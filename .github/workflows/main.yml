@@ -4,23 +4,20 @@ on:
   push:
     branches:
       - main
-
 jobs:
-  transform-tokens:
+  create_directory:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+    - name: Check Out Repository
+      uses: actions/checkout@v2
 
-      - name: Install token-transformer
-        run: npm install token-transformer
-
-      - name: Transform tokens
-        run: npx token-transformer tokens.json output-tokens.json
-
-
-      - name: Upload Output Tokens as Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: output-tokens
-          path: fiber-core/output-tokens.json
+    - name: Create Directory
+      run: |
+        mkdir my_new_directory
+      working-directory: ${{ github.workspace }}
+    
+    - name: List Contents
+      run: |
+        ls -l
+      working-directory: ${{ github.workspace }}
