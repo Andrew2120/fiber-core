@@ -18,21 +18,5 @@ jobs:
       - name: Transform tokens
         run: npx token-transformer tokens.json output-tokens.json
 
-
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Git
-        run: |
-          git config --global user.name "Andrew2120"
-          git config --global user.email "andrew-2120@live.com"
-
-      - name: Make Changes
-        run: |
-          # Make your changes here, e.g., echo "New content" > file.txt
-          git add .
-          git commit -m "Auto commit by GitHub Actions"
-          git push
-
-      - name: Push changes
-        run: git push
+      - name: add changes
+        run: git add .
