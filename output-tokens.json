@@ -1315,7 +1315,7 @@
       },
       "neutral": {
         "semantic-neutral--4": {
-          "value": "#2c291b",
+          "value": "#1b2c21",
           "type": "color"
         },
         "semantic-neutral--3": {
@@ -1640,7 +1640,7 @@
     },
     "coolGray": {
       "cool-gray--4": {
-        "value": "#2c291b",
+        "value": "#1b2c21",
         "type": "color"
       },
       "cool-gray--3": {
@@ -3193,7 +3193,7 @@
           "y": 1,
           "blur": 2,
           "spread": 0,
-          "color": "#2c291b1f",
+          "color": "#1b2c211f",
           "type": "dropShadow"
         },
         "type": "boxShadow"
@@ -3205,7 +3205,7 @@
             "y": 2,
             "blur": 2,
             "spread": -1,
-            "color": "#2c291b0a",
+            "color": "#1b2c210a",
             "type": "dropShadow"
           },
           {
@@ -3213,7 +3213,7 @@
             "y": 2,
             "blur": 8,
             "spread": -1,
-            "color": "#2c291b14",
+            "color": "#1b2c2114",
             "type": "dropShadow"
           }
         ],
@@ -3226,7 +3226,7 @@
             "y": 2,
             "blur": 2,
             "spread": -1,
-            "color": "#2c291b0a",
+            "color": "#1b2c210a",
             "type": "dropShadow"
           },
           {
@@ -3234,7 +3234,7 @@
             "y": 8,
             "blur": 16,
             "spread": -2,
-            "color": "#2c291b1f",
+            "color": "#1b2c211f",
             "type": "dropShadow"
           }
         ],
@@ -3247,7 +3247,7 @@
             "y": 2,
             "blur": 2,
             "spread": -1,
-            "color": "#2c291b0a",
+            "color": "#1b2c210a",
             "type": "dropShadow"
           },
           {
@@ -3255,7 +3255,7 @@
             "y": 16,
             "blur": 24,
             "spread": -6,
-            "color": "#2c291b29",
+            "color": "#1b2c2129",
             "type": "dropShadow"
           }
         ],
@@ -3269,7 +3269,7 @@
           "y": -1,
           "blur": 2,
           "spread": 0,
-          "color": "#2c291b1f",
+          "color": "#1b2c211f",
           "type": "dropShadow"
         },
         "type": "boxShadow"
@@ -3281,7 +3281,7 @@
             "y": -2,
             "blur": 2,
             "spread": -1,
-            "color": "#2c291b0a",
+            "color": "#1b2c210a",
             "type": "dropShadow"
           },
           {
@@ -3289,7 +3289,7 @@
             "y": -2,
             "blur": 8,
             "spread": -1,
-            "color": "#2c291b14",
+            "color": "#1b2c2114",
             "type": "dropShadow"
           }
         ],
@@ -3302,7 +3302,7 @@
             "y": -2,
             "blur": 2,
             "spread": -1,
-            "color": "#2c291b0a",
+            "color": "#1b2c210a",
             "type": "dropShadow"
           },
           {
@@ -3310,7 +3310,7 @@
             "y": -8,
             "blur": 16,
             "spread": -2,
-            "color": "#2c291b1f",
+            "color": "#1b2c211f",
             "type": "dropShadow"
           }
         ],
@@ -3323,7 +3323,7 @@
             "y": -2,
             "blur": 2,
             "spread": -1,
-            "color": "#2c291b0a",
+            "color": "#1b2c210a",
             "type": "dropShadow"
           },
           {
@@ -3331,7 +3331,7 @@
             "y": -16,
             "blur": 24,
             "spread": -6,
-            "color": "#2c291b29",
+            "color": "#1b2c2129",
             "type": "dropShadow"
           }
         ],
