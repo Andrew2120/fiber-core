@@ -5,7 +5,7 @@ on:
     branches:
       - main
 jobs:
-  Run_tokens_transformet_and_push_changes:
+  Run_tokens_transformer_and_push_changes:
     runs-on: ubuntu-latest
     
     steps:
@@ -27,7 +27,7 @@ jobs:
           git config --global user.email "andrew-2120@live.com"
           git config --global user.name "Andrew2120"
           git add output-tokens.json
-          git commit -m "Add my_new_directory"
+          git commit -m "update tokens"
           git remote set-url origin https://github.com/Andrew2120/fiber-core.git  # Replace USERNAME and REPOSITORY with your GitHub username and repository name
           git push origin main
         env:
