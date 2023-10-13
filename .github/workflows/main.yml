@@ -17,6 +17,5 @@ jobs:
 
       - name: Transform tokens
         run: npm install token-transformer -g
-      - name: Transform tokens
-        run: npx token-transformer tokens.json output-tokens.json
+
         
