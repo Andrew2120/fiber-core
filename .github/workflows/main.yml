@@ -12,17 +12,17 @@ jobs:
     - name: Check Out Repository
       uses: actions/checkout@v2
 
-    - name: Create Directory
+    - name: Create Directory and Placeholder File
       run: |
         mkdir my_new_directory
+        touch my_new_directory/placeholder.txt  # Create a placeholder file
       working-directory: ${{ github.workspace }}
     
     - name: Commit and Push Directory
       run: |
-        git config --global user.email "andrew-2120@live.com"
-        git config --global user.name "Andrew"
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
         git add my_new_directory
         git commit -m "Add my_new_directory"
         git push
       working-directory: ${{ github.workspace }}
-
