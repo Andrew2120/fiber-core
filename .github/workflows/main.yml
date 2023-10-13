@@ -5,27 +5,31 @@ on:
     branches:
       - main
 jobs:
-  create_and_commit_directory:
+  Run_tokens_transformet_and_push_changes:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - name: Check Out Repository
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-    - name: Create Directory and Placeholder File
-      run: |
-        mkdir my_new_directory
-        touch my_new_directory/placeholder.txt
-      working-directory: ${{ github.workspace }}
+      - name: Install token-transformer
+        run: npm install token-transformer
+
+      - name: Transform tokens
+        run: npx token-transformer tokens.json output-tokens.json
+  
+      - name: Placeholder File
+        run: |
+          touch output-tokens.json
+        working-directory: ${{ github.workspace }}
    
-    - name: Commit and Push Directory
-      run: |
-        git config --global user.email "andrew-2120@live.com"
-        git config --global user.name "Andrew2120"
-        git add my_new_directory
-        git commit -m "Add my_new_directory"
-        git remote set-url origin https://github.com/Andrew2120/fiber-core.git  # Replace USERNAME and REPOSITORY with your GitHub username and repository name
-        git push origin main
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      working-directory: ${{ github.workspace }}
+      - name: Commit and Push Directory
+        run: |
+          git config --global user.email "andrew-2120@live.com"
+          git config --global user.name "Andrew2120"
+          git add my_new_directory
+          git commit -m "Add my_new_directory"
+          git remote set-url origin https://github.com/Andrew2120/fiber-core.git  # Replace USERNAME and REPOSITORY with your GitHub username and repository name
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: ${{ github.workspace }}
