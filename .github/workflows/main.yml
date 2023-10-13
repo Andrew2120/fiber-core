@@ -15,7 +15,11 @@ jobs:
         run: npm install token-transformer
 
       - name: Transform tokens
-        run: touch npx token-transformer tokens.json output-tokens.json
+        run: npx token-transformer tokens.json output-tokens.json
+  
+      - name: Placeholder File
+        run: |
+          touch output-tokens.json
         working-directory: ${{ github.workspace }}
    
       - name: Commit and Push Directory
