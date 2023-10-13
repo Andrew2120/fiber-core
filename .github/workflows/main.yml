@@ -5,7 +5,7 @@ on:
     branches:
       - main
 jobs:
-  create_directory:
+  create_and_commit_directory:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +17,12 @@ jobs:
         mkdir my_new_directory
       working-directory: ${{ github.workspace }}
     
-    - name: List Contents
+    - name: Commit and Push Directory
       run: |
-        ls -l
+        git config --global user.email "andrew-2120@live.com"
+        git config --global user.name "Andrew"
+        git add my_new_directory
+        git commit -m "Add my_new_directory"
+        git push
       working-directory: ${{ github.workspace }}
+
