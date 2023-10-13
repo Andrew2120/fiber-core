@@ -15,14 +15,17 @@ jobs:
     - name: Create Directory and Placeholder File
       run: |
         mkdir my_new_directory
-        touch my_new_directory/placeholder.txt  # Create a placeholder file
+        touch my_new_directory/placeholder.txt
       working-directory: ${{ github.workspace }}
-    
+   
     - name: Commit and Push Directory
       run: |
-        git config --global user.email "you@example.com"
-        git config --global user.name "Your Name"
+        git config --global user.email "andrew-2120@live.com"
+        git config --global user.name "Andrew2120"
         git add my_new_directory
         git commit -m "Add my_new_directory"
-        git push
+        git remote set-url origin https://github.com/USERNAME/REPOSITORY.git  # Replace USERNAME and REPOSITORY with your GitHub username and repository name
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       working-directory: ${{ github.workspace }}
