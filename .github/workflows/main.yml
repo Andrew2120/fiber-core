@@ -27,5 +27,5 @@ jobs:
         git remote set-url origin https://github.com/Andrew2120/fiber-core.git  # Replace USERNAME and REPOSITORY with your GitHub username and repository name
         git push origin main
       env:
-        GITHUB_TOKEN: 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
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       working-directory: ${{ github.workspace }}
