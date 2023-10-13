@@ -17,4 +17,13 @@ jobs:
 
       - name: Transform tokens
         run: npx token-transformer tokens.json output-tokens.json
-        
+
+      - name: Commit and push output tokens
+        uses: actions/github-script@v5
+        with:
+          script: |
+            git config --global user.name "Andrew2120"
+            git config --global user.email "Andrew-2120@live.com"
+            git add output-tokens.json
+            git commit -m "Generated output tokens"
+            git push      
