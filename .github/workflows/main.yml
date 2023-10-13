@@ -1,0 +1,22 @@
+name: Token Transformer
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  transform-tokens:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install token-transformer
+        run: npm install token-transformer
+
+      - name: Transform tokens
+        run: npm install token-transformer -g
+      - name: Transform tokens
+        run: npx token-transformer tokens.json output-tokens.json
+        
