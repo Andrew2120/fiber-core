@@ -42,7 +42,7 @@
         "type": "color"
       },
       "content-success-primary": {
-        "value": "#23410e",
+        "value": "#92968f",
         "type": "color"
       },
       "content-success-secondary": {
@@ -337,7 +337,7 @@
           "type": "color"
         },
         "action-success-active": {
-          "value": "#23410e",
+          "value": "#92968f",
           "type": "color"
         },
         "action-success-selected": {
@@ -1175,7 +1175,7 @@
       },
       "green": {
         "nonSemantic-green-content-primary": {
-          "value": "#23410e",
+          "value": "#92968f",
           "type": "color"
         },
         "nonSemantic-green-content-secondary": {
@@ -1481,7 +1481,7 @@
           "type": "color"
         },
         "semantic-success--3": {
-          "value": "#23410e",
+          "value": "#92968f",
           "type": "color"
         },
         "semantic-success--2": {
@@ -2454,7 +2454,7 @@
         "type": "color"
       },
       "green--3": {
-        "value": "#23410e",
+        "value": "#92968f",
         "type": "color"
       },
       "green--2": {
