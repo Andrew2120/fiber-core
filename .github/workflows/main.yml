@@ -16,7 +16,11 @@ jobs:
 
       - name: Transform tokens
         run: npx token-transformer tokens.json output-tokens.json
-
+        
+      - name: Placeholder File
+        run: |
+          touch output-tokens.json
+        working-directory: ${{ github.workspace }}
          
       - name: Commit and Push Directory
         run: |
@@ -30,10 +34,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: ${{ github.workspace }}
         
-      - name: Placeholder File
-        run: |
-          touch output-tokens.json
-        working-directory: ${{ github.workspace }}
+
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
