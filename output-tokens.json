@@ -673,7 +673,7 @@
           "type": "color"
         },
         "interaction-border-active": {
-          "value": "#9ca0aa",
+          "value": "#0f43c7",
           "type": "color"
         },
         "interaction-border-selected": {
@@ -1273,7 +1273,7 @@
           "type": "color"
         },
         "semantic-brand--1": {
-          "value": "#9ca0aa",
+          "value": "#0f43c7",
           "type": "color"
         },
         "semantic-brand-0": {
@@ -1435,7 +1435,7 @@
           "type": "color"
         },
         "semantic-info--1": {
-          "value": "#9ca0aa",
+          "value": "#0f43c7",
           "type": "color"
         },
         "semantic-info-0": {
@@ -2246,7 +2246,7 @@
         "type": "color"
       },
       "blue--1": {
-        "value": "#9ca0aa",
+        "value": "#0f43c7",
         "type": "color"
       },
       "blue-0": {
