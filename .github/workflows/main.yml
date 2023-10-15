@@ -15,7 +15,7 @@ jobs:
         run: npm install token-transformer
 
       - name: Transform tokens
-        run: npx token-transformer tokens.json output-tokens.json --expandTypography=true Sets alias
+        run: npx token-transformer tokens.json output-tokens.json --expandTypography=true --throwErrorWhenNotResolved=true
   
       - name: Placeholder File
         run: |
