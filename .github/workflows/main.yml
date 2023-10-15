@@ -58,8 +58,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Commit files
         run: |
-          git config --local user.email "test@test.com"
-          git config --local user.name "Test"
+          git config --local user.email "Andrew-2120@live.com"
+          git config --local user.name "Andrew"
           git commit -a -m "Add changes"
       - name: Push changes
         uses: ad-m/github-push-action@master
