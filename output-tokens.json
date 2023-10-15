@@ -960,7 +960,7 @@
         "type": "borderRadius"
       },
       "border-radius-999": {
-        "value": 90000,
+        "value": 10,
         "type": "borderRadius"
       }
     },
