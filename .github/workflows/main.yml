@@ -51,13 +51,20 @@ jobs:
           touch BTokens.kt
         working-directory: ${{ github.workspace }}
       - name: Push to Another Repository
-        env:
-          TARGET_REPO: Andrew2120/FiberA # Change to your target repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
+      - name: Commit files
         run: |
-          git config user.name Andrew
-          git config user.email Andrew-2120@live.com
-          git remote add target_repo https://github.com/$TARGET_REPO.git
-          git push target_repo HEAD:main
-          env:
-           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: ${{ github.workspace }}
+          git config --local user.email "test@test.com"
+          git config --local user.name "Test"
+          git commit -a -m "Add changes"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+            github_token: ${{ secrets.PAT_TOKEN }}
+            repository: Andrew2120/FiberA
+            force: true
+
