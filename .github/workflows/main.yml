@@ -55,7 +55,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.FIBER_ANDROID_TOKEN }}
       - name: Commit files
         run: |
           git config --local user.email "test@test.com"
