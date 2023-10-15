@@ -26,6 +26,11 @@ jobs:
         
       - name: Run Quicktype
         run: quicktype output-tokens.json -o Tokens.kt
+      - name: JavaScript action
+        uses: actions/javascript-action@v5
+        with:
+          script: script.js
+
 
       - name: Commit and Push Directory
         run: |
