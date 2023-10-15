@@ -48,17 +48,16 @@ jobs:
         run: |
           touch BTokens.kt
         working-directory: ${{ github.workspace }}
-      - name: Commit and Push Directory
-        run: |
-          git config --global user.email "andrew-2120@live.com"
-          git config --global user.name "Andrew2120"
-          git add BTokens.kt
-          git commit -m "update tokens"
-          git remote set-url origin https://github.com/Andrew2120/fiber-core.git  # Replace USERNAME and REPOSITORY with your GitHub username and repository name
-          git push origin main
+      - name: Push to Another Repository
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: ${{ github.workspace }}
+          TARGET_REPO: Andrew2120/FiberA # Change to your target repository
+        run: |
+          git config user.email "andrew-2120@live.com"
+          git config user.name "Andrew2120"
+          git remote add target_repo https://github.com/$TARGET_REPO.git
+          git push target_repo HEAD: main
+          env:
+          GITHUB_TOKEN: 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
         
 
 
