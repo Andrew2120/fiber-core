@@ -9939,7 +9939,11 @@
   },
   "tokenSetOrder": {
     "0": {
-      "value": "core",
+      "value": "global",
+      "type": "other"
+    },
+    "1": {
+      "value": "alias",
       "type": "other"
     }
   }
