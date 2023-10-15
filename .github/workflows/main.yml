@@ -54,10 +54,10 @@ jobs:
         env:
           TARGET_REPO: Andrew2120/FiberA # Change to your target repository
         run: |
-          git config user.name github-actions[bot]
-          git config user.email github-actions[bot]@users.noreply.github.com
+          git config user.name Andrew
+          git config user.email Andrew-2120@live.com
           git remote add target_repo https://github.com/$TARGET_REPO.git
-          git push target_repo HEAD:main
+          git push target_repo HEAD: main
           env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: ${{ github.workspace }}
