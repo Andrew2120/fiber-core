@@ -47,7 +47,7 @@ jobs:
            
       - name: Placeholder File
         run: |
-          BTokens.kt
+          touch BTokens.kt
         working-directory: ${{ github.workspace }}
                
       - name: Commit and Push Directory
