@@ -6,10 +6,6 @@
           "value": "#9270a8",
           "type": "color"
         },
-        "cool-gray--3": {
-          "value": "#b1cf9d",
-          "type": "color"
-        },
         "cool-gray--2": {
           "value": "#3a424a",
           "type": "color"
@@ -52,6 +48,10 @@
         },
         "cool-gray-+8": {
           "value": "#fcfcfd",
+          "type": "color"
+        },
+        "cool-gray--3": {
+          "value": "#e54912",
           "type": "color"
         }
       },
