@@ -57,7 +57,8 @@ jobs:
           git remote add target_repo https://github.com/$TARGET_REPO.git
           git push target_repo main
           env:
-          GITHUB_TOKEN:${{ secrets.PAT_TOKEN }}
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         
 
 
