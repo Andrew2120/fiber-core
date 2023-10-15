@@ -50,7 +50,7 @@
         "type": "color"
       },
       "content-warning-primary": {
-        "value": "#9c7878",
+        "value": "#e80b0b",
         "type": "color"
       },
       "content-warning-secondary": {
@@ -1217,7 +1217,7 @@
       },
       "orange": {
         "nonSemantic-orange-content-primary": {
-          "value": "#9c7878",
+          "value": "#e80b0b",
           "type": "color"
         },
         "nonSemantic-orange-content-secondary": {
@@ -1535,7 +1535,7 @@
           "type": "color"
         },
         "semantic-warning--3": {
-          "value": "#9c7878",
+          "value": "#e80b0b",
           "type": "color"
         },
         "semantic-warning--2": {
@@ -2508,7 +2508,7 @@
         "type": "color"
       },
       "orange--3": {
-        "value": "#9c7878",
+        "value": "#e80b0b",
         "type": "color"
       },
       "orange--2": {
