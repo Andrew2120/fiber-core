@@ -77,7 +77,7 @@ function getValidVariableName(variableName="",parentClassName=""){
     }
 
     if(validVariable.includes("-")){
-        validVariable = validVariable.replaceAll("-","_")
+        validVariable = validVariable.replace("-","_")
     }
 
     if(validVariable.length == 0)
