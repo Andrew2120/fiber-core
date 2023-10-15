@@ -1101,7 +1101,7 @@ data class GlobalBorderRadius (
     val borderRadius25: The0,
 
     @Json(name = "border-radius-50")
-    val borderRadius50: The0,
+    val borderRadius50: BorderRadius50,
 
     @Json(name = "border-radius-100")
     val borderRadius100: The0,
@@ -1119,7 +1119,7 @@ data class GlobalBorderRadius (
     val borderRadius300: The0,
 
     @Json(name = "border-radius-999")
-    val borderRadius999: BorderRadius999
+    val borderRadius999: BorderRadius50
 )
 
 data class The0 (
@@ -1154,7 +1154,7 @@ enum class The0_Type(val value: String) {
     }
 }
 
-data class BorderRadius999 (
+data class BorderRadius50 (
     val value: Double,
     val type: String
 )
@@ -1279,24 +1279,24 @@ data class FontFamilyClass (
 
 data class FontWeightClass (
     @Json(name = "font-weight-300")
-    val fontWeight300: BorderRadius999,
+    val fontWeight300: BorderRadius50,
 
     @Json(name = "font-weight-400")
-    val fontWeight400: BorderRadius999,
+    val fontWeight400: BorderRadius50,
 
     @Json(name = "font-weight-500")
-    val fontWeight500: BorderRadius999,
+    val fontWeight500: BorderRadius50,
 
     @Json(name = "font-weight-600")
-    val fontWeight600: BorderRadius999,
+    val fontWeight600: BorderRadius50,
 
     @Json(name = "font-weight-700")
-    val fontWeight700: BorderRadius999
+    val fontWeight700: BorderRadius50
 )
 
 data class LetterSpacing (
     @Json(name = "letterSpacing-0")
-    val letterSpacing0: BorderRadius999,
+    val letterSpacing0: BorderRadius50,
 
     @Json(name = "letterSpacing-100")
     val letterSpacing100: The0,
@@ -1322,13 +1322,13 @@ data class LetterSpacing (
 
 data class GlobalOpacity (
     @Json(name = "opacity-0")
-    val opacity0: BorderRadius999,
+    val opacity0: BorderRadius50,
 
     @Json(name = "opacity-50")
-    val opacity50: BorderRadius999,
+    val opacity50: BorderRadius50,
 
     @Json(name = "opacity-100")
-    val opacity100: BorderRadius999
+    val opacity100: BorderRadius50
 )
 
 data class TokenSetOrder (
