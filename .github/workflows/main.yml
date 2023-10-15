@@ -25,7 +25,7 @@ jobs:
         run: npm install -g quicktype
         
       - name: Run Quicktype
-        run: quicktype output-tokens.json -o Tokens.kt
+        run: quicktype output-tokens.json -o Serialization Tokens.kt
 
       - name: Commit and Push Directory
         run: |
