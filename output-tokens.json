@@ -1049,7 +1049,7 @@
       },
       "cyan": {
         "nonSemantic-cyan-content-primary": {
-          "value": "#0c456e",
+          "value": "#0f6e0c",
           "type": "color"
         },
         "nonSemantic-cyan-content-secondary": {
@@ -2292,7 +2292,7 @@
         "type": "color"
       },
       "cyan--3": {
-        "value": "#0c456e",
+        "value": "#0f6e0c",
         "type": "color"
       },
       "cyan--2": {
