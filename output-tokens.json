@@ -265,7 +265,7 @@
           "type": "color"
         },
         "action-primary-hover": {
-          "value": "#b1b4bb",
+          "value": "#417aff",
           "type": "color"
         },
         "action-primary-active": {
@@ -273,7 +273,7 @@
           "type": "color"
         },
         "action-primary-selected": {
-          "value": "#b1b4bb",
+          "value": "#417aff",
           "type": "color"
         },
         "action-primary-subtle-normal": {
@@ -499,7 +499,7 @@
           "type": "color"
         },
         "interaction-default-hover": {
-          "value": "#b1b4bb",
+          "value": "#417aff",
           "type": "color"
         },
         "interaction-default-active": {
@@ -507,7 +507,7 @@
           "type": "color"
         },
         "interaction-default-selected": {
-          "value": "#b1b4bb",
+          "value": "#417aff",
           "type": "color"
         },
         "interaction-default-subtle-normal": {
@@ -1269,7 +1269,7 @@
           "type": "color"
         },
         "semantic-brand--2": {
-          "value": "#b1b4bb",
+          "value": "#417aff",
           "type": "color"
         },
         "semantic-brand--1": {
@@ -1431,7 +1431,7 @@
           "type": "color"
         },
         "semantic-info--2": {
-          "value": "#b1b4bb",
+          "value": "#417aff",
           "type": "color"
         },
         "semantic-info--1": {
@@ -2242,7 +2242,7 @@
         "type": "color"
       },
       "blue--2": {
-        "value": "#b1b4bb",
+        "value": "#417aff",
         "type": "color"
       },
       "blue--1": {
