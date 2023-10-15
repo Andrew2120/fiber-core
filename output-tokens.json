@@ -50,7 +50,7 @@
         "type": "color"
       },
       "content-warning-primary": {
-        "value": "#c7b4cd",
+        "value": "#000",
         "type": "color"
       },
       "content-warning-secondary": {
@@ -1217,7 +1217,7 @@
       },
       "orange": {
         "nonSemantic-orange-content-primary": {
-          "value": "#c7b4cd",
+          "value": "#000",
           "type": "color"
         },
         "nonSemantic-orange-content-secondary": {
@@ -1535,7 +1535,7 @@
           "type": "color"
         },
         "semantic-warning--3": {
-          "value": "#c7b4cd",
+          "value": "#000",
           "type": "color"
         },
         "semantic-warning--2": {
@@ -2508,7 +2508,7 @@
         "type": "color"
       },
       "orange--3": {
-        "value": "#c7b4cd",
+        "value": "#000",
         "type": "color"
       },
       "orange--2": {
