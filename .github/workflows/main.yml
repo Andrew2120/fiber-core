@@ -50,6 +50,18 @@ jobs:
         run: |
           touch BTokens.kt
           - name: Checkout
+               
+      - name: Commit and Push Directory
+        run: |
+          git config --global user.email "andrew-2120@live.com"
+          git config --global user.name "Andrew2120"
+          git add BTokens.kt
+          git commit -m "update tokens"
+          git remote set-url origin https://github.com/Andrew2120/fiber-core.git  # Replace USERNAME and REPOSITORY with your GitHub username and repository name
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: ${{ github.workspace }}    
       - name: push changes
         uses: actions/checkout@v2
 
