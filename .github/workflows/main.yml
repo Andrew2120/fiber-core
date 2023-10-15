@@ -15,7 +15,7 @@ jobs:
         run: npm install token-transformer
 
       - name: Transform tokens
-        run: npx token-transformer tokens.json output-tokens.json --expandTypography=true sets=['alies']
+        run: npx token-transformer tokens.json output-tokens.json --expandTypography=true
   
       - name: Placeholder File
         run: |
@@ -28,7 +28,7 @@ jobs:
           git config --global user.name "Andrew2120"
           git add output-tokens.json
           git commit -m "update tokens"
-          git remote set-url origin https://github.com/Andrew2120/fiber-core.git  # Replace USERNAME and REPOSITORY with your GitHub username and repository name
+          git remote set-url origin https://github.com/Andrew2120/fiber-core.git
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
