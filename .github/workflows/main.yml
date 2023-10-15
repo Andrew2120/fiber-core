@@ -54,8 +54,8 @@ jobs:
       - name: Pushes to another repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
-          SSH_DEPLOY_KEY: opa8BgNKQ7b1OAXkGz9q/55Vl/EOKJ7p58vo/t39tj0
-          API_TOKEN_GITHUB: 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
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source-directory: 'example'
           destination-github-username: 'Andrew2120'
