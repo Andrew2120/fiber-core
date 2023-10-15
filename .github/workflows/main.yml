@@ -55,7 +55,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
-          token: ${{ secrets.FIBER_ANDROID_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Commit files
         run: |
           git config --local user.email "test@test.com"
@@ -64,7 +64,7 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-            github_token: ${{ secrets.FIBER_ANDROID_TOKEN }}
+            github_token: ${{ secrets.GITHUB_TOKEN }}
             repository: Andrew2120/FiberA
             force: true
 
