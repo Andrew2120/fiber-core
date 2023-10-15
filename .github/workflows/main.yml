@@ -26,10 +26,14 @@ jobs:
         
       - name: Run Quicktype
         run: quicktype output-tokens.json -o Tokens.kt
-      - name: JavaScript action
-        uses: actions/javascript-action@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          script: script.js
+          node-version: 14
+
+      - name: Run JavaScript File
+        run: |
+            node script.js
 
 
       - name: Commit and Push Directory
