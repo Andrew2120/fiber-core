@@ -60,6 +60,21 @@ jobs:
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: ${{ github.workspace }}  
+        working-directory: ${{ github.workspace }}
+              
+      - name: push changes
+        uses: actions/checkout@v2
+
+      - name: Pushes test file
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+         API_TOKEN_GITHUB: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          source_file: 'BTokens.kt'
+          destination_repo: 'Andrew2120/FiberA'
+          destination_folder: 'test-dir'
+          user_email: 'Andrew-2120@live.com'
+          user_name: 'Andrew'
+          commit_message: 'A custom message for the commit'
 
 
