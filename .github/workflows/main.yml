@@ -49,16 +49,16 @@ jobs:
         working-directory: ${{ github.workspace }}
         
       - name: creates output
-        run:  sh ./build.sh # some command from your repository that creates
-                            # output to "source-directory" ("output" in the example)
+         echo "This is some content for the text file" > example.txt
+         
       - name: Pushes to another repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
           SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source-directory: 'output'
-          destination-github-username: 'cpina'
-          destination-repository-name: 'pandoc-test-output'
-          user-email: carles3@pina.cat
+          source-directory: 'example'
+          destination-github-username: 'Anddrew2120'
+          destination-repository-name: 'Andrew2120/FiberA'
+          user-email: andrew-2120@live.com
           target-branch: main
