@@ -55,6 +55,6 @@ jobs:
           git config user.email "andrew-2120@live.com"
           git config user.name "Andrew2120"
           git remote add target_repo https://github.com/$TARGET_REPO.git
-          git push target_repo main
+          git push target_repo HEAD:main
           env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
