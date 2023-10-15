@@ -46,6 +46,6 @@ jobs:
             node android_converter.js
       - name: Placeholder File
         run: |
-          touch output-tokens.json
+          touch BTokens.kt
         working-directory: ${{ github.workspace }}
 
