@@ -1091,7 +1091,7 @@
       },
       "teal": {
         "nonSemantic-teal-content-primary": {
-          "value": "#c5c8c9",
+          "value": "#7c4fc4",
           "type": "color"
         },
         "nonSemantic-teal-content-secondary": {
@@ -2346,7 +2346,7 @@
         "type": "color"
       },
       "teal--3": {
-        "value": "#c5c8c9",
+        "value": "#7c4fc4",
         "type": "color"
       },
       "teal--2": {
