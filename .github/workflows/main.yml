@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+permissions:
+  contents: write      
 jobs:
   Run_tokens_transformer_and_push_changes:
     runs-on: ubuntu-latest
