@@ -42,8 +42,8 @@ jobs:
           node-version: 20
 
       - name: Run JavaScript File
-        run: |
-            node android_converter.js
+        run: 
+           node android_converter.js
       - name: Placeholder File
         run: |
           touch BTokens.kt
@@ -58,3 +58,4 @@ jobs:
           git push target_repo HEAD:master
           env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: ${{ github.workspace }}
