@@ -21,11 +21,7 @@ jobs:
         run: |
           touch output-tokens.json
         working-directory: ${{ github.workspace }}
-      - name: Install Quicktype
-        run: npm install -g quicktype
-        
-      - name: Run Quicktype
-        run: quicktype output-tokens.json -o Tokens.kt
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
@@ -33,7 +29,7 @@ jobs:
 
       - name: Run JavaScript File
         run: |
-            node script.js
+            node android_converter.js
 
 
       - name: Commit and Push Directory
