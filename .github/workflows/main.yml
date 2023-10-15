@@ -44,10 +44,11 @@ jobs:
       - name: Run JavaScript File
         run: 
            node android_converter.js
+           
       - name: Placeholder File
         run: |
-          touch BTokens.kt
-          - name: Checkout
+          BTokens.kt
+        working-directory: ${{ github.workspace }}
                
       - name: Commit and Push Directory
         run: |
