@@ -1,6 +1,11 @@
 const fs = require('fs');
 let json = require('./output-tokens.json');
 
+const v8 = require('v8');
+const oldLimit = v8.getHeapStatistics().maxOldGenerationSize;
+const newLimit = oldLimit * 1.5;
+v8.setFlagsFromString(`--max-old-space-size=${newLimit}`);
+
 let importLibs = "import androidx.compose.ui.unit.*\n"+
                  "import androidx.compose.ui.graphics.Color\n"+
                  "import androidx.core.graphics.toColorInt\n"+
