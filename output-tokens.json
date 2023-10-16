@@ -222,7 +222,7 @@
         "type": "color"
       },
       "background-danger-muted": {
-        "value": "#fcd9d9",
+        "value": "#d15a5a",
         "type": "color"
       },
       "background-danger-onSubtle": {
@@ -863,7 +863,7 @@
           "type": "color"
         },
         "nonSemantic-red-background-muted": {
-          "value": "#fcd9d9",
+          "value": "#d15a5a",
           "type": "color"
         },
         "nonSemantic-red-background-onSubtle": {
@@ -1617,7 +1617,7 @@
           "type": "color"
         },
         "semantic-danger-+4": {
-          "value": "#fcd9d9",
+          "value": "#d15a5a",
           "type": "color"
         },
         "semantic-danger-+5": {
@@ -2050,7 +2050,7 @@
         "type": "color"
       },
       "red-+4": {
-        "value": "#fcd9d9",
+        "value": "#d15a5a",
         "type": "color"
       },
       "red-+5": {
