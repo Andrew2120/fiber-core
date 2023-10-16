@@ -1,5 +1,5 @@
 const fs = require('fs');
-let json = require('./test.json');
+let json = require('./output-tokens.json');
 
 let objectTypeCashe = {};
 let importLibs = "import androidx.compose.ui.unit.*\n"+
