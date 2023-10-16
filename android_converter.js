@@ -1,54 +1,49 @@
 const fs = require('fs');
 let json = require('./output-tokens.json');
 
-const v8 = require('v8');
-const oldLimit = v8.getHeapStatistics().maxOldGenerationSize;
-const newLimit = oldLimit * 1.5;
-v8.setFlagsFromString(`--max-old-space-size=${newLimit}`);
-
+let objectTypeCashe = {};
 let importLibs = "import androidx.compose.ui.unit.*\n"+
                  "import androidx.compose.ui.graphics.Color\n"+
-                 "import androidx.core.graphics.toColorInt\n"+
-                 "import androidx.compose.runtime.Composable\n"+
-                 "import androidx.compose.ui.platform.LocalDensity";
+                 "import androidx.core.graphics.toColorInt";
 
-let customFun = "@Composable\nfun Dp.dpToPx() = with(LocalDensity.current) {\nthis@dpToPx.toPx()\n}"
-
-let ignoreKeys=""
-
-let generatedTypes =""
-let generatedClasses =""
-const generateAndroidTokensUsingJsonObject = (obj, objName="",parentName="") => {
+const generateAndroidTokensUsingJsonObject = (obj, objName) => {
    
 
-    let content = ""
-    let contentHeader = ""
-    if(parentName.length>0){
-        contentHeader =   `\n\nobject ${parentName}_${objName[0].toUpperCase()+objName.slice(1)} {\n\n`;
-    }else{
-        contentHeader =   `\n\nobject ${objName[0].toUpperCase()+objName.slice(1)} {\n\n`;
-    }
-   
-    let contentFooter = `}\n\n`;
-    // Object.keys(obj).forEach((key) => {
-    //     console.log("Processing key:", key);
-        
-    //     if (key !== "elevation") {
-    //         if (isBaseObj(obj[key])) {
-    //             console.log("Converting base object:", key);
-    //             content += convertBaseObjToVariable(objName, key, obj[key]) + "\n";
-    //         } else {
-    //             console.log("Generating Android tokens for key:", key);
-    //             let newObj = generateAndroidTokensUsingJsonObject(obj[key], key, objName);
-    //             contentFooter += newObj;
-    //             content += "val " + key + " = " + objName + '_' + (key[0].toUpperCase() + key.slice(1)) + '\n';
-    //         }
-    //     }
-    // });
+    let content = "";
 
-    return  contentHeader+content+contentFooter;
+    content +=importLibs;
+
+    
+    let  colorsToken = obj["color"];
+
+    Object.keys(colorsToken).forEach((key)=>{
+
+        content += convertObjToAndroidObjectClass(key,colorsToken[key]);
+
+    });
+
+
+    return content;
 }
 
+const convertObjToAndroidObjectClass = (objName="",obj) =>{
+    let content = ""
+    let contentHeader = `\n\nobject ${objName[0].toUpperCase()+objName.slice(1)} {\n\n`;
+    let contentFooter = `}\n\n`;
+
+    content += contentHeader;
+
+    Object.keys(obj).forEach((key) => {
+       content += convertBaseObjToVariable(objName,key,obj[key]) +"\n";
+
+    });
+
+
+
+    content += contentFooter;
+
+    return content; 
+}
 
 const convertBaseObjToVariable = (parentObjName = "",key ="",obj) =>{
 
@@ -60,41 +55,9 @@ const convertBaseObjToVariable = (parentObjName = "",key ="",obj) =>{
     if(obj["type"] == "color"){
         variableValue = convertValueToColor(obj["value"])
     }
-    else if(obj["type"] == "borderWidth"||
-             obj["type"] == "borderRadius"||
-            obj["type"] == "sizing"|| 
-            obj["type"] == "spacing"|| 
-            obj["type"] == "opacity"|| 
-            obj["type"] == "dimension"|| 
-
-            obj["type"] == "fontSizes"|| 
-            obj["type"] == "letterSpacing"||
-            obj["type"] == "lineHeights" ){
-                variableValue = convertValueToDimen(obj["value"])       
-            }
-            else if(obj["type"] == "fontWeights"){
-                variableValue = obj["value"]
-            }
-            else if(obj["type"] == "fontFamilies"){
-                variableValue = '"'+obj["value"]+'"'
-            }
-            else{
-                if(generatedTypes.includes(obj["type"])){
-                    variableValue = getCustomClassValue(obj["type"],obj["value"]) 
-                }else{
-                  
-                    generateCustomObject(obj["type"],obj["value"])
-                    variableValue = getCustomClassValue(obj["type"],obj["value"]) 
-
-                }
-            }
 
     return "val "+ variableName+" = " +variableValue;
 
-}
-
-function extractType(valueJ){
-    
 }
 
 function getValidVariableName(variableName="",parentClassName=""){
@@ -122,116 +85,20 @@ function getValidVariableName(variableName="",parentClassName=""){
 
     return validVariable;
 }
-
 function convertValueToColor(valueJ){
 
     return 'Color("'+valueJ+'".toColorInt())'
 }
 
-function convertValueToDimen(valueJ){
-
-    if (typeof valueJ === 'string'){
-    let valideValue = valueJ
-    if(valideValue.includes("dp"))
-   valideValue =  valideValue.replace("dp",".dp")
-   if(valideValue.includes("em"))
-   valideValue =  valideValue.replace("em",".em")
-   if(valideValue.includes("px"))
-   valideValue =  valideValue.replace("px",".dp")
-
-   return valideValue
-}else{
-    return valueJ
-}
-}
-
-function getCustomClassValue(objName="",valueJ){
-
-let content = `${objName[0].toUpperCase()+objName.slice(1)}Data(`
-
-Object.keys(valueJ).forEach((key) =>{
-
-    let type = getTypeOf(valueJ[key])
-    if(type == "Color"){
-        content += convertValueToColor(valueJ[key])+","
-    }
-    else if(type == "Dp"){
-        content += convertValueToDimen(valueJ[key])+","
-    }
-    else if(type == "Float"){
-        content += valueJ[key]+"F,"
-    }
-    else{
-        content += '"' +valueJ[key]+'",'
-    }
-
-
-})
-
-content+=")"
-return content
-}
-//working here now
-function generateCustomObject(objName="",valueJ){
-
-
-    let content = `\n\n data class ${objName[0].toUpperCase()+objName.slice(1)}Data(`
-
-
-    let objVal = Object.keys(valueJ)
-
-    objVal.forEach((key) =>{
-        let type = getTypeOf(valueJ[key])
-
-        content += 'val '+key+":"+type+","
-
-    })
-
-    content+=")\n\n"
-
-    generatedClasses += content
-        generatedTypes += objName+" , "
-
-
-}
-
-const getTypeOf = value => {
-    if (typeof value === 'string'){
-        if(value.includes("#")){
-
-            return "Color"
-        }else if(value.includes("px")||value.includes("em")||value.includes("dp")){
-            return "Any"
+const isObjContainObj = (obj) =>{
+    Object.keys(obj).forEach((key) => {
+        if (typeof obj[key] === 'object'){
+            return true
         }
-        
-        else{
-            return "String"
-        }
-    }
-    if (typeof value === 'number') {
-        return "Any"
-    }
+    });
 
+return false;
 }
-
-function convertValueToTypography(valueJ){
-
-    let validValue = "object{\n"
-    let objVal = Object.keys(valueJ)
-    objVal.forEach((key) => {
-        
-        if(key == "fontFamily"){
-            validValue += "val "+ key +" = "+'"'+valueJ[key]+'"'+"\n"
-        }
-        else{
-            let newVal = convertValueToDimen(valueJ[key])
-        validValue += "val "+ key +" = "+newVal+"\n"
-        }
-    })
-
-    return validValue+"\n}\n"
-}
-
 
 const isBaseObj =(obj) =>{
 
@@ -245,9 +112,31 @@ const isBaseObj =(obj) =>{
 }
 
 
-let content = generateAndroidTokensUsingJsonObject(json, "BTokens");
 
-fs.writeFile('./BTokens.kt', importLibs+content+generatedClasses, err => {
+const getTypeOf = value => {
+    if (typeof value === 'string') return "String"
+    if (typeof value === 'number') {
+        if (Number.isInteger(value)) return "Int"
+        return "CGFloat"
+    }
+
+}
+
+const getObjectSignutre = (obj) => {
+    let sortedKeys = Object.keys(obj).sort((a, b) => a - b);
+    let values = sortedKeys.map((key) => obj[key]);
+    let valueTypes = values.map(value => {
+        if (typeof value === 'object')
+            return getObjectSignutre(value);
+        return getTypeOf(value);
+    });
+
+    return sortedKeys.join("") + valueTypes.join("");
+}
+
+let content = generateAndroidTokensUsingJsonObject(json, "Generated");
+
+fs.writeFile('./BTokens.kt', content, err => {
   if (err) {
     console.error(err);
   }
