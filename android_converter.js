@@ -3,7 +3,6 @@ let json = require('./output-tokens.json');
 
 let importLibs = "import androidx.compose.ui.unit.*\n"+
                  "import androidx.compose.ui.graphics.Color\n"+
-                 "android.graphics.Color.parseColor\n"+
                  "import androidx.core.graphics.toColorInt\n"+
                  "import androidx.compose.runtime.Composable\n"+
                  "import androidx.compose.ui.platform.LocalDensity";
@@ -121,7 +120,7 @@ function getValidVariableName(variableName="",parentClassName=""){
 
 function convertValueToColor(valueJ){
 
-    return'Color(parseColor("'+valueJ+'"))'
+    return 'Color("'+valueJ+'".toColorInt())'
 }
 
 function convertValueToDimen(valueJ){
