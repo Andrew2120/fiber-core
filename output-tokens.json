@@ -367,7 +367,7 @@
           "type": "color"
         },
         "action-danger-hover": {
-          "value": "#952d2d",
+          "value": "#63c7c3",
           "type": "color"
         },
         "action-danger-active": {
@@ -375,7 +375,7 @@
           "type": "color"
         },
         "action-danger-selected": {
-          "value": "#952d2d",
+          "value": "#63c7c3",
           "type": "color"
         },
         "action-danger-subtle-normal": {
@@ -567,7 +567,7 @@
           "type": "color"
         },
         "interaction-danger-hover": {
-          "value": "#952d2d",
+          "value": "#63c7c3",
           "type": "color"
         },
         "interaction-danger-active": {
@@ -575,7 +575,7 @@
           "type": "color"
         },
         "interaction-danger-selected": {
-          "value": "#952d2d",
+          "value": "#63c7c3",
           "type": "color"
         },
         "interaction-danger-subtle-normal": {
@@ -1593,7 +1593,7 @@
           "type": "color"
         },
         "semantic-danger--2": {
-          "value": "#952d2d",
+          "value": "#63c7c3",
           "type": "color"
         },
         "semantic-danger--1": {
@@ -2026,7 +2026,7 @@
         "type": "color"
       },
       "red--2": {
-        "value": "#952d2d",
+        "value": "#63c7c3",
         "type": "color"
       },
       "red--1": {
