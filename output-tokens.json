@@ -62,7 +62,7 @@
         "type": "color"
       },
       "content-danger-secondary": {
-        "value": "#c53434",
+        "value": "#279e10",
         "type": "color"
       },
       "content-brand-primary": {
@@ -120,7 +120,7 @@
         "type": "color"
       },
       "border-danger-strong": {
-        "value": "#c53434",
+        "value": "#279e10",
         "type": "color"
       },
       "border-danger-subtle": {
@@ -218,7 +218,7 @@
         "type": "color"
       },
       "background-danger-strong": {
-        "value": "#c53434",
+        "value": "#279e10",
         "type": "color"
       },
       "background-danger-muted": {
@@ -363,7 +363,7 @@
       },
       "danger": {
         "action-danger-normal": {
-          "value": "#c53434",
+          "value": "#279e10",
           "type": "color"
         },
         "action-danger-hover": {
@@ -563,7 +563,7 @@
       },
       "danger": {
         "interaction-danger-normal": {
-          "value": "#c53434",
+          "value": "#279e10",
           "type": "color"
         },
         "interaction-danger-hover": {
@@ -843,7 +843,7 @@
           "type": "color"
         },
         "nonSemantic-red-content-secondary": {
-          "value": "#c53434",
+          "value": "#279e10",
           "type": "color"
         },
         "nonSemantic-red-border-default": {
@@ -851,7 +851,7 @@
           "type": "color"
         },
         "nonSemantic-red-border-strong": {
-          "value": "#c53434",
+          "value": "#279e10",
           "type": "color"
         },
         "nonSemantic-red-border-subtle": {
@@ -859,7 +859,7 @@
           "type": "color"
         },
         "nonSemantic-red-background-strong": {
-          "value": "#c53434",
+          "value": "#279e10",
           "type": "color"
         },
         "nonSemantic-red-background-muted": {
@@ -1601,7 +1601,7 @@
           "type": "color"
         },
         "semantic-danger-0": {
-          "value": "#c53434",
+          "value": "#279e10",
           "type": "color"
         },
         "semantic-danger-+1": {
@@ -2034,7 +2034,7 @@
         "type": "color"
       },
       "red-0": {
-        "value": "#c53434",
+        "value": "#279e10",
         "type": "color"
       },
       "red-+1": {
