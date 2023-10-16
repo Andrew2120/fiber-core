@@ -41,7 +41,7 @@ jobs:
         with:
           node-version: 20
       - name: Setmax
-        run: node --stack-size=10000 android_converter.js
+        run: node --stack-size=20000 android_converter.js
       - name: Run JavaScript File
         run: 
            node android_converter.js
