@@ -40,7 +40,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 20
-
+      - name: Setmax
+        run: node --stack-size=5000 android_converter.js
       - name: Run JavaScript File
         run: 
            node android_converter.js
