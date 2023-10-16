@@ -885,7 +885,7 @@
           "type": "color"
         },
         "nonSemantic-magenta-content-secondary": {
-          "value": "#b12f86",
+          "value": "#91ae7a",
           "type": "color"
         },
         "nonSemantic-magenta-border-default": {
@@ -893,7 +893,7 @@
           "type": "color"
         },
         "nonSemantic-magenta-border-strong": {
-          "value": "#b12f86",
+          "value": "#91ae7a",
           "type": "color"
         },
         "nonSemantic-magenta-border-subtle": {
@@ -901,7 +901,7 @@
           "type": "color"
         },
         "nonSemantic-magenta-background-strong": {
-          "value": "#b12f86",
+          "value": "#91ae7a",
           "type": "color"
         },
         "nonSemantic-magenta-background-muted": {
@@ -2088,7 +2088,7 @@
         "type": "color"
       },
       "magenta-0": {
-        "value": "#b12f86",
+        "value": "#91ae7a",
         "type": "color"
       },
       "magenta-+1": {
