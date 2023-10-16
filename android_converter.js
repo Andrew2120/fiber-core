@@ -2,9 +2,9 @@ const fs = require('fs');
 let json = require('./output-tokens.json');
 
 let objectTypeCashe = {};
-let importLibs = "import androidx.compose.ui.unit.*\n"+
-                 "import androidx.compose.ui.graphics.Color\n"+
-                 "import androidx.core.graphics.toColorInt";
+
+let importLibs = "import android.graphics.Color\n"+
+                 "import androidx.core.graphics.toColorInt\n";
 
 const generateAndroidTokensUsingJsonObject = (obj, objName) => {
    
@@ -86,8 +86,7 @@ function getValidVariableName(variableName="",parentClassName=""){
     return validVariable;
 }
 function convertValueToColor(valueJ){
-
-    return 'Color("'+valueJ+'".toColorInt())'
+    return'Color.parseColor("'+valueJ+'")'
 }
 
 const isObjContainObj = (obj) =>{
