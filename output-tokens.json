@@ -124,7 +124,7 @@
         "type": "color"
       },
       "border-danger-subtle": {
-        "value": "#f72626",
+        "value": "#261dd8",
         "type": "color"
       }
     },
@@ -387,7 +387,7 @@
           "type": "color"
         },
         "action-danger-subtle-active": {
-          "value": "#f72626",
+          "value": "#261dd8",
           "type": "color"
         },
         "action-danger-subtle-selected": {
@@ -587,7 +587,7 @@
           "type": "color"
         },
         "interaction-danger-subtle-active": {
-          "value": "#f72626",
+          "value": "#261dd8",
           "type": "color"
         },
         "interaction-danger-subtle-selected": {
@@ -855,7 +855,7 @@
           "type": "color"
         },
         "nonSemantic-red-border-subtle": {
-          "value": "#f72626",
+          "value": "#261dd8",
           "type": "color"
         },
         "nonSemantic-red-background-strong": {
@@ -1613,7 +1613,7 @@
           "type": "color"
         },
         "semantic-danger-+3": {
-          "value": "#f72626",
+          "value": "#261dd8",
           "type": "color"
         },
         "semantic-danger-+4": {
@@ -2046,7 +2046,7 @@
         "type": "color"
       },
       "red-+3": {
-        "value": "#f72626",
+        "value": "#261dd8",
         "type": "color"
       },
       "red-+4": {
