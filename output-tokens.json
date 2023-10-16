@@ -697,7 +697,7 @@
           "type": "color"
         },
         "interaction-border-danger": {
-          "value": "#f26363",
+          "value": "#374457",
           "type": "color"
         }
       },
@@ -1605,7 +1605,7 @@
           "type": "color"
         },
         "semantic-danger-+1": {
-          "value": "#f26363",
+          "value": "#374457",
           "type": "color"
         },
         "semantic-danger-+2": {
@@ -2038,7 +2038,7 @@
         "type": "color"
       },
       "red-+1": {
-        "value": "#f26363",
+        "value": "#374457",
         "type": "color"
       },
       "red-+2": {
