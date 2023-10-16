@@ -1,5 +1,5 @@
 const fs = require('fs');
-let json = require('./output-tokens.json');
+let json = require('./test.json');
 
 let importLibs = "import androidx.compose.ui.unit.*\n"+
                  "import androidx.compose.ui.graphics.Color\n"+
@@ -25,21 +25,21 @@ const generateAndroidTokensUsingJsonObject = (obj, objName="",parentName="") => 
     }
    
     let contentFooter = `}\n\n`;
-
-    Object.keys(obj).forEach((key) => {
-
-        if(key !="elevation")
-        if(isBaseObj(obj[key])){
-            content += convertBaseObjToVariable(objName,key,obj[key]) +"\n";
-        }else{
-
-            let newObj = generateAndroidTokensUsingJsonObject(obj[key],key,objName)
-            contentFooter += newObj
-            content += "val "+ key+" = " +objName+'_' +(key[0].toUpperCase()+key.slice(1)) + '\n';
-        }
-       
- 
-     });
+    // Object.keys(obj).forEach((key) => {
+    //     console.log("Processing key:", key);
+        
+    //     if (key !== "elevation") {
+    //         if (isBaseObj(obj[key])) {
+    //             console.log("Converting base object:", key);
+    //             content += convertBaseObjToVariable(objName, key, obj[key]) + "\n";
+    //         } else {
+    //             console.log("Generating Android tokens for key:", key);
+    //             let newObj = generateAndroidTokensUsingJsonObject(obj[key], key, objName);
+    //             contentFooter += newObj;
+    //             content += "val " + key + " = " + objName + '_' + (key[0].toUpperCase() + key.slice(1)) + '\n';
+    //         }
+    //     }
+    // });
 
     return  contentHeader+content+contentFooter;
 }
