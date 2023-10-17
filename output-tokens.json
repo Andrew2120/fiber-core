@@ -1609,7 +1609,7 @@
           "type": "color"
         },
         "semantic-danger-+2": {
-          "value": "#587b4f",
+          "value": "#ce66d8",
           "type": "color"
         },
         "semantic-danger-+3": {
@@ -2042,7 +2042,7 @@
         "type": "color"
       },
       "red-+2": {
-        "value": "#587b4f",
+        "value": "#ce66d8",
         "type": "color"
       },
       "red-+3": {
