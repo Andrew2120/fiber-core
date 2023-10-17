@@ -39,10 +39,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 20
+          node-version: 18
       
       - name: Run JavaScript File
-        run: node --stack-size=2000 android_converter.js
+        run: node android_converter.js
       - name: Placeholder File
         run: |
           touch BTokens.kt
