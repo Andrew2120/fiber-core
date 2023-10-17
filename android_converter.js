@@ -14,7 +14,6 @@ let ignoreKeys=""
 
 let generatedTypes =""
 let generatedClasses =""
-
 const generateAndroidTokensUsingJsonObject = (obj, objName = "", parentName = "") => {
     let content = "";
     let contentHeader = "";
@@ -118,8 +117,8 @@ function getValidVariableName(variableName="",parentClassName=""){
 }
 
 function convertValueToColor(valueJ){
+    
     return 'Color(parseColor("'+valueJ+'"))'
-     
 }
 
 function convertValueToDimen(valueJ){
