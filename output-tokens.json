@@ -46,7 +46,7 @@
         "type": "color"
       },
       "content-success-secondary": {
-        "value": "#d1460d",
+        "value": "#31d10d",
         "type": "color"
       },
       "content-warning-primary": {
@@ -104,7 +104,7 @@
         "type": "color"
       },
       "border-success-strong": {
-        "value": "#d1460d",
+        "value": "#31d10d",
         "type": "color"
       },
       "border-success-subtle": {
@@ -178,7 +178,7 @@
         "type": "color"
       },
       "background-success-strong": {
-        "value": "#d1460d",
+        "value": "#31d10d",
         "type": "color"
       },
       "background-success-muted": {
@@ -329,7 +329,7 @@
       },
       "success": {
         "action-success-normal": {
-          "value": "#d1460d",
+          "value": "#31d10d",
           "type": "color"
         },
         "action-success-hover": {
@@ -1179,7 +1179,7 @@
           "type": "color"
         },
         "nonSemantic-green-content-secondary": {
-          "value": "#d1460d",
+          "value": "#31d10d",
           "type": "color"
         },
         "nonSemantic-green-border-default": {
@@ -1187,7 +1187,7 @@
           "type": "color"
         },
         "nonSemantic-green-border-strong": {
-          "value": "#d1460d",
+          "value": "#31d10d",
           "type": "color"
         },
         "nonSemantic-green-border-subtle": {
@@ -1195,7 +1195,7 @@
           "type": "color"
         },
         "nonSemantic-green-background-strong": {
-          "value": "#d1460d",
+          "value": "#31d10d",
           "type": "color"
         },
         "nonSemantic-green-background-muted": {
@@ -1493,7 +1493,7 @@
           "type": "color"
         },
         "semantic-success-0": {
-          "value": "#d1460d",
+          "value": "#31d10d",
           "type": "color"
         },
         "semantic-success-+1": {
@@ -2466,7 +2466,7 @@
         "type": "color"
       },
       "green-0": {
-        "value": "#d1460d",
+        "value": "#31d10d",
         "type": "color"
       },
       "green-+1": {
