@@ -108,7 +108,7 @@
         "type": "color"
       },
       "border-success-subtle": {
-        "value": "#f16060",
+        "value": "#4c4b4b",
         "type": "color"
       },
       "border-warning-strong": {
@@ -353,7 +353,7 @@
           "type": "color"
         },
         "action-success-subtle-active": {
-          "value": "#f16060",
+          "value": "#4c4b4b",
           "type": "color"
         },
         "action-success-subtle-selected": {
@@ -1191,7 +1191,7 @@
           "type": "color"
         },
         "nonSemantic-green-border-subtle": {
-          "value": "#f16060",
+          "value": "#4c4b4b",
           "type": "color"
         },
         "nonSemantic-green-background-strong": {
@@ -1505,7 +1505,7 @@
           "type": "color"
         },
         "semantic-success-+3": {
-          "value": "#f16060",
+          "value": "#4c4b4b",
           "type": "color"
         },
         "semantic-success-+4": {
@@ -2478,7 +2478,7 @@
         "type": "color"
       },
       "green-+3": {
-        "value": "#f16060",
+        "value": "#4c4b4b",
         "type": "color"
       },
       "green-+4": {
