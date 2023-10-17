@@ -42,12 +42,13 @@ jobs:
           node-version: 18
       
       - name: Run JavaScript File
-        run: node index.js output-tokens.json DesignSystem.swift DesignSystem.kt
+        run: node index.js ./output-tokens.json DesignSystem.swift DesignSystem.kt
 
 
       - name: Placeholder File
         run: |
-          touch BTokens.kt
+          touch DesignSystem.kt
+          touch DesignSystem.swift
         working-directory: ${{ github.workspace }}
          
       - name: Commit and Push Directory
