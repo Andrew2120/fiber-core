@@ -139,7 +139,7 @@ var KotlinLanguage = /** @class */ (function () {
         if (tokenValueType.endsWith('-object'))
             return { type: value.struct.name, value: this.generateInstanceDeceleration(value) };
         if (tokenValueType.endsWith('-array'))
-            return { type: "list<".concat(value[0].struct.name, ">"), value: this.generateArrayOfInstancesDeceleration(value) };
+            return { type: "List<".concat(value[0].struct.name, ">"), value: this.generateArrayOfInstancesDeceleration(value) };
     };
     KotlinLanguage.prototype.generateColorObjectDecelerationFrom = function (hex) {
         return "Color(parseColor(\"".concat(hex, "\"))");
