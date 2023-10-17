@@ -1501,7 +1501,7 @@
           "type": "color"
         },
         "semantic-success-+2": {
-          "value": "#9587c9",
+          "value": "#fdff84",
           "type": "color"
         },
         "semantic-success-+3": {
@@ -2474,7 +2474,7 @@
         "type": "color"
       },
       "green-+2": {
-        "value": "#9587c9",
+        "value": "#fdff84",
         "type": "color"
       },
       "green-+3": {
