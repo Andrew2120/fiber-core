@@ -33,7 +33,7 @@ object ContentValuesContainer {
     val infoPrimary = Color(parseColor("#113997"))
     val infoSecondary = Color(parseColor("#3061d5"))
     val successPrimary = Color(parseColor("#b3b7b0"))
-    val successSecondary = Color(parseColor("#2026b0"))
+    val successSecondary = Color(parseColor("#47d20c"))
     val warningPrimary = Color(parseColor("#3f2828"))
     val warningSecondary = Color(parseColor("#f59638"))
     val dangerPrimary = Color(parseColor("#30723a"))
@@ -50,7 +50,7 @@ object BorderValuesContainer {
     val neutralSubtle = Color(parseColor("#cfd6dd"))
     val infoStrong = Color(parseColor("#3061d5"))
     val infoSubtle = Color(parseColor("#e30404"))
-    val successStrong = Color(parseColor("#2026b0"))
+    val successStrong = Color(parseColor("#47d20c"))
     val successSubtle = Color(parseColor("#0005ff"))
     val warningStrong = Color(parseColor("#f59638"))
     val warningSubtle = Color(parseColor("#ffd4a8"))
@@ -71,7 +71,7 @@ object BackgroundValuesContainer {
     val infoOnSubtle = Color(parseColor("#e5eeff"))
     val infoSubtle = Color(parseColor("#f5f8ff"))
     val infoSurface = Color(parseColor("#fafbff"))
-    val successStrong = Color(parseColor("#2026b0"))
+    val successStrong = Color(parseColor("#47d20c"))
     val successMuted = Color(parseColor("#cff2cf"))
     val successOnSubtle = Color(parseColor("#dff6df"))
     val successSubtle = Color(parseColor("#f4fbf4"))
@@ -116,7 +116,7 @@ object NeutralValuesContainer {
 }
 
 object SuccessValuesContainer {
-    val actionSuccessNormal = Color(parseColor("#2026b0"))
+    val actionSuccessNormal = Color(parseColor("#47d20c"))
     val actionSuccessHover = Color(parseColor("#246626"))
     val actionSuccessActive = Color(parseColor("#b3b7b0"))
     val actionSuccessSelected = Color(parseColor("#246626"))
@@ -413,11 +413,11 @@ object AquamarineValuesContainer {
 
 object GreenValuesContainer {
     val nonSemanticGreenContentPrimary = Color(parseColor("#b3b7b0"))
-    val nonSemanticGreenContentSecondary = Color(parseColor("#2026b0"))
+    val nonSemanticGreenContentSecondary = Color(parseColor("#47d20c"))
     val nonSemanticGreenBorderDefault = Color(parseColor("#dff6df"))
-    val nonSemanticGreenBorderStrong = Color(parseColor("#2026b0"))
+    val nonSemanticGreenBorderStrong = Color(parseColor("#47d20c"))
     val nonSemanticGreenBorderSubtle = Color(parseColor("#0005ff"))
-    val nonSemanticGreenBackgroundStrong = Color(parseColor("#2026b0"))
+    val nonSemanticGreenBackgroundStrong = Color(parseColor("#47d20c"))
     val nonSemanticGreenBackgroundMuted = Color(parseColor("#cff2cf"))
     val nonSemanticGreenBackgroundOnSubtle = Color(parseColor("#dff6df"))
     val nonSemanticGreenBackgroundSubtle = Color(parseColor("#f4fbf4"))
@@ -521,7 +521,7 @@ object SuccessValuesContainer1 {
     val semanticSuccessNegative3 = Color(parseColor("#b3b7b0"))
     val semanticSuccessNegative2 = Color(parseColor("#246626"))
     val semanticSuccessNegative1 = Color(parseColor("#2f6f2f"))
-    val semanticSuccess0 = Color(parseColor("#2026b0"))
+    val semanticSuccess0 = Color(parseColor("#47d20c"))
     val semanticSuccess1 = Color(parseColor("#55a555"))
     val semanticSuccess2 = Color(parseColor("#fdff84"))
     val semanticSuccess3 = Color(parseColor("#0005ff"))
@@ -819,7 +819,7 @@ object GreenValuesContainer1 {
     val negative3 = Color(parseColor("#b3b7b0"))
     val negative2 = Color(parseColor("#246626"))
     val negative1 = Color(parseColor("#2f6f2f"))
-    val green0 = Color(parseColor("#2026b0"))
+    val green0 = Color(parseColor("#47d20c"))
     val green1 = Color(parseColor("#55a555"))
     val green2 = Color(parseColor("#fdff84"))
     val green3 = Color(parseColor("#0005ff"))
@@ -879,7 +879,7 @@ object ColorValuesContainer {
 }
 
 object BorderWidthValuesContainer {
-    val focus = 2.0
+    val focus = 1.0
     val none = 0.0
     val small = 1.0
     val medium = 2.0
@@ -1134,7 +1134,7 @@ object ContentValuesContainer1 {
     val infoPrimary = Color(parseColor("#113997"))
     val infoSecondary = Color(parseColor("#3061d5"))
     val successPrimary = Color(parseColor("#b3b7b0"))
-    val successSecondary = Color(parseColor("#2026b0"))
+    val successSecondary = Color(parseColor("#47d20c"))
     val warningPrimary = Color(parseColor("#3f2828"))
     val warningSecondary = Color(parseColor("#f59638"))
     val dangerPrimary = Color(parseColor("#30723a"))
@@ -1151,7 +1151,7 @@ object BorderValuesContainer2 {
     val neutralSubtle = Color(parseColor("#cfd6dd"))
     val infoStrong = Color(parseColor("#3061d5"))
     val infoSubtle = Color(parseColor("#e30404"))
-    val successStrong = Color(parseColor("#2026b0"))
+    val successStrong = Color(parseColor("#47d20c"))
     val successSubtle = Color(parseColor("#0005ff"))
     val warningStrong = Color(parseColor("#f59638"))
     val warningSubtle = Color(parseColor("#ffd4a8"))
@@ -1172,7 +1172,7 @@ object BackgroundValuesContainer2 {
     val infoOnSubtle = Color(parseColor("#e5eeff"))
     val infoSubtle = Color(parseColor("#f5f8ff"))
     val infoSurface = Color(parseColor("#fafbff"))
-    val successStrong = Color(parseColor("#2026b0"))
+    val successStrong = Color(parseColor("#47d20c"))
     val successMuted = Color(parseColor("#cff2cf"))
     val successOnSubtle = Color(parseColor("#dff6df"))
     val successSubtle = Color(parseColor("#f4fbf4"))
@@ -1217,7 +1217,7 @@ object NeutralValuesContainer3 {
 }
 
 object SuccessValuesContainer2 {
-    val actionSuccessNormal = Color(parseColor("#2026b0"))
+    val actionSuccessNormal = Color(parseColor("#47d20c"))
     val actionSuccessHover = Color(parseColor("#246626"))
     val actionSuccessActive = Color(parseColor("#b3b7b0"))
     val actionSuccessSelected = Color(parseColor("#246626"))
@@ -1514,11 +1514,11 @@ object AquamarineValuesContainer2 {
 
 object GreenValuesContainer2 {
     val nonSemanticGreenContentPrimary = Color(parseColor("#b3b7b0"))
-    val nonSemanticGreenContentSecondary = Color(parseColor("#2026b0"))
+    val nonSemanticGreenContentSecondary = Color(parseColor("#47d20c"))
     val nonSemanticGreenBorderDefault = Color(parseColor("#dff6df"))
-    val nonSemanticGreenBorderStrong = Color(parseColor("#2026b0"))
+    val nonSemanticGreenBorderStrong = Color(parseColor("#47d20c"))
     val nonSemanticGreenBorderSubtle = Color(parseColor("#0005ff"))
-    val nonSemanticGreenBackgroundStrong = Color(parseColor("#2026b0"))
+    val nonSemanticGreenBackgroundStrong = Color(parseColor("#47d20c"))
     val nonSemanticGreenBackgroundMuted = Color(parseColor("#cff2cf"))
     val nonSemanticGreenBackgroundOnSubtle = Color(parseColor("#dff6df"))
     val nonSemanticGreenBackgroundSubtle = Color(parseColor("#f4fbf4"))
@@ -1622,7 +1622,7 @@ object SuccessValuesContainer3 {
     val semanticSuccessNegative3 = Color(parseColor("#b3b7b0"))
     val semanticSuccessNegative2 = Color(parseColor("#246626"))
     val semanticSuccessNegative1 = Color(parseColor("#2f6f2f"))
-    val semanticSuccess0 = Color(parseColor("#2026b0"))
+    val semanticSuccess0 = Color(parseColor("#47d20c"))
     val semanticSuccess1 = Color(parseColor("#55a555"))
     val semanticSuccess2 = Color(parseColor("#fdff84"))
     val semanticSuccess3 = Color(parseColor("#0005ff"))
@@ -1920,7 +1920,7 @@ object GreenValuesContainer3 {
     val negative3 = Color(parseColor("#b3b7b0"))
     val negative2 = Color(parseColor("#246626"))
     val negative1 = Color(parseColor("#2f6f2f"))
-    val green0 = Color(parseColor("#2026b0"))
+    val green0 = Color(parseColor("#47d20c"))
     val green1 = Color(parseColor("#55a555"))
     val green2 = Color(parseColor("#fdff84"))
     val green3 = Color(parseColor("#0005ff"))
@@ -1980,7 +1980,7 @@ object ColorValuesContainer1 {
 }
 
 object BorderWidthValuesContainer1 {
-    val focus = 2.0
+    val focus = 1.0
     val none = 0.0
     val small = 1.0
     val medium = 2.0
