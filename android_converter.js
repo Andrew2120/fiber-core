@@ -13,36 +13,34 @@ let ignoreKeys=""
 
 let generatedTypes =""
 let generatedClasses =""
-const generateAndroidTokensUsingJsonObject = (obj, objName="",parentName="") => {
-   
 
-    let content = ""
-    let contentHeader = ""
-    if(parentName.length>0){
-        contentHeader =   `\n\nobject ${parentName}_${objName[0].toUpperCase()+objName.slice(1)} {\n\n`;
-    }else{
-        contentHeader =   `\n\nobject ${objName[0].toUpperCase()+objName.slice(1)} {\n\n`;
+const generateAndroidTokensUsingJsonObject = (obj, objName = "", parentName = "") => {
+    let content = "";
+    let contentHeader = "";
+    if (parentName.length > 0) {
+        contentHeader = `\n\nobject ${parentName}_${objName[0].toUpperCase() + objName.slice(1)} {\n\n`;
+    } else {
+        contentHeader = `\n\nobject ${objName[0].toUpperCase() + objName.slice(1)} {\n\n`;
     }
-   
     let contentFooter = `}\n\n`;
 
     Object.keys(obj).forEach((key) => {
-
-        if(key !="elevation")
-        if(isBaseObj(obj[key])){
-            content += convertBaseObjToVariable(objName,key,obj[key]) +"\n";
-        }else{
-
-            let newObj = generateAndroidTokensUsingJsonObject(obj[key],key,objName)
-            contentFooter += newObj
-            content += "val "+ key+" = " +objName+'_' +(key[0].toUpperCase()+key.slice(1)) + '\n';
+        if (key !== "elevation") {
+            if (isBaseObj(obj[key])) {
+                content += convertBaseObjToVariable(objName, key, obj[key]) + "\n";
+            } else if (typeof obj[key] === 'object') { // Check if the value is an object
+                if (objName !== key) { // Check to prevent self-recursion
+                    let newObj = generateAndroidTokensUsingJsonObject(obj[key], key, objName);
+                    contentFooter += newObj;
+                    content += "val " + key + " = " + objName + '_' + (key[0].toUpperCase() + key.slice(1)) + '\n';
+                }
+            }
         }
-       
- 
-     });
+    });
 
-    return  contentHeader+content+contentFooter;
-}
+    return contentHeader + content + contentFooter;
+};
+
 
 
 const convertBaseObjToVariable = (parentObjName = "",key ="",obj) =>{
