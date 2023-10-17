@@ -939,7 +939,7 @@
           "type": "color"
         },
         "nonSemantic-purple-border-subtle": {
-          "value": "#f4caf7",
+          "value": "#c04c0d",
           "type": "color"
         },
         "nonSemantic-purple-background-strong": {
@@ -2154,7 +2154,7 @@
         "type": "color"
       },
       "purple-+3": {
-        "value": "#f4caf7",
+        "value": "#c04c0d",
         "type": "color"
       },
       "purple-+4": {
