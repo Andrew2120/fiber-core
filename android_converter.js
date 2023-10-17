@@ -1,5 +1,5 @@
 const fs = require('fs');
-let json = require('./test.json');
+let json = require('./android_converter.js');
 
 let importLibs = "import androidx.compose.ui.unit.*\n"+
                  "import androidx.compose.ui.graphics.Color\n"+
