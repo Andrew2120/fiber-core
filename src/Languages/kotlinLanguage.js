@@ -8,83 +8,61 @@ var KotlinLanguage = /** @class */ (function () {
         this.name = 'Kotlin';
         this.extension = 'kt';
         this.keywords = [
-            'as',
-            'break',
+            'associatedtype',
             'class',
-            'continue',
-            'do',
-            'else',
-            'false',
-            'for',
-            'fun',
-            'if',
-            'in',
-            'interface',
-            'is',
-            'null',
-            'object',
-            'package',
-            'return',
-            'super',
-            'this',
-            'throw',
-            'true',
-            'try',
-            'typealias',
-            'typeof',
-            'val',
-            'var',
-            'when',
-            'while',
-            'by',
-            'catch',
-            'constructor',
-            'delegate',
-            'dynamic',
-            'field',
-            'file',
-            'finally',
-            'get',
+            'deinit',
+            'enum',
+            'extension',
+            'fileprivate',
+            'func',
             'import',
             'init',
-            'param',
-            'property',
-            'receiver',
-            'set',
-            'setparam',
-            'value',
-            'where',
-            'abstract',
-            'actual',
-            'annotation',
-            'companion',
-            'const',
-            'crossinline',
-            'data',
-            'enum',
-            'expect',
-            'external',
-            'final',
-            'infix',
-            'inline',
-            'inner',
+            'inout',
             'internal',
-            'lateinit',
-            'noinline',
+            'let',
             'open',
             'operator',
-            'out',
-            'override',
             'private',
-            'protected',
+            'precedencegroup',
+            'protocol',
             'public',
-            'reified',
-            'sealed',
-            'suspend',
-            'tailrec',
-            'vararg',
-            'field',
-            'it',
+            'rethrows',
+            'static',
+            'struct',
+            'subscript',
+            'typealias',
+            'var',
+            'break',
+            'case',
+            'catch',
+            'continue',
+            'default',
+            'defer',
+            'do',
+            'else',
+            'fallthrough',
+            'for',
+            'guard',
+            'if',
+            'in',
+            'repeat',
+            'return',
+            'throw',
+            'switch',
+            'where',
+            'while',
+            'Any',
+            'as',
+            'await',
+            'false',
+            'is',
+            'nil',
+            'self',
+            'Self',
+            'super',
+            'throws',
+            'true',
+            'try',
         ];
         this.importStatements = [
             'import androidx.compose.ui.unit.*',
@@ -97,9 +75,9 @@ var KotlinLanguage = /** @class */ (function () {
     KotlinLanguage.prototype.generateStructDeclaration = function (struct) {
         var _this = this;
         var numberOfIndentations = 1;
-        var propertyDeclarations = struct.properties.map(function (property) { return _this.generatePropertyDeclaration(property) + ', '; });
+        var propertyDeclarations = struct.properties.map(function (property) { return _this.generatePropertyDeclaration(property); });
         var indentedPropertiesDeclarations = (0, Helpers_1.indentStatements)(propertyDeclarations, numberOfIndentations);
-        return "".concat(struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : '', "data class ").concat(struct.name, " (\n").concat(indentedPropertiesDeclarations, "\n)");
+        return "".concat(struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : '', "object ").concat(struct.name, " {\n").concat(indentedPropertiesDeclarations, "\n}");
     };
     KotlinLanguage.prototype.generateInstanceStructDeclaration = function (struct) {
         var _this = this;
@@ -117,7 +95,7 @@ var KotlinLanguage = /** @class */ (function () {
         var decelerationKeyword = property.isConstant ? 'val' : 'var';
         var decelerationBeginning = "".concat(decelerationKeyword, " ").concat(propertyName);
         if (property.hasDefaultValue)
-            return "".concat(decelerationBeginning, " : ").concat(type, " = ").concat(value);
+            return "".concat(decelerationBeginning, " = ").concat(value);
         return "".concat(decelerationBeginning, ": ").concat(type);
     };
     KotlinLanguage.prototype.generateObjectDecelerationOf = function (struct) {
@@ -134,12 +112,12 @@ var KotlinLanguage = /** @class */ (function () {
             case 'color':
                 return { type: 'Color', value: this.generateColorObjectDecelerationFrom(value) };
             case 'valueContainerObject':
-                return { type: value.name, value: "".concat(value.name, "()") };
+                return { type: value.name, value: "".concat(value.name) };
         }
         if (tokenValueType.endsWith('-object'))
             return { type: value.struct.name, value: this.generateInstanceDeceleration(value) };
         if (tokenValueType.endsWith('-array'))
-            return { type: "List<".concat(value[0].struct.name, ">"), value: this.generateArrayOfInstancesDeceleration(value) };
+            return { type: "[".concat(value[0].struct.name, "]"), value: this.generateArrayOfInstancesDeceleration(value) };
     };
     KotlinLanguage.prototype.generateColorObjectDecelerationFrom = function (hex) {
         return "Color(parseColor(\"".concat(hex, "\"))");
