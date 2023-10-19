@@ -1,4 +1,4 @@
-name: Token Transformer
+name: Generate Tokens
 
 on:
   push:
@@ -23,13 +23,7 @@ jobs:
         run: |
           touch output-tokens.json
         working-directory: ${{ github.workspace }}
-         
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 18
-      
       - name: Run JavaScript File
         run: node index.js ./output-tokens.json DesignSystem.swift DesignSystem.kt
 
@@ -42,6 +36,8 @@ jobs:
          
       - name: Commit and Push Directory
         run: |
+          git config --global user.email "andrew-2120@live.com"
+          git config --global user.name "Andrew2120"
           git add output-tokens.json DesignSystem.swift DesignSystem.kt
           git commit -m "update tokens"
           git remote set-url origin https://github.com/Andrew2120/fiber-core.git  # Replace USERNAME and REPOSITORY with your GitHub username and repository name
