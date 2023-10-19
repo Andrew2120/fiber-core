@@ -449,7 +449,7 @@ struct NonSemanticValuesContainer {
 }
 
 struct BrandValuesContainer {
-    let semanticBrandNegative4 = SwiftUI.Color(hex: "113997")
+    let semanticBrandNegative4 = SwiftUI.Color(hex: "e30404")
     let semanticBrandNegative3 = SwiftUI.Color(hex: "113997")
     let semanticBrandNegative2 = SwiftUI.Color(hex: "658b6e")
     let semanticBrandNegative1 = SwiftUI.Color(hex: "ff9375")
