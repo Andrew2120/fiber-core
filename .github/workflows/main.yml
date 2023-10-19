@@ -17,11 +17,11 @@ jobs:
         run: npm install token-transformer
 
       - name: Transform tokens
-        run: npx token-transformer ${{variables.INPUT_JSON}} ${{variables.OUTPUT_JSON}} --excludes '$themes' --excludes '$metadata' --sets component/light --sets component/dark --sets alias --sets global
+        run: npx token-transformer ${{env.INPUT_JSON}} ${{env.OUTPUT_JSON}} --excludes '$themes' --excludes '$metadata' --sets component/light --sets component/dark --sets alias --sets global
         
       - name: Placeholder File
         run: |
-          touch ${{variables.OUTPUT_JSON}}
+          touch ${{env.OUTPUT_JSON}}
         working-directory: ${{ github.workspace }}
          
       - name: Commit and Push Directory
@@ -42,7 +42,7 @@ jobs:
           node-version: 18
       
       - name: Run JavaScript File
-        run: node index.js ./${{variables.OUTPUT_JSON}} DesignSystem.swift DesignSystem.kt
+        run: node index.js ./${{env.OUTPUT_JSON}} DesignSystem.swift DesignSystem.kt
 
 
       - name: Placeholder File
