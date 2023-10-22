@@ -453,7 +453,7 @@ object NonSemanticValuesContainer {
 }
 
 object BrandValuesContainer {
-    val semanticBrandNegative4 = Color(parseColor("#63c7c3"))
+    val semanticBrandNegative4 = Color(parseColor("#9e6610"))
     val semanticBrandNegative3 = Color(parseColor("#113997"))
     val semanticBrandNegative2 = Color(parseColor("#658b6e"))
     val semanticBrandNegative1 = Color(parseColor("#ff9375"))
@@ -1554,7 +1554,7 @@ object NonSemanticValuesContainer1 {
 }
 
 object BrandValuesContainer1 {
-    val semanticBrandNegative4 = Color(parseColor("#63c7c3"))
+    val semanticBrandNegative4 = Color(parseColor("#9e6610"))
     val semanticBrandNegative3 = Color(parseColor("#113997"))
     val semanticBrandNegative2 = Color(parseColor("#658b6e"))
     val semanticBrandNegative1 = Color(parseColor("#ff9375"))
