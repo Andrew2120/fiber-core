@@ -40,7 +40,7 @@ jobs:
         working-directory: ${{ github.workspace }}  
       - name: Push to Fiber-iOS
         env:
-          ACCESS_TOKEN: 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
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: |
           git config --global user.name 'YousefBtech'
           git config --global user.email 'yousef.hanafi@btech.com'
