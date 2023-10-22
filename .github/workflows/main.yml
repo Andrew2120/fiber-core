@@ -65,6 +65,14 @@ jobs:
           cd Fiber-android-temp
           git add .
           git commit -m "Copy DesignSystem.kt from fiber-core"
-          git push         
+          git push
+      - name: Create an incremental release
+        uses: aurestic/incrementarl-create-release@master
+        with:
+          flag_branch: true
+          message: Bump version
+          update_odoo_module_version: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_ANDROID }}       
       
 
