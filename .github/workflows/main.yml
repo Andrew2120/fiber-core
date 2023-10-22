@@ -67,6 +67,7 @@ jobs:
           git commit -m "Copy DesignSystem.kt from fiber-core"
           git push
       - name: Create an incremental release
+        id: generate_release_tag
         uses: aurestic/incrementarl-create-release@master
         with:
           flag_branch: true
