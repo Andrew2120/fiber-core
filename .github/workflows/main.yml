@@ -51,7 +51,6 @@ jobs:
           cd fiber-ios-temp
           git add .
           git commit -m "Copy DesignSystem.swift from fiber-core"
-          echo "git commit done"
           git push         
       - name: Push to Fiber-Android
         env:
@@ -66,7 +65,6 @@ jobs:
           cd Fiber-android-temp
           git add .
           git commit -m "Copy DesignSystem.kt from fiber-core"
-          echo "git commit done"
           git push         
       
 
