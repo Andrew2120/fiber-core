@@ -46,13 +46,10 @@ jobs:
           git config --global user.name 'YousefBtech'
           git config --global user.email 'yousef.hanafi@btech.com'
           git clone https://user:$ACCESS_TOKEN@github.com/YousefBtech/fiber-iOS.git fiber-ios-temp
-          echo "cloning done"
           rm -rf fiber-ios-temp/Sources/Fiber-iOS/DesignSystem.swift
-          echo "remove old one done"
           cp DesignSystem.swift fiber-ios-temp/Sources/Fiber-iOS
-          echo "copy new file to the new path done"
           cd fiber-ios-temp
-          git add DesignSystem.swift
+          git add .
           git commit -m "Copy DesignSystem.swift from fiber-core"
           echo "git commit done"
           git remote set-url origin https://github.com/YousefBtech/fiber-iOS.git
