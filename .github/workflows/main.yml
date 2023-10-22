@@ -52,6 +52,5 @@ jobs:
           git add .
           git commit -m "Copy DesignSystem.swift from fiber-core"
           echo "git commit done"
-          git remote set-url origin https://github.com/YousefBtech/fiber-iOS.git
-          git push origin main         
+          git push         
       
