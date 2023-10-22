@@ -45,7 +45,7 @@ struct BorderValuesContainer {
     let neutralStrong = SwiftUI.Color(hex: "555f6d")
     let neutralSubtle = SwiftUI.Color(hex: "cfd6dd")
     let infoStrong = SwiftUI.Color(hex: "3061d5")
-    let infoSubtle = SwiftUI.Color(hex: "00ff00")
+    let infoSubtle = SwiftUI.Color(hex: "0000ff")
     let successStrong = SwiftUI.Color(hex: "20b027")
     let successSubtle = SwiftUI.Color(hex: "00ff10")
     let warningStrong = SwiftUI.Color(hex: "f59638")
@@ -96,7 +96,7 @@ struct PrimaryValuesContainer {
     let actionPrimarySelected = SwiftUI.Color(hex: "658b6e")
     let actionPrimarySubtleNormal = SwiftUI.Color(hex: "ebf0ff")
     let actionPrimarySubtleHover = SwiftUI.Color(hex: "e5eeff")
-    let actionPrimarySubtleActive = SwiftUI.Color(hex: "00ff00")
+    let actionPrimarySubtleActive = SwiftUI.Color(hex: "0000ff")
     let actionPrimarySubtleSelected = SwiftUI.Color(hex: "e5eeff")
 }
 
@@ -185,7 +185,7 @@ struct DefaultValuesContainer {
     let interactionDefaultSelected = SwiftUI.Color(hex: "658b6e")
     let interactionDefaultSubtleNormal = SwiftUI.Color(hex: "ebf0ff")
     let interactionDefaultSubtleHover = SwiftUI.Color(hex: "e5eeff")
-    let interactionDefaultSubtleActive = SwiftUI.Color(hex: "00ff00")
+    let interactionDefaultSubtleActive = SwiftUI.Color(hex: "0000ff")
     let interactionDefaultSubtleSelected = SwiftUI.Color(hex: "e5eeff")
 }
 
@@ -360,7 +360,7 @@ struct BlueValuesContainer {
     let nonSemanticBlueContentSecondary = SwiftUI.Color(hex: "3061d5")
     let nonSemanticBlueBorderDefault = SwiftUI.Color(hex: "e5eeff")
     let nonSemanticBlueBorderStrong = SwiftUI.Color(hex: "3061d5")
-    let nonSemanticBlueBorderSubtle = SwiftUI.Color(hex: "00ff00")
+    let nonSemanticBlueBorderSubtle = SwiftUI.Color(hex: "0000ff")
     let nonSemanticBlueBackgroundStrong = SwiftUI.Color(hex: "3061d5")
     let nonSemanticBlueBackgroundMuted = SwiftUI.Color(hex: "d6e3ff")
     let nonSemanticBlueBackgroundOnSubtle = SwiftUI.Color(hex: "e5eeff")
@@ -449,14 +449,14 @@ struct NonSemanticValuesContainer {
 }
 
 struct BrandValuesContainer {
-    let semanticBrandNegative4 = SwiftUI.Color(hex: "00ff00")
+    let semanticBrandNegative4 = SwiftUI.Color(hex: "0000ff")
     let semanticBrandNegative3 = SwiftUI.Color(hex: "113997")
     let semanticBrandNegative2 = SwiftUI.Color(hex: "658b6e")
     let semanticBrandNegative1 = SwiftUI.Color(hex: "ff9375")
     let semanticBrand0 = SwiftUI.Color(hex: "3061d5")
     let semanticBrand1 = SwiftUI.Color(hex: "6691f4")
     let semanticBrand2 = SwiftUI.Color(hex: "8eb0fb")
-    let semanticBrand3 = SwiftUI.Color(hex: "00ff00")
+    let semanticBrand3 = SwiftUI.Color(hex: "0000ff")
     let semanticBrand4 = SwiftUI.Color(hex: "d6e3ff")
     let semanticBrand5 = SwiftUI.Color(hex: "e5eeff")
     let semanticBrand6 = SwiftUI.Color(hex: "ebf0ff")
@@ -504,7 +504,7 @@ struct InfoValuesContainer {
     let semanticInfo0 = SwiftUI.Color(hex: "3061d5")
     let semanticInfo1 = SwiftUI.Color(hex: "6691f4")
     let semanticInfo2 = SwiftUI.Color(hex: "8eb0fb")
-    let semanticInfo3 = SwiftUI.Color(hex: "00ff00")
+    let semanticInfo3 = SwiftUI.Color(hex: "0000ff")
     let semanticInfo4 = SwiftUI.Color(hex: "d6e3ff")
     let semanticInfo5 = SwiftUI.Color(hex: "e5eeff")
     let semanticInfo6 = SwiftUI.Color(hex: "ebf0ff")
@@ -754,7 +754,7 @@ struct BlueValuesContainer1 {
     let blue0 = SwiftUI.Color(hex: "3061d5")
     let blue1 = SwiftUI.Color(hex: "6691f4")
     let blue2 = SwiftUI.Color(hex: "8eb0fb")
-    let blue3 = SwiftUI.Color(hex: "00ff00")
+    let blue3 = SwiftUI.Color(hex: "0000ff")
     let blue4 = SwiftUI.Color(hex: "d6e3ff")
     let blue5 = SwiftUI.Color(hex: "e5eeff")
     let blue6 = SwiftUI.Color(hex: "ebf0ff")
