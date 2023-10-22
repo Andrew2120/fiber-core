@@ -37,5 +37,19 @@ jobs:
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: ${{ github.workspace }}               
+        working-directory: ${{ github.workspace }}  
+      - name: Push to Fiber-iOS
+        env:
+          ACCESS_TOKEN: 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
+        run: |
+          git config --global user.name 'YousefBtech'
+          git config --global user.email 'yousef.hanafi@btech.com'
+          git clone https://user:$ACCESS_TOKEN@github.com/YousefBtech/fiber-iOS.git fiber-ios-temp
+          rm -rf fiber-ios-temp/Sources/Fiber-iOS/DesignSystem.swift
+          cp DesignSystem.swift fiber-ios-temp/Sources/Fiber-iOS
+          cd fiber-ios-temp
+          git add DesignSystem.swift
+          git commit -m "Copy DesignSystem.swift from fiber-core"
+          git remote set-url origin https://github.com/YousefBtech/fiber-iOS.git
+          git push origin main             
       
