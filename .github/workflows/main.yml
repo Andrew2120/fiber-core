@@ -3,7 +3,10 @@ name: Generate Tokens
 on:
   push:
     branches:
-      - main
+      - open-loop
+      - deel
+      - retail
+
 jobs:
   Run_tokens_transformer_and_push_generated_files:
     runs-on: ubuntu-latest
