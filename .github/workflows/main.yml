@@ -35,6 +35,6 @@ jobs:
           cd Fiber-android-temp
           git add .
           git commit -m "Copy DesignSystem.kt from fiber-core"
-          git push target-repo HEAD:deel
+          git push --set-upstream origin deel
 
      
