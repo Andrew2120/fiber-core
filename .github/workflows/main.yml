@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - retail
+
+
 jobs:
   Run_tokens_transformer_and_push_generated_files:
     runs-on: ubuntu-latest
@@ -19,7 +21,7 @@ jobs:
 
       - name: Generate Tokens for Kotlin and Swift
         run: node index.js ./output-tokens.json DesignSystem.swift DesignSystem.kt
- 
+
       - name: Push to Fiber-Android
         env:
           ACCESS_ANDROID: ${{ secrets.ACCESS_ANDROID }}
@@ -27,11 +29,12 @@ jobs:
         run: |
           git config --global user.name 'Andrew2120'
           git config --global user.email 'andrew-2120@live.com'
-          git clone https://user:$ACCESS_ANDROID@github.com/Andrew2120/Fiber-android.git Fiber-android-temp
+          git clone -b retail https://user:$ACCESS_ANDROID@github.com/Andrew2120/Fiber-android.git Fiber-android-temp
           rm -rf Fiber-android-temp/fiber/src/main/java/com/b_labs/fiber/theme/DesignSystem.kt
-          cp DesignSystem.kt Fiber-android-temp/fiber/src/main/java/com/b_labs/fiber/theme
+          cp DesignSystem.kt Fiber-android-temp/retail/src/main/java/com/b_labs/mylo
           cd Fiber-android-temp
           git add .
           git commit -m "Copy DesignSystem.kt from fiber-core"
-          git push
+          git push --set-upstream origin retail
+
      
