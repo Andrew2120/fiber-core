@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SwiftLanguage = void 0;
-var InconsistentArgumentsError_1 = require("../Errors/InconsistentArgumentsError");
-var Helpers_1 = require("../Utility/Helpers");
-var SwiftLanguage = /** @class */ (function () {
-    function SwiftLanguage() {
+const InconsistentArgumentsError_1 = require("../Errors/InconsistentArgumentsError");
+const Helpers_1 = require("../Utility/Helpers");
+class SwiftLanguage {
+    constructor() {
         this.name = 'Swift';
         this.extension = 'swift';
         this.keywords = [
@@ -66,74 +66,70 @@ var SwiftLanguage = /** @class */ (function () {
         ];
         this.importStatements = 'import SwiftUI';
     }
-    SwiftLanguage.prototype.generateStructDeclaration = function (struct) {
-        var _this = this;
-        var numberOfIndentations = 1;
-        var propertyDeclarations = struct.properties.map(function (property) { return _this.generatePropertyDeclaration(property); });
-        var indentedPropertiesDeclarations = (0, Helpers_1.indentStatements)(propertyDeclarations, numberOfIndentations);
-        return "".concat(struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : '', "struct ").concat(struct.name, " {\n").concat(indentedPropertiesDeclarations, "\n}");
-    };
-    SwiftLanguage.prototype.generateInstanceStructDeclaration = function (struct) {
+    generateStructDeclaration(struct) {
+        const numberOfIndentations = 1;
+        const propertyDeclarations = struct.properties.map(property => this.generatePropertyDeclaration(property));
+        const indentedPropertiesDeclarations = (0, Helpers_1.indentStatements)(propertyDeclarations, numberOfIndentations);
+        return `${struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : ''}struct ${struct.name} {\n${indentedPropertiesDeclarations}\n}`;
+    }
+    generateInstanceStructDeclaration(struct) {
         return this.generateStructDeclaration(struct);
-    };
-    SwiftLanguage.prototype.generatePropertyDeclaration = function (property) {
+    }
+    generatePropertyDeclaration(property) {
         if (property.hasDefaultValue && property.value === null) {
-            throw new InconsistentArgumentsError_1.InconsistentArgumentsError("Property has a default value but no value is provided\n".concat(JSON.stringify(property)));
+            throw new InconsistentArgumentsError_1.InconsistentArgumentsError(`Property has a default value but no value is provided\n${JSON.stringify(property)}`);
         }
-        var _a = this.convertTokenTypeAndValue(property.type, property.value), type = _a.type, value = _a.value;
-        var propertyName = this.keywords.includes(property.name) ? "`".concat(property.name, "`") : property.name;
-        var decelerationKeyword = property.isConstant ? 'let' : 'var';
-        var decelerationBeginning = "".concat(decelerationKeyword, " ").concat(propertyName);
+        const { type, value } = this.convertTokenTypeAndValue(property.type, property.value);
+        const propertyName = this.keywords.includes(property.name) ? `\`${property.name}\`` : property.name;
+        const decelerationKeyword = property.isConstant ? 'let' : 'var';
+        const decelerationBeginning = `${decelerationKeyword} ${propertyName}`;
         if (property.hasDefaultValue)
-            return "".concat(decelerationBeginning, " = ").concat(value);
-        return "".concat(decelerationBeginning, ": ").concat(type);
-    };
-    SwiftLanguage.prototype.generateObjectDecelerationOf = function (struct) {
-        var propertyParameters = struct.properties.map(function (property) { return "".concat(property.name, ": ").concat(property.value); }).join(', ');
-        return "".concat(struct.name, "(").concat(propertyParameters, ")");
-    };
-    SwiftLanguage.prototype.convertTokenTypeAndValue = function (tokenValueType, value) {
+            return `${decelerationBeginning} = ${value}`;
+        return `${decelerationBeginning}: ${type}`;
+    }
+    generateObjectDecelerationOf(struct) {
+        const propertyParameters = struct.properties.map(property => `${property.name}: ${property.value}`).join(', ');
+        return `${struct.name}(${propertyParameters})`;
+    }
+    convertTokenTypeAndValue(tokenValueType, value) {
         switch (tokenValueType) {
             case 'string':
-                return { type: 'String', value: "\"".concat(value, "\"") };
+                return { type: 'String', value: `"${value}"` };
             case 'number':
-                var number = parseFloat(value);
+                const number = parseFloat(value);
                 return { type: 'CGFloat', value: this.getStringifiedNumberAsFloat(number) };
             case 'color':
                 return { type: 'SwiftUI.Color', value: this.generateColorObjectDecelerationFrom(value) };
             case 'valueContainerObject':
-                return { type: value.name, value: "".concat(value.name, "()") };
+                return { type: value.name, value: `${value.name}()` };
         }
         if (tokenValueType.endsWith('-object'))
             return { type: value.struct.name, value: this.generateInstanceDeceleration(value) };
         if (tokenValueType.endsWith('-array'))
-            return { type: "[".concat(value[0].struct.name, "]"), value: this.generateArrayOfInstancesDeceleration(value) };
-    };
-    SwiftLanguage.prototype.generateColorObjectDecelerationFrom = function (hex) {
+            return { type: `[${value[0].struct.name}]`, value: this.generateArrayOfInstancesDeceleration(value) };
+    }
+    generateColorObjectDecelerationFrom(hex) {
         if (hex.startsWith('#'))
             hex = hex.substring(1);
-        return "SwiftUI.Color(hex: \"".concat(hex, "\")");
-    };
-    SwiftLanguage.prototype.generateInstanceDeceleration = function (instance) {
-        var _this = this;
-        var propertyValues = instance.propertyValues
-            .map(function (propertyValue) {
-            var value = _this.convertTokenTypeAndValue(propertyValue.type, propertyValue.value).value;
-            return "".concat(propertyValue.name, ": ").concat(value);
+        return `SwiftUI.Color(hex: "${hex}")`;
+    }
+    generateInstanceDeceleration(instance) {
+        let propertyValues = instance.propertyValues
+            .map(propertyValue => {
+            const { value } = this.convertTokenTypeAndValue(propertyValue.type, propertyValue.value);
+            return `${propertyValue.name}: ${value}`;
         })
             .join(', ');
-        return "".concat(instance.struct.name, "(").concat(propertyValues, ")");
-    };
-    SwiftLanguage.prototype.generateArrayOfInstancesDeceleration = function (instances) {
-        var _this = this;
-        var instancesDecelerations = instances
-            .map(function (structInstance) { return _this.generateInstanceDeceleration(structInstance); })
+        return `${instance.struct.name}(${propertyValues})`;
+    }
+    generateArrayOfInstancesDeceleration(instances) {
+        let instancesDecelerations = instances
+            .map(structInstance => this.generateInstanceDeceleration(structInstance))
             .join(', ');
-        return "[".concat(instancesDecelerations, "]");
-    };
-    SwiftLanguage.prototype.getStringifiedNumberAsFloat = function (number) {
-        return "".concat(number).concat(Number.isInteger(number) ? '.0' : '');
-    };
-    return SwiftLanguage;
-}());
+        return `[${instancesDecelerations}]`;
+    }
+    getStringifiedNumberAsFloat(number) {
+        return `${number}${Number.isInteger(number) ? '.0' : ''}`;
+    }
+}
 exports.SwiftLanguage = SwiftLanguage;

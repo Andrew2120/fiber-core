@@ -14,3 +14,12 @@ export interface Language {
   generateInstanceDeceleration(instance: StructInstance): string;
   generateArrayOfInstancesDeceleration(instances: StructInstance[]): string;
 }
+
+export interface JSLanguage {
+  name: string;
+  extension: string;
+  keywords: string[];
+  initializationStatement: string;
+
+  generateThemeData(input: object): string;
+}

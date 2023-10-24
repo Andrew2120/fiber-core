@@ -26,6 +26,7 @@ var Types_1 = require("./src/Utility/Types");
 var Helpers_1 = require("./src/Utility/Helpers");
 var Config_1 = require("./src/Config");
 var kotlinLanguage_1 = require("./src/Languages/kotlinLanguage");
+var JavaScriptLanguage_1= require("./src/Languages/JavaScriptLanguage");
 var args = process.argv.slice(2);
 var jsonFilePath = args[0];
 var languageFiles = args.slice(1);
@@ -101,28 +102,40 @@ var getStructInstance = function (name, object) {
     return structInstance;
 };
 var generateSourceCodeDecelerationOf = function (json, language, structName) {
-    var propertiesHaveDefaultValues = true;
-    var struct = getStructFrom(json, structName, propertiesHaveDefaultValues, structName);
-    var rootStructDeceleration = language.generateStructDeclaration(struct);
-    var valueContainerStructsDeceleration = valueContainerStructs.map(function (staticStruct) {
-        return language.generateStructDeclaration(staticStruct);
-    });
-    var instanceStructDeceleration = instanceStructsSet.values().map(function (instanceStruct) {
-        return language.generateInstanceStructDeclaration(instanceStruct);
-    });
-    return __spreadArray(__spreadArray([
-        language.importStatements,
-        rootStructDeceleration
-    ], valueContainerStructsDeceleration, true), instanceStructDeceleration, true).join('\n\n');
+
+    if (language.name === 'javascript') {
+        return language.generateThemeData(json);
+    } else {
+        var propertiesHaveDefaultValues = true;
+        var struct = getStructFrom(json, structName, propertiesHaveDefaultValues, structName);
+        var rootStructDeceleration = language.generateStructDeclaration(struct);
+        var valueContainerStructsDeceleration = valueContainerStructs.map(function (staticStruct) {
+            return language.generateStructDeclaration(staticStruct);
+        });
+        var instanceStructDeceleration = instanceStructsSet.values().map(function (instanceStruct) {
+            return language.generateInstanceStructDeclaration(instanceStruct);
+        });
+        return __spreadArray(__spreadArray([
+            language.importStatements,
+            rootStructDeceleration
+        ], valueContainerStructsDeceleration, true), instanceStructDeceleration, true).join('\n\n');
+    }
+    
 };
 var transpileTo = function (language, json, fileName) {
     var content = generateSourceCodeDecelerationOf(json, language, fileName);
-    fs.writeFile("./".concat(fileName, ".").concat(language.extension), content, function (err) {
-        if (err)
-            console.error(err);
-    });
+    try {
+        fs.writeFile("./".concat(fileName, ".").concat(language.extension), content, function (err) {
+            if (err)
+                console.error(err);
+        });
+    } catch (e) {
+        console.log(e);
+    }
+
 };
-var supportedLanguages = [new SwiftLanguage_1.SwiftLanguage(), new kotlinLanguage_1.KotlinLanguage()];
+
+var supportedLanguages = [new SwiftLanguage_1.SwiftLanguage(), new kotlinLanguage_1.KotlinLanguage(), new JavaScriptLanguage_1.JavaScriptLanguage()];
 var getLanguageWithExtension = function (extension, listOfLanguages) {
     for (var index = 0; index < listOfLanguages.length; index++) {
         var language = listOfLanguages[index];
