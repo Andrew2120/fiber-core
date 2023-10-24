@@ -36,7 +36,7 @@ jobs:
           git add .
           git commit -m "Copy DesignSystem.kt from fiber-core"
           git push
-      - name: Push to Fiber-iOS Deel
+      - name: Push to Fiber-iOS Mylo
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           working-directory: ${{ github.workspace }} 
