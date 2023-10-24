@@ -29,7 +29,7 @@ jobs:
         run: |
           git config --global user.name 'Andrew2120'
           git config --global user.email 'andrew-2120@live.com'
-          git clone https://user:$ACCESS_ANDROID@github.com/Andrew2120/Fiber-android.git Fiber-android-temp
+          git clone -b deel https://user:$ACCESS_ANDROID@github.com/Andrew2120/Fiber-android.git Fiber-android-temp
           rm -rf Fiber-android-temp/deel/src/main/java/com/b_labs/deel/DesignSystem.kt
           cp DesignSystem.kt Fiber-android-temp/deel/src/main/java/com/b_labs/deel
           cd Fiber-android-temp
