@@ -22,6 +22,9 @@ jobs:
       - name: Generate Tokens for Kotlin and Swift
         run: node index.js ./output-tokens.json DesignSystem.swift DesignSystem.kt
 
+
+      
+
       - name: Push to Fiber-Android Deel
         env:
           ACCESS_ANDROID: ${{ secrets.ACCESS_ANDROID }}
@@ -30,10 +33,14 @@ jobs:
           git config --global user.name 'Andrew2120'
           git config --global user.email 'andrew-2120@live.com'
           git clone https://user:$ACCESS_ANDROID@github.com/Andrew2120/Fiber-Android2.git Fiber-android-temp
+          list=$(ls)
+          echo "::set-output name=files::$list"
+          echo "List of files: ${{ steps.list.outputs.files }}"
+
+          
           
           rm -rf Fiber-android-temp/fiber-deel/src/main/java/com/b_labs/fiber_deel/DesignSystemValues.kt
           cd Fiber-android-temp/fiber-deel/src/main/java/com/b_labs
-          run: ls 
 
           cp DesignSystemValues.kt Fiber-android-temp/fiber-deel/src/main/java/com/b_labs/fiber_deel
           
