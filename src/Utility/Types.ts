@@ -35,3 +35,35 @@ export class StructsSet {
     this.structsBySignature[newStructSignature] = struct;
   }
 }
+
+export class StructNamesSet {
+  private numberOfOccurrencesByStructName = {};
+
+  constructor(structNames: string[]) {
+    structNames.forEach(structName => this.append(structName));
+  }
+
+  values(): string[] {
+    return Object.values(this.numberOfOccurrencesByStructName);
+  }
+
+  includes(structName: string) {
+    return !!this.numberOfOccurrencesByStructName[structName];
+  }
+
+  append(structName: string) {
+    // this.numberOfOccurrencesByStructName[structName] = struct;
+    //   const originalStructName = capitalizeFirstLetter(name) + 'ValuesContainer';
+    // let structName = originalStructName;
+
+    const numberOfOccurrences = this.numberOfOccurrencesByStructName[structName];
+
+    if (typeof numberOfOccurrences === 'number') {
+      this.numberOfOccurrencesByStructName[structName] = numberOfOccurrences + 1;
+      return structName + numberOfOccurrences;
+    } else {
+      this.numberOfOccurrencesByStructName[structName] = 1;
+      return structName;
+    }
+  }
+}

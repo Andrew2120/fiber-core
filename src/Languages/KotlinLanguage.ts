@@ -1,4 +1,4 @@
-import { Property, Struct, StructInstance } from '../Struct';
+import { Declaration, Property, Struct, StructInstance } from '../Struct';
 import { InconsistentArgumentsError } from '../Errors/InconsistentArgumentsError';
 import { indentStatements as indentStatements } from '../Utility/Helpers';
 import { Language } from './Language';
@@ -7,61 +7,83 @@ export class KotlinLanguage implements Language {
   name = 'Kotlin';
   extension = 'kt';
   keywords = [
-    'associatedtype',
-    'class',
-    'deinit',
-    'enum',
-    'extension',
-    'fileprivate',
-    'func',
-    'import',
-    'init',
-    'inout',
-    'internal',
-    'let',
-    'open',
-    'operator',
-    'private',
-    'precedencegroup',
-    'protocol',
-    'public',
-    'rethrows',
-    'static',
-    'struct',
-    'subscript',
-    'typealias',
-    'var',
+    'as',
     'break',
-    'case',
-    'catch',
+    'class',
     'continue',
-    'default',
-    'defer',
     'do',
     'else',
-    'fallthrough',
+    'false',
     'for',
-    'guard',
+    'fun',
     'if',
     'in',
-    'repeat',
-    'return',
-    'throw',
-    'switch',
-    'where',
-    'while',
-    'Any',
-    'as',
-    'await',
-    'false',
+    'interface',
     'is',
-    'nil',
-    'self',
-    'Self',
+    'null',
+    'object',
+    'package',
+    'return',
     'super',
-    'throws',
+    'this',
+    'throw',
     'true',
     'try',
+    'typealias',
+    'typeof',
+    'val',
+    'var',
+    'when',
+    'while',
+    'by',
+    'catch',
+    'constructor',
+    'delegate',
+    'dynamic',
+    'field',
+    'file',
+    'finally',
+    'get',
+    'import',
+    'init',
+    'param',
+    'property',
+    'receiver',
+    'set',
+    'setparam',
+    'value',
+    'where',
+    'abstract',
+    'actual',
+    'annotation',
+    'companion',
+    'const',
+    'crossinline',
+    'data',
+    'enum',
+    'expect',
+    'external',
+    'final',
+    'infix',
+    'inline',
+    'inner',
+    'internal',
+    'lateinit',
+    'noinline',
+    'open',
+    'operator',
+    'out',
+    'override',
+    'private',
+    'protected',
+    'public',
+    'reified',
+    'sealed',
+    'suspend',
+    'tailrec',
+    'vararg',
+    'field',
+    'it',
   ];
 
   importStatements: string = [
@@ -72,14 +94,18 @@ export class KotlinLanguage implements Language {
     'import androidx.compose.ui.platform.LocalDensity',
   ].join('\n');
 
-  generateStructDeclaration(struct: Struct): string {
+  private numberOfIndentations = 0;
+
+  generateStructDeclaration(struct: Struct, isReferenceType: boolean): string {
     const numberOfIndentations = 1;
-    const propertyDeclarations = struct.properties.map(property => this.generatePropertyDeclaration(property));
+    const propertyDeclarations = struct.properties.map(
+      property => this.generatePropertyDeclaration(property) + ','
+    );
     const indentedPropertiesDeclarations = indentStatements(propertyDeclarations, numberOfIndentations);
 
-    return `${struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : ''}object ${
+    return `${struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : ''}data class ${
       struct.name
-    } {\n${indentedPropertiesDeclarations}\n}`;
+    } (\n${indentedPropertiesDeclarations}\n)`;
   }
 
   generateInstanceStructDeclaration(struct: Struct): string {
@@ -127,14 +153,14 @@ export class KotlinLanguage implements Language {
       case 'color':
         return { type: 'Color', value: this.generateColorObjectDecelerationFrom(value) };
       case 'valueContainerObject':
-        return { type: value.name, value: `${value.name}` };
+        return { type: value.struct.name, value: this.generateInstanceDeceleration(value) };
     }
 
     if (tokenValueType.endsWith('-object'))
       return { type: value.struct.name, value: this.generateInstanceDeceleration(value) };
 
     if (tokenValueType.endsWith('-array'))
-      return { type: `[${value[0].struct.name}]`, value: this.generateArrayOfInstancesDeceleration(value) };
+      return { type: `List<${value[0].struct.name}>`, value: this.generateArrayOfInstancesDeceleration(value) };
   }
 
   generateColorObjectDecelerationFrom(hex: string): string {
@@ -142,14 +168,20 @@ export class KotlinLanguage implements Language {
   }
 
   generateInstanceDeceleration(instance: StructInstance): string {
+    this.numberOfIndentations++;
+    var indentation = '    '.repeat(this.numberOfIndentations);
     let propertyValues = instance.propertyValues
       .map(propertyValue => {
         const { value } = this.convertTokenTypeAndValue(propertyValue.type, propertyValue.value);
         return `${propertyValue.name} = ${value}`;
       })
-      .join(', ');
+      .map(statement => indentation + statement)
+      .join(',\n');
 
-    return `${instance.struct.name}(${propertyValues})`;
+    this.numberOfIndentations--;
+    indentation = '    '.repeat(this.numberOfIndentations);
+    const deceleration = `${instance.struct.name}(\n${propertyValues}\n${indentation})`;
+    return deceleration;
   }
 
   generateArrayOfInstancesDeceleration(instances: StructInstance[]): string {
@@ -158,6 +190,10 @@ export class KotlinLanguage implements Language {
       .join(', ');
 
     return `listOf(${instancesDecelerations})`;
+  }
+
+  generateDecelerationStatement(declaration: Declaration): string {
+    return this.generatePropertyDeclaration(declaration);
   }
 
   private getStringifiedNumberAsFloat(number: number): string {

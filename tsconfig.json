@@ -1,7 +1,11 @@
 {
-  "compilerOptions": {
-    "target": "ES2016",
-    "module": "commonjs",
-    "sourceMap": false
-  }
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "outDir": "out",
+        "sourceMap": true
+    }
 }

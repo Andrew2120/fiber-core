@@ -1,9 +1,21 @@
 import { Property, PropertyValue, Struct, StructInstance } from '../Struct';
 import { TokenValueType } from './Types';
 
-export const indentStatements = (statements: String[], numberOfIndentations: number): string => {
+export const indentStatements = (
+  statements: String[],
+  numberOfIndentations: number,
+  joiner: string = '\n'
+): string => {
   const indentation = '    ';
-  return statements.map(statement => indentation.repeat(numberOfIndentations) + statement).join('\n');
+  return statements.map(statement => indentation.repeat(numberOfIndentations) + statement).join(joiner);
+};
+
+export const indentMultilineString = (string: String, numberOfIndentations: number): string => {
+  const indentation = '    ';
+  return string
+    .split('\n')
+    .map(statement => indentation.repeat(numberOfIndentations) + statement)
+    .join('\n');
 };
 
 /**

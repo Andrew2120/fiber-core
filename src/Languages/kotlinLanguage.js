@@ -93,11 +93,12 @@ var KotlinLanguage = /** @class */ (function () {
             'import androidx.compose.runtime.Composable',
             'import androidx.compose.ui.platform.LocalDensity',
         ].join('\n');
+        this.numberOfIndentations = 0;
     }
-    KotlinLanguage.prototype.generateStructDeclaration = function (struct) {
+    KotlinLanguage.prototype.generateStructDeclaration = function (struct, isReferenceType) {
         var _this = this;
         var numberOfIndentations = 1;
-        var propertyDeclarations = struct.properties.map(function (property) { return _this.generatePropertyDeclaration(property) + ', '; });
+        var propertyDeclarations = struct.properties.map(function (property) { return _this.generatePropertyDeclaration(property) + ','; });
         var indentedPropertiesDeclarations = (0, Helpers_1.indentStatements)(propertyDeclarations, numberOfIndentations);
         return "".concat(struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : '', "data class ").concat(struct.name, " (\n").concat(indentedPropertiesDeclarations, "\n)");
     };
@@ -117,7 +118,7 @@ var KotlinLanguage = /** @class */ (function () {
         var decelerationKeyword = property.isConstant ? 'val' : 'var';
         var decelerationBeginning = "".concat(decelerationKeyword, " ").concat(propertyName);
         if (property.hasDefaultValue)
-            return "".concat(decelerationBeginning, " : ").concat(type, " = ").concat(value);
+            return "".concat(decelerationBeginning, " = ").concat(value);
         return "".concat(decelerationBeginning, ": ").concat(type);
     };
     KotlinLanguage.prototype.generateObjectDecelerationOf = function (struct) {
@@ -134,7 +135,7 @@ var KotlinLanguage = /** @class */ (function () {
             case 'color':
                 return { type: 'Color', value: this.generateColorObjectDecelerationFrom(value) };
             case 'valueContainerObject':
-                return { type: value.name, value: "".concat(value.name, "()") };
+                return { type: value.struct.name, value: this.generateInstanceDeceleration(value) };
         }
         if (tokenValueType.endsWith('-object'))
             return { type: value.struct.name, value: this.generateInstanceDeceleration(value) };
@@ -146,13 +147,19 @@ var KotlinLanguage = /** @class */ (function () {
     };
     KotlinLanguage.prototype.generateInstanceDeceleration = function (instance) {
         var _this = this;
+        this.numberOfIndentations++;
+        var indentation = '    '.repeat(this.numberOfIndentations);
         var propertyValues = instance.propertyValues
             .map(function (propertyValue) {
             var value = _this.convertTokenTypeAndValue(propertyValue.type, propertyValue.value).value;
             return "".concat(propertyValue.name, " = ").concat(value);
         })
-            .join(', ');
-        return "".concat(instance.struct.name, "(").concat(propertyValues, ")");
+            .map(function (statement) { return indentation + statement; })
+            .join(',\n');
+        this.numberOfIndentations--;
+        indentation = '    '.repeat(this.numberOfIndentations);
+        var deceleration = "".concat(instance.struct.name, "(\n").concat(propertyValues, "\n").concat(indentation, ")");
+        return deceleration;
     };
     KotlinLanguage.prototype.generateArrayOfInstancesDeceleration = function (instances) {
         var _this = this;
@@ -160,6 +167,9 @@ var KotlinLanguage = /** @class */ (function () {
             .map(function (structInstance) { return _this.generateInstanceDeceleration(structInstance); })
             .join(', ');
         return "listOf(".concat(instancesDecelerations, ")");
+    };
+    KotlinLanguage.prototype.generateDecelerationStatement = function (declaration) {
+        return this.generatePropertyDeclaration(declaration);
     };
     KotlinLanguage.prototype.getStringifiedNumberAsFloat = function (number) {
         return "".concat(number).concat(Number.isInteger(number) ? '.0' : '');

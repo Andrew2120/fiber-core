@@ -4,6 +4,7 @@ export type Nullable<T> = T | null;
 
 export interface Property {
   accessModifier: AccessModifier;
+  isStatic: boolean;
   hasDefaultValue: boolean;
   isConstant: boolean;
   name: string;
@@ -27,3 +28,5 @@ export interface StructInstance {
   struct: Struct;
   propertyValues: PropertyValue[];
 }
+
+export interface Declaration extends Property {}
