@@ -5,7 +5,6 @@
         "moduleResolution": "NodeNext",
         "resolveJsonModule": true,
         "esModuleInterop": true,
-        "outDir": "out",
-        "sourceMap": true
+        "sourceMap": false
     }
 }
