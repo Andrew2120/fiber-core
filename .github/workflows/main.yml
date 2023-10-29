@@ -31,11 +31,11 @@ jobs:
           git config --global user.email 'andrew-2120@live.com'
           git clone https://user:$ACCESS_ANDROID@github.com/Andrew2120/Fiber-Android2.git Fiber-android-temp
           
-          rm -rf Fiber-android-temp/f-android/fiber-deel/src/main/java/com/b_labs/fiber_deel/Theme.kt
-          cp Theme.kt f-android/fiber-deel/src/main/java/com/b_labs/fiber_deel
+          rm -rf Fiber-android-temp/f-android/fiber-deel/src/main/java/com/b_labs/fiber_deel/DesignSystemValues.kt
+          cp DesignSystemValues.kt f-android/fiber-deel/src/main/java/com/b_labs/fiber_deel
           
-          rm -rf Fiber-android-temp/fiber-tokens/src/main/java/com/b_labs/fiber_tokens/DesignSystem.kt
-          cp DesignSystem.kt fiber-tokens/src/main/java/com/b_labs/fiber_tokens
+          rm -rf Fiber-android-temp/fiber-tokens/src/main/java/com/b_labs/fiber_tokens/DesignSystemTypes.kt
+          cp DesignSystemTypes.kt fiber-tokens/src/main/java/com/b_labs/fiber_tokens
           
           cd Fiber-android-temp
           git add .
