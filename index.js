@@ -151,9 +151,7 @@ const generateSourceCodeDecelerationOf = (json, language, structName, importPath
     };
 };
 const transpileTo = (language, json, fileName, importPath) => {
-    debugger;
     if (language.name === "javascript") {
-        debugger;
         const jsLanguage = language;
         const content = jsLanguage.generateThemeData(json);
         fs.writeFile("./".concat(fileName, ".").concat(jsLanguage.extension), content, function (err) {
