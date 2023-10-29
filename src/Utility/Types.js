@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StructNamesSet = exports.StructsSet = void 0;
 const Helpers_1 = require("./Helpers");
 class StructsSet {
-    structsBySignature = {};
     constructor(structs) {
+        this.structsBySignature = {};
         structs.forEach(struct => this.append(struct));
     }
     values() {
@@ -21,8 +21,8 @@ class StructsSet {
 }
 exports.StructsSet = StructsSet;
 class StructNamesSet {
-    numberOfOccurrencesByStructName = {};
     constructor(structNames) {
+        this.numberOfOccurrencesByStructName = {};
         structNames.forEach(structName => this.append(structName));
     }
     values() {

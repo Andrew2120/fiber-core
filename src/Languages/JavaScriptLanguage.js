@@ -3,11 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.JavaScriptLanguage = void 0;
 const Config_1 = require("../Config");
 class JavaScriptLanguage {
-    name = 'javascript';
-    extension = 'js';
-    keywords = [];
-    output = {};
-    initializationStatement = 'export const themeData =';
+    constructor() {
+        this.name = 'javascript';
+        this.extension = 'js';
+        this.keywords = [];
+        this.output = {};
+        this.initializationStatement = 'export const themeData =';
+    }
     generateThemeData(input) {
         Object.keys(input).forEach(key => {
             this.output[Config_1.mapOfTailwindNames[key] || key] = {};
@@ -16,7 +18,7 @@ class JavaScriptLanguage {
         this.output[Config_1.mapOfTailwindNames.elevation] = this.handleElevationCase(input['elevation']);
         let jsonData = {
             theme: {
-                extend: { ...this.output },
+                extend: Object.assign({}, this.output),
             },
             variants: {},
             plugins: [],
