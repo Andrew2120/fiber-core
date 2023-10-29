@@ -24,7 +24,7 @@ jobs:
         run: npx token-transformer tokens.json output-tokens.json --excludes '$themes' --excludes '$metadata' --sets component/light --sets component/dark --sets alias --sets global
 
       - name: Generate Tokens web
-        run: node index.js ./output-tokens.json theme-data-${{ github.head_ref || github.ref_name }}.js
+        run: node index.js ./output-tokens.json DesignSystem.swift DesignSystem.ktd
   
       - name: Push to Fiber-web
         env:
