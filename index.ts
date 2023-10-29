@@ -1,4 +1,6 @@
 import { SwiftLanguage } from './src/Languages/SwiftLanguage';
+import { KotlinLanguage } from './src/Languages/KotlinLanguage';
+import { JavaScriptLanguage } from './src/Languages/JavaScriptLanguage';
 import { Declaration, Property, Struct, StructInstance } from './src/Struct';
 import * as fs from 'fs';
 import { AccessModifier, StructsSet } from './src/Utility/Types';
@@ -11,8 +13,6 @@ import {
 } from './src/Utility/Helpers';
 import { jsonKeyMap, mapOfUnits } from './src/Config';
 import { Language, JSLanguage } from './src/Languages/Language';
-import { KotlinLanguage } from './src/Languages/KotlinLanguage';
-import { JavaScriptLanguage } from './src/Languages/JavaScriptLanguage';
 
 const args = process.argv.slice(2);
 const jsonFilePath = args[0];
