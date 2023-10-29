@@ -35,8 +35,6 @@ jobs:
           git clone https://user:$ACCESS_ANDROID@github.com/Andrew2120/f-android.git Fiber-android-temp
           
           rm -rf Fiber-android-temp/fiber-deel/src/main/java/com/b_labs/fiber_deel/DesignSystemValues.kt
-          cd Fiber-android-temp/fiber-deel/src/main/java/com/b_labs
-
           cp DesignSystemValues.kt Fiber-android-temp/fiber-deel/src/main/java/com/b_labs/fiber_deel
           
           rm -rf Fiber-android-temp/fiber-tokens/src/main/java/com/b_labs/fiber_tokens/DesignSystemTypes.kt
