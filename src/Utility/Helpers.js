@@ -1,17 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getStructInstanceOf = exports.getValueAndTypeFrom = exports.getValueAndTypeFromWrappedValue = exports.getPropertyName = exports.lowerCaseFirstLetter = exports.capitalizeFirstLetter = exports.replaceKeysWithValuesIn = exports.getStructSignature = exports.getPropertySignature = exports.convertToCamelCase = exports.isHexColor = exports.isStruct = exports.isWrappedValue = exports.indentMultilineString = exports.indentStatements = void 0;
-var indentStatements = function (statements, numberOfIndentations, joiner) {
-    if (joiner === void 0) { joiner = '\n'; }
-    var indentation = '    ';
-    return statements.map(function (statement) { return indentation.repeat(numberOfIndentations) + statement; }).join(joiner);
+const indentStatements = (statements, numberOfIndentations, joiner = '\n') => {
+    const indentation = '    ';
+    return statements.map(statement => indentation.repeat(numberOfIndentations) + statement).join(joiner);
 };
 exports.indentStatements = indentStatements;
-var indentMultilineString = function (string, numberOfIndentations) {
-    var indentation = '    ';
+const indentMultilineString = (string, numberOfIndentations) => {
+    const indentation = '    ';
     return string
         .split('\n')
-        .map(function (statement) { return indentation.repeat(numberOfIndentations) + statement; })
+        .map(statement => indentation.repeat(numberOfIndentations) + statement)
         .join('\n');
 };
 exports.indentMultilineString = indentMultilineString;
