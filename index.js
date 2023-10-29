@@ -1,35 +1,39 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
     }
-    return to.concat(ar || Array.prototype.slice.call(from));
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var SwiftLanguage_1 = require("./src/Languages/SwiftLanguage");
-var fs = require("fs");
-var Types_1 = require("./src/Utility/Types");
-var Helpers_1 = require("./src/Utility/Helpers");
-var Config_1 = require("./src/Config");
-var KotlinLanguage_1 = require("./src/Languages/KotlinLanguage");
-var args = process.argv.slice(2);
-var jsonFilePath = args[0];
-var languageFiles = args.slice(1);
-var accessModifier = 'internal';
+const SwiftLanguage_1 = require("./src/Languages/SwiftLanguage");
+const fs = __importStar(require("fs"));
+const Types_1 = require("./src/Utility/Types");
+const Helpers_1 = require("./src/Utility/Helpers");
+const Config_1 = require("./src/Config");
+const KotlinLanguage_1 = require("./src/Languages/KotlinLanguage");
+const JavaScriptLanguage_1 = require("./src/Languages/JavaScriptLanguage");
+const args = process.argv.slice(2);
+const jsonFilePath = args[0];
+const languageFiles = args.slice(1);
+const accessModifier = 'internal';
 var structOccurrencesByName = {};
 // const valueContainerStructs: Struct[] = [];
 var instanceStructsSet = new Types_1.StructsSet([]);
@@ -43,12 +47,12 @@ var instanceStructsSet = new Types_1.StructsSet([]);
  * @returns A `Struct` object containing all the necessary information for source code deceleration of
  * this object as a Struct
  */
-var getStructFrom = function (object, name, isStatic, propertiesHaveDefaultValues, originalStructName) {
+const getStructFrom = (object, name, isStatic, propertiesHaveDefaultValues, originalStructName) => {
     var properties = [];
-    Object.keys(object).forEach(function (key) {
-        var propertyName = (0, Helpers_1.getPropertyName)(key, originalStructName, Config_1.jsonKeyMap);
-        var _a = (0, Helpers_1.getValueAndTypeFrom)(object[key], Config_1.mapOfUnits), value = _a.value, type = _a.type;
-        var property = {
+    Object.keys(object).forEach(key => {
+        let propertyName = (0, Helpers_1.getPropertyName)(key, originalStructName, Config_1.jsonKeyMap);
+        const { value, type } = (0, Helpers_1.getValueAndTypeFrom)(object[key], Config_1.mapOfUnits);
+        const property = {
             accessModifier: accessModifier,
             isStatic: isStatic,
             hasDefaultValue: propertiesHaveDefaultValues,
@@ -56,33 +60,33 @@ var getStructFrom = function (object, name, isStatic, propertiesHaveDefaultValue
             name: propertyName,
         };
         if (type.endsWith('-array')) {
-            var structInstances = value.map(function (element) {
+            const structInstances = value.map(element => {
                 var structName = type.replace('-array', '');
                 return getStructInstance(structName, element);
             });
-            properties.push(__assign(__assign({}, property), { type: type, value: structInstances }));
+            properties.push({ ...property, type, value: structInstances });
             return;
         }
         if (type.endsWith('-object')) {
             var structName = type.replace('-object', '');
-            var structInstance = getStructInstance(structName, value);
-            properties.push(__assign(__assign({}, property), { type: type, value: structInstance }));
+            let structInstance = getStructInstance(structName, value);
+            properties.push({ ...property, type, value: structInstance });
             return;
         }
         if (type === 'valueContainerObject') {
-            var structInstance = getStaticStruct(propertyName, value);
-            properties.push(__assign(__assign({}, property), { type: type, value: structInstance }));
+            const structInstance = getStaticStruct(propertyName, value);
+            properties.push({ ...property, type, value: structInstance });
             return;
         }
-        properties.push(__assign(__assign({}, property), { type: type, value: value }));
+        properties.push({ ...property, type, value: value });
     });
-    return { accessModifier: accessModifier, name: name, properties: properties };
+    return { accessModifier, name, properties };
 };
 /** @Mutating */
-var getStaticStruct = function (name, object) {
-    var originalStructName = (0, Helpers_1.capitalizeFirstLetter)(name) + 'ValuesContainer';
-    var structName = originalStructName;
-    var numberOfOccurrences = structOccurrencesByName[originalStructName];
+const getStaticStruct = (name, object) => {
+    const originalStructName = (0, Helpers_1.capitalizeFirstLetter)(name) + 'ValuesContainer';
+    let structName = originalStructName;
+    const numberOfOccurrences = structOccurrencesByName[originalStructName];
     if (typeof numberOfOccurrences === 'number') {
         structName += numberOfOccurrences;
         structOccurrencesByName[originalStructName] = numberOfOccurrences + 1;
@@ -90,20 +94,20 @@ var getStaticStruct = function (name, object) {
     else {
         structOccurrencesByName[originalStructName] = 1;
     }
-    var isStatic = false;
-    var hasDefaultValues = false;
-    var struct = getStructFrom(object, structName, isStatic, hasDefaultValues, name);
+    const isStatic = false;
+    const hasDefaultValues = false;
+    let struct = getStructFrom(object, structName, isStatic, hasDefaultValues, name);
     instanceStructsSet.append(struct);
-    var structInstance = (0, Helpers_1.getStructInstanceOf)(struct);
+    let structInstance = (0, Helpers_1.getStructInstanceOf)(struct);
     return structInstance;
 };
 /** @Mutating */
-var getStructInstance = function (name, object) {
-    var isStatic = false;
-    var hasDefaultValues = false;
-    var struct = getStructFrom(object, name, isStatic, hasDefaultValues, name);
+const getStructInstance = (name, object) => {
+    const isStatic = false;
+    const hasDefaultValues = false;
+    let struct = getStructFrom(object, name, isStatic, hasDefaultValues, name);
     instanceStructsSet.append(struct);
-    var structInstance = (0, Helpers_1.getStructInstanceOf)(struct);
+    let structInstance = (0, Helpers_1.getStructInstanceOf)(struct);
     return structInstance;
 };
 // const types: Struct[] = [];
@@ -113,64 +117,74 @@ var getStructInstance = function (name, object) {
 // const typeDecelerations: string[] = [];
 // const instances: StructInstance[] = [];
 // const instancesDecelerations: string[] = [];
-var generateSourceCodeDecelerationOf = function (json, language, structName, importPath) {
-    var propertiesHaveDefaultValues = false;
-    var isStatic = false;
-    var struct = getStructFrom(json, structName, isStatic, propertiesHaveDefaultValues, structName);
-    var rootStructDeceleration = language.generateStructDeclaration(struct, true);
+const generateSourceCodeDecelerationOf = (json, language, structName, importPath) => {
+    const propertiesHaveDefaultValues = false;
+    const isStatic = false;
+    const struct = getStructFrom(json, structName, isStatic, propertiesHaveDefaultValues, structName);
+    const rootStructDeceleration = language.generateStructDeclaration(struct, true);
     // const valueContainerStructsDeceleration = valueContainerStructs.map(staticStruct => {
     //   return language.generateStructDeclaration(staticStruct);
     // });
-    var instanceStructDeceleration = instanceStructsSet.values().map(function (instanceStruct) {
+    const instanceStructDeceleration = instanceStructsSet.values().map(instanceStruct => {
         return language.generateInstanceStructDeclaration(instanceStruct);
     });
-    var rootStructInstance = (0, Helpers_1.getStructInstanceOf)(struct);
-    var declaration = {
+    const rootStructInstance = (0, Helpers_1.getStructInstanceOf)(struct);
+    const declaration = {
         accessModifier: 'public',
         isStatic: false,
         hasDefaultValue: true,
         isConstant: true,
         name: (0, Helpers_1.lowerCaseFirstLetter)(structName),
-        type: "".concat(struct.name, "-object"),
+        type: `${struct.name}-object`,
         value: rootStructInstance,
     };
-    var rootStructInstanceDeceleration = language.generateDecelerationStatement(declaration);
+    const rootStructInstanceDeceleration = language.generateDecelerationStatement(declaration);
     var instanceImportStatements = language.importStatements;
     if (language.extension === 'kt') {
-        var typesNames = __spreadArray([struct.name], instanceStructsSet.values().map(function (struct) { return struct.name; }), true);
+        const typesNames = [struct.name, ...instanceStructsSet.values().map(struct => struct.name)];
         instanceImportStatements +=
-            '\n' + typesNames.map(function (typeName) { return 'import ' + importPath + ".".concat(typeName); }).join('\n');
+            '\n' + typesNames.map(typeName => 'import ' + importPath + `.${typeName}`).join('\n');
     }
     return {
-        types: __spreadArray([language.importStatements, rootStructDeceleration], instanceStructDeceleration, true).join('\n\n'),
+        types: [language.importStatements, rootStructDeceleration, ...instanceStructDeceleration].join('\n\n'),
         instances: [instanceImportStatements, rootStructInstanceDeceleration].join('\n\n'),
     };
 };
-var transpileTo = function (language, json, fileName, importPath) {
-    var _a = generateSourceCodeDecelerationOf(json, language, fileName, importPath), types = _a.types, instances = _a.instances;
-    fs.writeFile("./".concat(fileName, "Types.").concat(language.extension), types, function (err) {
-        if (err)
-            console.error(err);
-    });
-    fs.writeFile("./".concat(fileName, "Values.").concat(language.extension), instances, function (err) {
-        if (err)
-            console.error(err);
-    });
+const transpileTo = (language, json, fileName, importPath) => {
+    if (language.name === "javascript") {
+        const jsLanguage = language;
+        const content = jsLanguage.generateThemeData(json);
+        fs.writeFile("./".concat(fileName, ".").concat(jsLanguage.extension), content, function (err) {
+            if (err)
+                console.error(err);
+        });
+    }
+    else {
+        const { types, instances } = generateSourceCodeDecelerationOf(json, language, fileName, importPath);
+        fs.writeFile(`./${fileName}Types.${language.extension}`, types, err => {
+            if (err)
+                console.error(err);
+        });
+        fs.writeFile(`./${fileName}Values.${language.extension}`, instances, err => {
+            if (err)
+                console.error(err);
+        });
+    }
 };
-var supportedLanguages = [new SwiftLanguage_1.SwiftLanguage(), new KotlinLanguage_1.KotlinLanguage()];
-var getLanguageWithExtension = function (extension, listOfLanguages) {
-    for (var index = 0; index < listOfLanguages.length; index++) {
-        var language = listOfLanguages[index];
+const supportedLanguages = [new SwiftLanguage_1.SwiftLanguage(), new KotlinLanguage_1.KotlinLanguage(), new JavaScriptLanguage_1.JavaScriptLanguage()];
+const getLanguageWithExtension = (extension, listOfLanguages) => {
+    for (let index = 0; index < listOfLanguages.length; index++) {
+        const language = listOfLanguages[index];
         if (language.extension === extension)
             return language;
     }
-    console.error("Language is with extension ".concat(extension, " is not supported"));
+    console.error(`Language is with extension ${extension} is not supported`);
 };
-var json = require(jsonFilePath);
-languageFiles.forEach(function (languageFile) {
-    var _a = languageFile.split('.'), filename = _a[0], extension = _a[1];
-    var language = getLanguageWithExtension(extension, supportedLanguages);
-    transpileTo(language, json, filename, '');
+const json = require(jsonFilePath);
+languageFiles.forEach(languageFile => {
+    const [filename, extension] = languageFile.split('.');
+    const language = getLanguageWithExtension(extension, supportedLanguages);
+    transpileTo(language, json, filename, 'com.b_labs.fiber_tokens');
     structOccurrencesByName = {};
     instanceStructsSet = new Types_1.StructsSet([]);
 });
