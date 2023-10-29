@@ -29,27 +29,16 @@ jobs:
         run: |
           git config --global user.name 'Andrew2120'
           git config --global user.email 'andrew-2120@live.com'
-          git clone -b mylo https://user:$ACCESS_ANDROID@github.com/Andrew2120/Fiber-Android2.git Fiber-android-temp
-          rm -rf Fiber-android-temp/mylo/src/main/java/com/b_labs/fiber/theme/DesignSystem.kt
-          cp DesignSystem.kt Fiber-android-temp/mylo/src/main/java/com/b_labs/mylo
+          git clone https://user:$ACCESS_ANDROID@github.com/Andrew2120/f-android.git Fiber-android-temp
+          
+          rm -rf Fiber-android-temp/fiber-mylo/src/main/java/com/b_labs/fiber_mylo/DesignSystemValues.kt
+          cp DesignSystemValues.kt Fiber-android-temp/fiber-mylo/src/main/java/com/b_labs/fiber_mylo
+          
+          rm -rf Fiber-android-temp/fiber-tokens/src/main/java/com/b_labs/fiber_tokens/DesignSystemTypes.kt
+          cp DesignSystemTypes.kt Fiber-android-temp/fiber-tokens/src/main/java/com/b_labs/fiber_tokens
+          
           cd Fiber-android-temp
           git add .
           git commit -m "Copy DesignSystem.kt from fiber-core"
           git push
-      - name: Push to Fiber-iOS Mylo
-        env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          working-directory: ${{ github.workspace }} 
-        run: |
-          git config user.name 'YousefBtech'
-          git config user.email 'yousef.hanafi@btech.com'
-          git clone -b mylo https://user:$ACCESS_TOKEN@github.com/YousefBtech/fiber-iOS.git fiber-ios-temp
-          rm -rf fiber-ios-temp/Sources/Fiber-iOS/DesignSystem.swift
-          cp DesignSystem.swift fiber-ios-temp/Sources/Fiber-iOS
-          cd fiber-ios-temp
-          git status
-          git add .
-          git commit -m "Copy DesignSystem.swift from fiber-core"
-          git push  
-
      
