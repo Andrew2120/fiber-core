@@ -65,16 +65,31 @@ var SwiftLanguage = /** @class */ (function () {
             'try',
         ];
         this.importStatements = 'import SwiftUI';
+        this.numberOfIndentations = 0;
     }
-    SwiftLanguage.prototype.generateStructDeclaration = function (struct) {
+    SwiftLanguage.prototype.generateStructDeclaration = function (struct, isReferenceType) {
         var _this = this;
         var numberOfIndentations = 1;
+        var initializerDeclaration = isReferenceType
+            ? "\n\n" + this.generateInitializerDeclaration(struct.properties)
+            : '';
         var propertyDeclarations = struct.properties.map(function (property) { return _this.generatePropertyDeclaration(property); });
         var indentedPropertiesDeclarations = (0, Helpers_1.indentStatements)(propertyDeclarations, numberOfIndentations);
-        return "".concat(struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : '', "struct ").concat(struct.name, " {\n").concat(indentedPropertiesDeclarations, "\n}");
+        var typeDecelerationKeyword = isReferenceType ? 'class' : 'struct';
+        return "".concat(struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : '').concat(typeDecelerationKeyword, " ").concat(struct.name, " {\n").concat(indentedPropertiesDeclarations).concat(initializerDeclaration, "\n}");
+    };
+    SwiftLanguage.prototype.generateInitializerDeclaration = function (properties) {
+        var _this = this;
+        var propertiesParameters = properties
+            .map(function (property) { return property.name + ':' + _this.convertTokenTypeAndValue(property.type, property.value).type; })
+            .join(',\n');
+        var indentedPropertiesParameters = (0, Helpers_1.indentMultilineString)(propertiesParameters, 1);
+        var propertiesAssignment = properties.map(function (property) { return "self.".concat(property.name, " = ").concat(property.name); }).join('\n');
+        var indentedPropertiesAssignment = (0, Helpers_1.indentMultilineString)(propertiesAssignment, 1);
+        return (0, Helpers_1.indentMultilineString)("init(\n".concat(indentedPropertiesParameters, "\n){\n").concat(indentedPropertiesAssignment, "\n}"), 1);
     };
     SwiftLanguage.prototype.generateInstanceStructDeclaration = function (struct) {
-        return this.generateStructDeclaration(struct);
+        return this.generateStructDeclaration(struct, false);
     };
     SwiftLanguage.prototype.generatePropertyDeclaration = function (property) {
         if (property.hasDefaultValue && property.value === null) {
@@ -83,14 +98,10 @@ var SwiftLanguage = /** @class */ (function () {
         var _a = this.convertTokenTypeAndValue(property.type, property.value), type = _a.type, value = _a.value;
         var propertyName = this.keywords.includes(property.name) ? "`".concat(property.name, "`") : property.name;
         var decelerationKeyword = property.isConstant ? 'let' : 'var';
-        var decelerationBeginning = "".concat(decelerationKeyword, " ").concat(propertyName);
+        var decelerationBeginning = "".concat(property.isStatic ? 'static ' : '').concat(decelerationKeyword, " ").concat(propertyName);
         if (property.hasDefaultValue)
             return "".concat(decelerationBeginning, " = ").concat(value);
         return "".concat(decelerationBeginning, ": ").concat(type);
-    };
-    SwiftLanguage.prototype.generateObjectDecelerationOf = function (struct) {
-        var propertyParameters = struct.properties.map(function (property) { return "".concat(property.name, ": ").concat(property.value); }).join(', ');
-        return "".concat(struct.name, "(").concat(propertyParameters, ")");
     };
     SwiftLanguage.prototype.convertTokenTypeAndValue = function (tokenValueType, value) {
         switch (tokenValueType) {
@@ -101,10 +112,8 @@ var SwiftLanguage = /** @class */ (function () {
                 return { type: 'CGFloat', value: this.getStringifiedNumberAsFloat(number) };
             case 'color':
                 return { type: 'SwiftUI.Color', value: this.generateColorObjectDecelerationFrom(value) };
-            case 'valueContainerObject':
-                return { type: value.name, value: "".concat(value.name, "()") };
         }
-        if (tokenValueType.endsWith('-object'))
+        if (tokenValueType.endsWith('-object') || tokenValueType === 'valueContainerObject')
             return { type: value.struct.name, value: this.generateInstanceDeceleration(value) };
         if (tokenValueType.endsWith('-array'))
             return { type: "[".concat(value[0].struct.name, "]"), value: this.generateArrayOfInstancesDeceleration(value) };
@@ -116,13 +125,19 @@ var SwiftLanguage = /** @class */ (function () {
     };
     SwiftLanguage.prototype.generateInstanceDeceleration = function (instance) {
         var _this = this;
+        this.numberOfIndentations++;
+        var indentation = '    '.repeat(this.numberOfIndentations);
         var propertyValues = instance.propertyValues
             .map(function (propertyValue) {
             var value = _this.convertTokenTypeAndValue(propertyValue.type, propertyValue.value).value;
             return "".concat(propertyValue.name, ": ").concat(value);
         })
-            .join(', ');
-        return "".concat(instance.struct.name, "(").concat(propertyValues, ")");
+            .map(function (statement) { return indentation + statement; })
+            .join(',\n');
+        this.numberOfIndentations--;
+        indentation = '    '.repeat(this.numberOfIndentations);
+        var deceleration = "".concat(instance.struct.name, "(\n").concat(propertyValues, "\n").concat(indentation, ")");
+        return deceleration;
     };
     SwiftLanguage.prototype.generateArrayOfInstancesDeceleration = function (instances) {
         var _this = this;
@@ -130,6 +145,9 @@ var SwiftLanguage = /** @class */ (function () {
             .map(function (structInstance) { return _this.generateInstanceDeceleration(structInstance); })
             .join(', ');
         return "[".concat(instancesDecelerations, "]");
+    };
+    SwiftLanguage.prototype.generateDecelerationStatement = function (declaration) {
+        return this.generatePropertyDeclaration(declaration);
     };
     SwiftLanguage.prototype.getStringifiedNumberAsFloat = function (number) {
         return "".concat(number).concat(Number.isInteger(number) ? '.0' : '');

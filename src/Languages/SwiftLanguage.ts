@@ -1,7 +1,6 @@
-import { Property, Struct, StructInstance } from '../Struct';
+import { Declaration, Property, Struct, StructInstance } from '../Struct';
 import { InconsistentArgumentsError } from '../Errors/InconsistentArgumentsError';
-import { indentStatements as indentStatements, isStruct } from '../Utility/Helpers';
-import { StructsSet, TokenValueType } from '../Utility/Types';
+import { indentMultilineString, indentStatements as indentStatements } from '../Utility/Helpers';
 import { Language } from './Language';
 
 export class SwiftLanguage implements Language {
@@ -66,19 +65,41 @@ export class SwiftLanguage implements Language {
   ];
 
   importStatements: string = 'import SwiftUI';
+  private numberOfIndentations = 0;
 
-  generateStructDeclaration(struct: Struct): string {
+  generateStructDeclaration(struct: Struct, isReferenceType: boolean): string {
     const numberOfIndentations = 1;
+    const initializerDeclaration = isReferenceType
+      ? `\n\n` + this.generateInitializerDeclaration(struct.properties)
+      : '';
     const propertyDeclarations = struct.properties.map(property => this.generatePropertyDeclaration(property));
     const indentedPropertiesDeclarations = indentStatements(propertyDeclarations, numberOfIndentations);
 
-    return `${struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : ''}struct ${
+    const typeDecelerationKeyword = isReferenceType ? 'class' : 'struct';
+
+    return `${struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : ''}${typeDecelerationKeyword} ${
       struct.name
-    } {\n${indentedPropertiesDeclarations}\n}`;
+    } {\n${indentedPropertiesDeclarations}${initializerDeclaration}\n}`;
+  }
+
+  generateInitializerDeclaration(properties: Property[]): string {
+    const propertiesParameters = properties
+      .map(property => property.name + ':' + this.convertTokenTypeAndValue(property.type, property.value).type)
+      .join(',\n');
+
+    const indentedPropertiesParameters = indentMultilineString(propertiesParameters, 1);
+
+    const propertiesAssignment = properties.map(property => `self.${property.name} = ${property.name}`).join('\n');
+    const indentedPropertiesAssignment = indentMultilineString(propertiesAssignment, 1);
+
+    return indentMultilineString(
+      `init(\n${indentedPropertiesParameters}\n){\n${indentedPropertiesAssignment}\n}`,
+      1
+    );
   }
 
   generateInstanceStructDeclaration(struct: Struct): string {
-    return this.generateStructDeclaration(struct);
+    return this.generateStructDeclaration(struct, false);
   }
 
   generatePropertyDeclaration(property: Property): string {
@@ -93,15 +114,10 @@ export class SwiftLanguage implements Language {
     const propertyName = this.keywords.includes(property.name) ? `\`${property.name}\`` : property.name;
 
     const decelerationKeyword = property.isConstant ? 'let' : 'var';
-    const decelerationBeginning = `${decelerationKeyword} ${propertyName}`;
+    const decelerationBeginning = `${property.isStatic ? 'static ' : ''}${decelerationKeyword} ${propertyName}`;
 
     if (property.hasDefaultValue) return `${decelerationBeginning} = ${value}`;
     return `${decelerationBeginning}: ${type}`;
-  }
-
-  generateObjectDecelerationOf(struct: Struct): string {
-    const propertyParameters = struct.properties.map(property => `${property.name}: ${property.value}`).join(', ');
-    return `${struct.name}(${propertyParameters})`;
   }
 
   convertTokenTypeAndValue(tokenValueType: string, value: any): { type: string; value: string } {
@@ -113,11 +129,9 @@ export class SwiftLanguage implements Language {
         return { type: 'CGFloat', value: this.getStringifiedNumberAsFloat(number) };
       case 'color':
         return { type: 'SwiftUI.Color', value: this.generateColorObjectDecelerationFrom(value) };
-      case 'valueContainerObject':
-        return { type: value.name, value: `${value.name}()` };
     }
 
-    if (tokenValueType.endsWith('-object'))
+    if (tokenValueType.endsWith('-object') || tokenValueType === 'valueContainerObject')
       return { type: value.struct.name, value: this.generateInstanceDeceleration(value) };
 
     if (tokenValueType.endsWith('-array'))
@@ -130,14 +144,20 @@ export class SwiftLanguage implements Language {
   }
 
   generateInstanceDeceleration(instance: StructInstance): string {
+    this.numberOfIndentations++;
+    var indentation = '    '.repeat(this.numberOfIndentations);
     let propertyValues = instance.propertyValues
       .map(propertyValue => {
         const { value } = this.convertTokenTypeAndValue(propertyValue.type, propertyValue.value);
         return `${propertyValue.name}: ${value}`;
       })
-      .join(', ');
+      .map(statement => indentation + statement)
+      .join(',\n');
 
-    return `${instance.struct.name}(${propertyValues})`;
+    this.numberOfIndentations--;
+    indentation = '    '.repeat(this.numberOfIndentations);
+    const deceleration = `${instance.struct.name}(\n${propertyValues}\n${indentation})`;
+    return deceleration;
   }
 
   generateArrayOfInstancesDeceleration(instances: StructInstance[]): string {
@@ -146,6 +166,10 @@ export class SwiftLanguage implements Language {
       .join(', ');
 
     return `[${instancesDecelerations}]`;
+  }
+
+  generateDecelerationStatement(declaration: Declaration): string {
+    return this.generatePropertyDeclaration(declaration);
   }
 
   private getStringifiedNumberAsFloat(number: number): string {

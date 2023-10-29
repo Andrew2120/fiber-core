@@ -25,13 +25,13 @@ var fs = require("fs");
 var Types_1 = require("./src/Utility/Types");
 var Helpers_1 = require("./src/Utility/Helpers");
 var Config_1 = require("./src/Config");
-var kotlinLanguage_1 = require("./src/Languages/kotlinLanguage");
+var KotlinLanguage_1 = require("./src/Languages/KotlinLanguage");
 var args = process.argv.slice(2);
 var jsonFilePath = args[0];
 var languageFiles = args.slice(1);
 var accessModifier = 'internal';
 var structOccurrencesByName = {};
-var valueContainerStructs = [];
+// const valueContainerStructs: Struct[] = [];
 var instanceStructsSet = new Types_1.StructsSet([]);
 /**
  * Creates and returns a `Struct` object form the provided object
@@ -43,13 +43,14 @@ var instanceStructsSet = new Types_1.StructsSet([]);
  * @returns A `Struct` object containing all the necessary information for source code deceleration of
  * this object as a Struct
  */
-var getStructFrom = function (object, name, propertiesHaveDefaultValues, originalStructName) {
+var getStructFrom = function (object, name, isStatic, propertiesHaveDefaultValues, originalStructName) {
     var properties = [];
     Object.keys(object).forEach(function (key) {
         var propertyName = (0, Helpers_1.getPropertyName)(key, originalStructName, Config_1.jsonKeyMap);
         var _a = (0, Helpers_1.getValueAndTypeFrom)(object[key], Config_1.mapOfUnits), value = _a.value, type = _a.type;
         var property = {
             accessModifier: accessModifier,
+            isStatic: isStatic,
             hasDefaultValue: propertiesHaveDefaultValues,
             isConstant: true,
             name: propertyName,
@@ -69,8 +70,8 @@ var getStructFrom = function (object, name, propertiesHaveDefaultValues, origina
             return;
         }
         if (type === 'valueContainerObject') {
-            var struct = getStaticStruct(propertyName, value);
-            properties.push(__assign(__assign({}, property), { type: type, value: struct }));
+            var structInstance = getStaticStruct(propertyName, value);
+            properties.push(__assign(__assign({}, property), { type: type, value: structInstance }));
             return;
         }
         properties.push(__assign(__assign({}, property), { type: type, value: value }));
@@ -89,40 +90,74 @@ var getStaticStruct = function (name, object) {
     else {
         structOccurrencesByName[originalStructName] = 1;
     }
-    var struct = getStructFrom(object, structName, true, name);
-    valueContainerStructs.push(struct);
-    return struct;
-};
-/** @Mutating */
-var getStructInstance = function (name, object) {
-    var struct = getStructFrom(object, name, false, name);
+    var isStatic = false;
+    var hasDefaultValues = false;
+    var struct = getStructFrom(object, structName, isStatic, hasDefaultValues, name);
     instanceStructsSet.append(struct);
     var structInstance = (0, Helpers_1.getStructInstanceOf)(struct);
     return structInstance;
 };
-var generateSourceCodeDecelerationOf = function (json, language, structName) {
-    var propertiesHaveDefaultValues = true;
-    var struct = getStructFrom(json, structName, propertiesHaveDefaultValues, structName);
-    var rootStructDeceleration = language.generateStructDeclaration(struct);
-    var valueContainerStructsDeceleration = valueContainerStructs.map(function (staticStruct) {
-        return language.generateStructDeclaration(staticStruct);
-    });
+/** @Mutating */
+var getStructInstance = function (name, object) {
+    var isStatic = false;
+    var hasDefaultValues = false;
+    var struct = getStructFrom(object, name, isStatic, hasDefaultValues, name);
+    instanceStructsSet.append(struct);
+    var structInstance = (0, Helpers_1.getStructInstanceOf)(struct);
+    return structInstance;
+};
+// const types: Struct[] = [];
+// const typesNames = types.map(type => type.name);
+// const importPath = ""
+// const importStatements = typesNames.map(typeName => importPath + typeName);
+// const typeDecelerations: string[] = [];
+// const instances: StructInstance[] = [];
+// const instancesDecelerations: string[] = [];
+var generateSourceCodeDecelerationOf = function (json, language, structName, importPath) {
+    var propertiesHaveDefaultValues = false;
+    var isStatic = false;
+    var struct = getStructFrom(json, structName, isStatic, propertiesHaveDefaultValues, structName);
+    var rootStructDeceleration = language.generateStructDeclaration(struct, true);
+    // const valueContainerStructsDeceleration = valueContainerStructs.map(staticStruct => {
+    //   return language.generateStructDeclaration(staticStruct);
+    // });
     var instanceStructDeceleration = instanceStructsSet.values().map(function (instanceStruct) {
         return language.generateInstanceStructDeclaration(instanceStruct);
     });
-    return __spreadArray(__spreadArray([
-        language.importStatements,
-        rootStructDeceleration
-    ], valueContainerStructsDeceleration, true), instanceStructDeceleration, true).join('\n\n');
+    var rootStructInstance = (0, Helpers_1.getStructInstanceOf)(struct);
+    var declaration = {
+        accessModifier: 'public',
+        isStatic: false,
+        hasDefaultValue: true,
+        isConstant: true,
+        name: (0, Helpers_1.lowerCaseFirstLetter)(structName),
+        type: "".concat(struct.name, "-object"),
+        value: rootStructInstance,
+    };
+    var rootStructInstanceDeceleration = language.generateDecelerationStatement(declaration);
+    var instanceImportStatements = language.importStatements;
+    if (language.extension === 'kt') {
+        var typesNames = __spreadArray([struct.name], instanceStructsSet.values().map(function (struct) { return struct.name; }), true);
+        instanceImportStatements +=
+            '\n' + typesNames.map(function (typeName) { return 'import ' + importPath + ".".concat(typeName); }).join('\n');
+    }
+    return {
+        types: __spreadArray([language.importStatements, rootStructDeceleration], instanceStructDeceleration, true).join('\n\n'),
+        instances: [instanceImportStatements, rootStructInstanceDeceleration].join('\n\n'),
+    };
 };
-var transpileTo = function (language, json, fileName) {
-    var content = generateSourceCodeDecelerationOf(json, language, fileName);
-    fs.writeFile("./".concat(fileName, ".").concat(language.extension), content, function (err) {
+var transpileTo = function (language, json, fileName, importPath) {
+    var _a = generateSourceCodeDecelerationOf(json, language, fileName, importPath), types = _a.types, instances = _a.instances;
+    fs.writeFile("./".concat(fileName, "Types.").concat(language.extension), types, function (err) {
+        if (err)
+            console.error(err);
+    });
+    fs.writeFile("./".concat(fileName, "Values.").concat(language.extension), instances, function (err) {
         if (err)
             console.error(err);
     });
 };
-var supportedLanguages = [new SwiftLanguage_1.SwiftLanguage(), new kotlinLanguage_1.KotlinLanguage()];
+var supportedLanguages = [new SwiftLanguage_1.SwiftLanguage(), new KotlinLanguage_1.KotlinLanguage()];
 var getLanguageWithExtension = function (extension, listOfLanguages) {
     for (var index = 0; index < listOfLanguages.length; index++) {
         var language = listOfLanguages[index];
@@ -135,5 +170,7 @@ var json = require(jsonFilePath);
 languageFiles.forEach(function (languageFile) {
     var _a = languageFile.split('.'), filename = _a[0], extension = _a[1];
     var language = getLanguageWithExtension(extension, supportedLanguages);
-    transpileTo(language, json, filename);
+    transpileTo(language, json, filename, 'com.b_labs.fiber_tokens');
+    structOccurrencesByName = {};
+    instanceStructsSet = new Types_1.StructsSet([]);
 });
