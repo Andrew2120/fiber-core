@@ -3,7 +3,10 @@ name: Generate Tokens
 on:
   push:
     branches:
-      - main
+      - open-loop
+      - deel
+      - retail
+
 jobs:
   Run_tokens_transformer_and_push_generated_files:
     runs-on: ubuntu-latest
@@ -42,10 +45,10 @@ jobs:
           git config --global user.name 'Andrew2120'
           git config --global user.email 'andrew-2120@live.com'
           git clone https://user:$ACCESS_ANDROID@github.com/Andrew2120/Fiber-android.git Fiber-android-temp
-          rm -rf Fiber-android-temp/Fiber-android/fiber/src/main/java/com/b_labs/fiber/theme/DesignSystem.kt
+          rm -rf Fiber-android-temp/fiber/src/main/java/com/b_labs/fiber/theme/DesignSystem.kt
           cp DesignSystem.kt Fiber-android-temp/fiber/src/main/java/com/b_labs/fiber/theme
           cd Fiber-android-temp
           git add .
           git commit -m "Copy DesignSystem.kt from fiber-core"
-          git push origin main
+          git push
      
