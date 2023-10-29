@@ -22,7 +22,10 @@ jobs:
 
       - name: Transform tokens
         run: npx token-transformer tokens.json output-tokens.json --excludes '$themes' --excludes '$metadata' --sets component/light --sets component/dark --sets alias --sets global
-
+    
+      - name: npm install
+        run: npm install
+        
       - name: Generate Tokens web
         run: node index.js ./output-tokens.json theme-data-${{ github.head_ref || github.ref_name }}.js
   
