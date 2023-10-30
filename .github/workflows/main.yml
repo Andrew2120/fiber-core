@@ -27,8 +27,8 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           working-directory: ${{ github.workspace }} 
         run: |
-          git config user.name 'YousefBtech'
-          git config user.email 'yousef.hanafi@btech.com'
+          git config --global user.name 'YousefBtech'
+          git config --global user.email 'yousef.hanafi@btech.com'
           git clone https://user:$ACCESS_TOKEN@github.com/YousefBtech/fiber-core.git fiber-ios-temp
           cp DesignSystemValues.swift fiber-ios-temp/
           cp DesignSystemTypes.swift fiber-ios-temp/
