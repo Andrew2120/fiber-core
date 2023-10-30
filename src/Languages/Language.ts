@@ -1,4 +1,4 @@
-import { Declaration, Property, Struct, StructInstance } from '../Struct';
+import { Declaration, Property, TypeData, InstanceData } from '../Struct';
 
 export interface Language {
   name: string;
@@ -6,11 +6,20 @@ export interface Language {
   keywords: string[];
   importStatements: string;
 
-  generateStructDeclaration(struct: Struct, isReferenceType: boolean): string;
-  generateInstanceStructDeclaration(struct: Struct): string;
+  generateStructDeclaration(struct: TypeData, isReferenceType: boolean): string;
+  generateInstanceStructDeclaration(struct: TypeData): string;
   generatePropertyDeclaration(property: Property): string;
   convertTokenTypeAndValue(tokenValueType: string, value: any): { type: string; value: string };
-  generateInstanceDeceleration(instance: StructInstance): string;
-  generateArrayOfInstancesDeceleration(instances: StructInstance[]): string;
+  generateInstanceDeceleration(instance: InstanceData): string;
+  generateArrayOfInstancesDeceleration(instances: InstanceData[]): string;
   generateDecelerationStatement(declaration: Declaration): string;
+}
+
+export interface JSLanguage {
+  name: string;
+  extension: string;
+  keywords: string[];
+  initializationStatement: string;
+
+  generateThemeData(input: object): string;
 }
