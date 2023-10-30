@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KotlinLanguage = void 0;
-var InconsistentArgumentsError_1 = require("../Errors/InconsistentArgumentsError");
-var Helpers_1 = require("../Utility/Helpers");
-var KotlinLanguage = /** @class */ (function () {
-    function KotlinLanguage() {
+const InconsistentArgumentsError_1 = require("../Errors/InconsistentArgumentsError");
+const Helpers_1 = require("../Utility/Helpers");
+class KotlinLanguage {
+    constructor() {
         this.name = 'Kotlin';
         this.extension = 'kt';
         this.keywords = [
@@ -95,42 +95,40 @@ var KotlinLanguage = /** @class */ (function () {
         ].join('\n');
         this.numberOfIndentations = 0;
     }
-    KotlinLanguage.prototype.generateStructDeclaration = function (struct, isReferenceType) {
-        var _this = this;
-        var numberOfIndentations = 1;
-        var propertyDeclarations = struct.properties.map(function (property) { return _this.generatePropertyDeclaration(property) + ','; });
-        var indentedPropertiesDeclarations = (0, Helpers_1.indentStatements)(propertyDeclarations, numberOfIndentations);
-        return "".concat(struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : '', "data class ").concat(struct.name, " (\n").concat(indentedPropertiesDeclarations, "\n)");
-    };
-    KotlinLanguage.prototype.generateInstanceStructDeclaration = function (struct) {
-        var _this = this;
-        var numberOfIndentations = 1;
-        var propertyDeclarations = struct.properties.map(function (property) { return _this.generatePropertyDeclaration(property) + ', '; });
-        var indentedPropertiesDeclarations = (0, Helpers_1.indentStatements)(propertyDeclarations, numberOfIndentations);
-        return "".concat(struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : '', "data class ").concat(struct.name, " (\n").concat(indentedPropertiesDeclarations, "\n)");
-    };
-    KotlinLanguage.prototype.generatePropertyDeclaration = function (property) {
+    generateStructDeclaration(struct, isReferenceType) {
+        const numberOfIndentations = 1;
+        const propertyDeclarations = struct.properties.map(property => this.generatePropertyDeclaration(property) + ',');
+        const indentedPropertiesDeclarations = (0, Helpers_1.indentStatements)(propertyDeclarations, numberOfIndentations);
+        return `${struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : ''}data class ${struct.name} (\n${indentedPropertiesDeclarations}\n)`;
+    }
+    generateInstanceStructDeclaration(struct) {
+        const numberOfIndentations = 1;
+        const propertyDeclarations = struct.properties.map(property => this.generatePropertyDeclaration(property) + ', ');
+        const indentedPropertiesDeclarations = (0, Helpers_1.indentStatements)(propertyDeclarations, numberOfIndentations);
+        return `${struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : ''}data class ${struct.name} (\n${indentedPropertiesDeclarations}\n)`;
+    }
+    generatePropertyDeclaration(property) {
         if (property.hasDefaultValue && property.value === null) {
-            throw new InconsistentArgumentsError_1.InconsistentArgumentsError("Property has a default value but no value is provided\n".concat(JSON.stringify(property)));
+            throw new InconsistentArgumentsError_1.InconsistentArgumentsError(`Property has a default value but no value is provided\n${JSON.stringify(property)}`);
         }
-        var _a = this.convertTokenTypeAndValue(property.type, property.value), type = _a.type, value = _a.value;
-        var propertyName = this.keywords.includes(property.name) ? "`".concat(property.name, "`") : property.name;
-        var decelerationKeyword = property.isConstant ? 'val' : 'var';
-        var decelerationBeginning = "".concat(decelerationKeyword, " ").concat(propertyName);
+        const { type, value } = this.convertTokenTypeAndValue(property.type, property.value);
+        const propertyName = this.keywords.includes(property.name) ? `\`${property.name}\`` : property.name;
+        const decelerationKeyword = property.isConstant ? 'val' : 'var';
+        const decelerationBeginning = `${decelerationKeyword} ${propertyName}`;
         if (property.hasDefaultValue)
-            return "".concat(decelerationBeginning, " = ").concat(value);
-        return "".concat(decelerationBeginning, ": ").concat(type);
-    };
-    KotlinLanguage.prototype.generateObjectDecelerationOf = function (struct) {
-        var propertyParameters = struct.properties.map(function (property) { return "".concat(property.name, ": ").concat(property.value); }).join(', ');
-        return "".concat(struct.name, "(").concat(propertyParameters, ")");
-    };
-    KotlinLanguage.prototype.convertTokenTypeAndValue = function (tokenValueType, value) {
+            return `${decelerationBeginning} = ${value}`;
+        return `${decelerationBeginning}: ${type}`;
+    }
+    generateObjectDecelerationOf(struct) {
+        const propertyParameters = struct.properties.map(property => `${property.name}: ${property.value}`).join(', ');
+        return `${struct.name}(${propertyParameters})`;
+    }
+    convertTokenTypeAndValue(tokenValueType, value) {
         switch (tokenValueType) {
             case 'string':
-                return { type: 'String', value: "\"".concat(value, "\"") };
+                return { type: 'String', value: `"${value}"` };
             case 'number':
-                var number = parseFloat(value);
+                const number = parseFloat(value);
                 return { type: 'Double', value: this.getStringifiedNumberAsFloat(number) };
             case 'color':
                 return { type: 'Color', value: this.generateColorObjectDecelerationFrom(value) };
@@ -140,40 +138,37 @@ var KotlinLanguage = /** @class */ (function () {
         if (tokenValueType.endsWith('-object'))
             return { type: value.struct.name, value: this.generateInstanceDeceleration(value) };
         if (tokenValueType.endsWith('-array'))
-            return { type: "List<".concat(value[0].struct.name, ">"), value: this.generateArrayOfInstancesDeceleration(value) };
-    };
-    KotlinLanguage.prototype.generateColorObjectDecelerationFrom = function (hex) {
-        return "Color(parseColor(\"".concat(hex, "\"))");
-    };
-    KotlinLanguage.prototype.generateInstanceDeceleration = function (instance) {
-        var _this = this;
+            return { type: `List<${value[0].struct.name}>`, value: this.generateArrayOfInstancesDeceleration(value) };
+    }
+    generateColorObjectDecelerationFrom(hex) {
+        return `Color(parseColor("${hex}"))`;
+    }
+    generateInstanceDeceleration(instance) {
         this.numberOfIndentations++;
         var indentation = '    '.repeat(this.numberOfIndentations);
-        var propertyValues = instance.propertyValues
-            .map(function (propertyValue) {
-            var value = _this.convertTokenTypeAndValue(propertyValue.type, propertyValue.value).value;
-            return "".concat(propertyValue.name, " = ").concat(value);
+        let propertyValues = instance.propertyValues
+            .map(propertyValue => {
+            const { value } = this.convertTokenTypeAndValue(propertyValue.type, propertyValue.value);
+            return `${propertyValue.name} = ${value}`;
         })
-            .map(function (statement) { return indentation + statement; })
+            .map(statement => indentation + statement)
             .join(',\n');
         this.numberOfIndentations--;
         indentation = '    '.repeat(this.numberOfIndentations);
-        var deceleration = "".concat(instance.struct.name, "(\n").concat(propertyValues, "\n").concat(indentation, ")");
+        const deceleration = `${instance.struct.name}(\n${propertyValues}\n${indentation})`;
         return deceleration;
-    };
-    KotlinLanguage.prototype.generateArrayOfInstancesDeceleration = function (instances) {
-        var _this = this;
-        var instancesDecelerations = instances
-            .map(function (structInstance) { return _this.generateInstanceDeceleration(structInstance); })
+    }
+    generateArrayOfInstancesDeceleration(instances) {
+        let instancesDecelerations = instances
+            .map(structInstance => this.generateInstanceDeceleration(structInstance))
             .join(', ');
-        return "listOf(".concat(instancesDecelerations, ")");
-    };
-    KotlinLanguage.prototype.generateDecelerationStatement = function (declaration) {
+        return `listOf(${instancesDecelerations})`;
+    }
+    generateDecelerationStatement(declaration) {
         return this.generatePropertyDeclaration(declaration);
-    };
-    KotlinLanguage.prototype.getStringifiedNumberAsFloat = function (number) {
-        return "".concat(number).concat(Number.isInteger(number) ? '.0' : '');
-    };
-    return KotlinLanguage;
-}());
+    }
+    getStringifiedNumberAsFloat(number) {
+        return `${number}${Number.isInteger(number) ? '.0' : ''}`;
+    }
+}
 exports.KotlinLanguage = KotlinLanguage;
