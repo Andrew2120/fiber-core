@@ -1,5 +1,5 @@
 import { SwiftLanguage } from './src/Languages/SwiftLanguage';
-import { Declaration, Property, Struct, StructInstance } from './src/Struct';
+import { Declaration, Property, TypeData, InstanceData } from './src/Struct';
 import * as fs from 'fs';
 import { AccessModifier, StructsSet } from './src/Utility/Types';
 import {
@@ -16,9 +16,10 @@ import { JavaScriptLanguage } from './src/Languages/JavaScriptLanguage';
 
 const args = process.argv.slice(2);
 const jsonFilePath = args[0];
+const packageName = args.pop();
 const languageFiles = args.slice(1);
 
-const accessModifier: AccessModifier = 'internal';
+const accessModifier: AccessModifier = 'public';
 
 var structOccurrencesByName = {};
 // const valueContainerStructs: Struct[] = [];
@@ -40,7 +41,7 @@ const getStructFrom = (
   isStatic: boolean,
   propertiesHaveDefaultValues: boolean,
   originalStructName: string
-): Struct => {
+): TypeData => {
   var properties: Property[] = [];
 
   Object.keys(object).forEach(key => {
@@ -57,7 +58,7 @@ const getStructFrom = (
     };
 
     if (type.endsWith('-array')) {
-      const structInstances: StructInstance[] = value.map(element => {
+      const structInstances: InstanceData[] = value.map(element => {
         var structName = type.replace('-array', '');
         return getStructInstance(structName, element);
       });
@@ -86,7 +87,7 @@ const getStructFrom = (
 };
 
 /** @Mutating */
-const getStaticStruct = (name: string, object: object): StructInstance => {
+const getStaticStruct = (name: string, object: object): InstanceData => {
   const originalStructName = capitalizeFirstLetter(name) + 'ValuesContainer';
   let structName = originalStructName;
 
@@ -110,7 +111,7 @@ const getStaticStruct = (name: string, object: object): StructInstance => {
 };
 
 /** @Mutating */
-const getStructInstance = (name: string, object: object): StructInstance => {
+const getStructInstance = (name: string, object: object): InstanceData => {
   const isStatic = false;
   const hasDefaultValues = false;
 
@@ -163,43 +164,58 @@ const generateSourceCodeDecelerationOf = (
   };
   const rootStructInstanceDeceleration = language.generateDecelerationStatement(declaration);
 
-  var instanceImportStatements: string = language.importStatements;
+  let instanceImportStatements: string = language.importStatements;
+  let typesImportStatements: string = language.importStatements;
   if (language.extension === 'kt') {
+    typesImportStatements = 'package com.b_labs.fiber_tokens\n' + language.importStatements;
+    const packageDeclaration = 'package com.b_labs.' + packageName;
     const typesNames = [struct.name, ...instanceStructsSet.values().map(struct => struct.name)];
+    instanceImportStatements = packageDeclaration + '\n' + instanceImportStatements;
     instanceImportStatements +=
       '\n' + typesNames.map(typeName => 'import ' + importPath + `.${typeName}`).join('\n');
   }
 
   return {
-    types: [language.importStatements, rootStructDeceleration, ...instanceStructDeceleration].join('\n\n'),
+    types: [typesImportStatements, rootStructDeceleration, ...instanceStructDeceleration].join('\n\n'),
     instances: [instanceImportStatements, rootStructInstanceDeceleration].join('\n\n'),
   };
 };
 
-const transpileTo = (language: Language|JSLanguage, json: object, fileName: string, importPath: string) => {
-  if(language.name === "javascript" ){
-    const jsLanguage = language as JSLanguage
-    const content = jsLanguage.generateThemeData(json)
-    fs.writeFile("./".concat(fileName, ".").concat(jsLanguage.extension), content, function (err) {
-      if (err)
-        console.error(err);
+const transpileTo = (language: Language | JSLanguage, json: object, fileName: string, importPath: string) => {
+  if (language.name === 'javascript') {
+    const jsLanguage = language as JSLanguage;
+    const content = jsLanguage.generateThemeData(json);
+    fs.writeFile('./'.concat(fileName, '.').concat(jsLanguage.extension), content, function (err) {
+      if (err) console.error(err);
     });
   } else {
-    const { types, instances } = generateSourceCodeDecelerationOf(json, language as Language, fileName, importPath);
+    const { types, instances } = generateSourceCodeDecelerationOf(
+      json,
+      language as Language,
+      fileName,
+      importPath
+    );
 
     fs.writeFile(`./${fileName}Types.${language.extension}`, types, err => {
       if (err) console.error(err);
     });
-  
+
     fs.writeFile(`./${fileName}Values.${language.extension}`, instances, err => {
       if (err) console.error(err);
     });
   }
 };
 
-const supportedLanguages: (Language|JSLanguage)[] = [new SwiftLanguage(), new KotlinLanguage(), new JavaScriptLanguage()];
+const supportedLanguages: (Language | JSLanguage)[] = [
+  new SwiftLanguage(),
+  new KotlinLanguage(),
+  new JavaScriptLanguage(),
+];
 
-const getLanguageWithExtension = (extension: string, listOfLanguages: (Language|JSLanguage)[]): (Language|JSLanguage) => {
+const getLanguageWithExtension = (
+  extension: string,
+  listOfLanguages: (Language | JSLanguage)[]
+): Language | JSLanguage => {
   for (let index = 0; index < listOfLanguages.length; index++) {
     const language = listOfLanguages[index];
     if (language.extension === extension) return language;

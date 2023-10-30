@@ -21,16 +21,17 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var SwiftLanguage_1 = require("./src/Languages/SwiftLanguage");
-var KotlinLanguage_1 = require("./src/Languages/kotlinLanguage");
-var JavaScriptLanguage_1 = require("./src/Languages/JavaScriptLanguage");
 var fs = require("fs");
 var Types_1 = require("./src/Utility/Types");
 var Helpers_1 = require("./src/Utility/Helpers");
 var Config_1 = require("./src/Config");
+var KotlinLanguage_1 = require("./src/Languages/KotlinLanguage");
+var JavaScriptLanguage_1 = require("./src/Languages/JavaScriptLanguage");
 var args = process.argv.slice(2);
 var jsonFilePath = args[0];
+var packageName = args.pop();
 var languageFiles = args.slice(1);
-var accessModifier = 'internal';
+var accessModifier = 'public';
 var structOccurrencesByName = {};
 // const valueContainerStructs: Struct[] = [];
 var instanceStructsSet = new Types_1.StructsSet([]);
@@ -137,21 +138,25 @@ var generateSourceCodeDecelerationOf = function (json, language, structName, imp
     };
     var rootStructInstanceDeceleration = language.generateDecelerationStatement(declaration);
     var instanceImportStatements = language.importStatements;
+    var typesImportStatements = language.importStatements;
     if (language.extension === 'kt') {
+        typesImportStatements = 'package com.b_labs.fiber_tokens\n' + language.importStatements;
+        var packageDeclaration = 'package com.b_labs.' + packageName;
         var typesNames = __spreadArray([struct.name], instanceStructsSet.values().map(function (struct) { return struct.name; }), true);
+        instanceImportStatements = packageDeclaration + '\n' + instanceImportStatements;
         instanceImportStatements +=
             '\n' + typesNames.map(function (typeName) { return 'import ' + importPath + ".".concat(typeName); }).join('\n');
     }
     return {
-        types: __spreadArray([language.importStatements, rootStructDeceleration], instanceStructDeceleration, true).join('\n\n'),
+        types: __spreadArray([typesImportStatements, rootStructDeceleration], instanceStructDeceleration, true).join('\n\n'),
         instances: [instanceImportStatements, rootStructInstanceDeceleration].join('\n\n'),
     };
 };
 var transpileTo = function (language, json, fileName, importPath) {
-    if (language.name === "javascript") {
+    if (language.name === 'javascript') {
         var jsLanguage = language;
         var content = jsLanguage.generateThemeData(json);
-        fs.writeFile("./".concat(fileName, ".").concat(jsLanguage.extension), content, function (err) {
+        fs.writeFile('./'.concat(fileName, '.').concat(jsLanguage.extension), content, function (err) {
             if (err)
                 console.error(err);
         });
@@ -168,7 +173,11 @@ var transpileTo = function (language, json, fileName, importPath) {
         });
     }
 };
-var supportedLanguages = [new SwiftLanguage_1.SwiftLanguage(), new KotlinLanguage_1.KotlinLanguage(), new JavaScriptLanguage_1.JavaScriptLanguage()];
+var supportedLanguages = [
+    new SwiftLanguage_1.SwiftLanguage(),
+    new KotlinLanguage_1.KotlinLanguage(),
+    new JavaScriptLanguage_1.JavaScriptLanguage(),
+];
 var getLanguageWithExtension = function (extension, listOfLanguages) {
     for (var index = 0; index < listOfLanguages.length; index++) {
         var language = listOfLanguages[index];

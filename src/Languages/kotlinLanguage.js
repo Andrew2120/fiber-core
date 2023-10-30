@@ -89,7 +89,7 @@ var KotlinLanguage = /** @class */ (function () {
         this.importStatements = [
             'import androidx.compose.ui.unit.*',
             'import androidx.compose.ui.graphics.Color',
-            'import android.graphics.Color.parseColor',
+            'import androidx.core.graphics.toColorInt',
             'import androidx.compose.runtime.Composable',
             'import androidx.compose.ui.platform.LocalDensity',
         ].join('\n');
@@ -143,7 +143,7 @@ var KotlinLanguage = /** @class */ (function () {
             return { type: "List<".concat(value[0].struct.name, ">"), value: this.generateArrayOfInstancesDeceleration(value) };
     };
     KotlinLanguage.prototype.generateColorObjectDecelerationFrom = function (hex) {
-        return "Color(parseColor(\"".concat(hex, "\"))");
+        return "Color(\"".concat(hex, "\".toColorInt())");
     };
     KotlinLanguage.prototype.generateInstanceDeceleration = function (instance) {
         var _this = this;

@@ -17,6 +17,6 @@ export const mapOfUnits = {
   em: { type: 'number', converter: (value: string) => convertStringWithUnitPostFixToNumber(value, 'em', 1) },
 };
 
-export const mapOfTailwindNames = {'color': 'colors', 'sizing': 'size', 'spacing': 'space', 'elevation': 'boxShadow'};
+export const mapOfTailwindNames = { color: 'colors', sizing: 'size', spacing: 'space', elevation: 'boxShadow' };
 
 export const keysToBeExcludedFormRecursiveFunc = ['elevation'];

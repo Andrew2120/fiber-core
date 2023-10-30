@@ -9,10 +9,10 @@ export interface Property {
   isConstant: boolean;
   name: string;
   type: string;
-  value: Nullable<string | number | Struct | StructInstance | Array<any>>;
+  value: Nullable<string | number | TypeData | InstanceData | Array<any>>;
 }
 
-export interface Struct {
+export interface TypeData {
   accessModifier: AccessModifier;
   name: string;
   properties: Property[];
@@ -21,11 +21,11 @@ export interface Struct {
 export interface PropertyValue {
   name: string;
   type: string;
-  value: Nullable<string | number | Struct | StructInstance | Array<any>>;
+  value: Nullable<string | number | TypeData | InstanceData | Array<any>>;
 }
 
-export interface StructInstance {
-  struct: Struct;
+export interface InstanceData {
+  struct: TypeData;
   propertyValues: PropertyValue[];
 }
 
