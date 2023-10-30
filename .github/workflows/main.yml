@@ -22,7 +22,24 @@ jobs:
       - name: Generate Tokens for Kotlin and Swift
         run: node index.js ./output-tokens.json DesignSystem.swift DesignSystem.kt
 
-    
+
+      - name: Push to Fiber-iOS Retail
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          working-directory: ${{ github.workspace }} 
+        run: |
+          git config --global user.name 'YousefBtech'
+          git config --global user.email 'yousef.hanafi@btech.com'
+          git clone https://user:$ACCESS_TOKEN@github.com/YousefBtech/fiber-iOS.git fiber-ios-temp
+          rm -rf fiber-ios-temp/Sources/Fiber_Core/DesignSystemTypes.swift
+          cp DesignSystemTypes.swift fiber-ios-temp/Sources/Fiber_Core/
+          rm -rf fiber-ios-temp/Sources/Fiber_Retail/DesignSystemValues.swift
+          cp DesignSystemValues.swift fiber-ios-temp/Sources/Fiber_Retail/
+          cd fiber-ios-temp
+          git add .
+          git commit -m "Copy DesignSystem.swift from fiber-core"
+          git push 
+          
       - name: Push to Fiber-Android Retail
         env:
           ACCESS_ANDROID: ${{ secrets.ACCESS_ANDROID }}
