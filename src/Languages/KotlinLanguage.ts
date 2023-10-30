@@ -1,4 +1,4 @@
-import { Declaration, Property, Struct, StructInstance } from '../Struct';
+import { Declaration, Property, TypeData, InstanceData } from '../Struct';
 import { InconsistentArgumentsError } from '../Errors/InconsistentArgumentsError';
 import { indentStatements as indentStatements } from '../Utility/Helpers';
 import { Language } from './Language';
@@ -89,14 +89,14 @@ export class KotlinLanguage implements Language {
   importStatements: string = [
     'import androidx.compose.ui.unit.*',
     'import androidx.compose.ui.graphics.Color',
-    'import android.graphics.Color.parseColor',
+    'import androidx.core.graphics.toColorInt',
     'import androidx.compose.runtime.Composable',
     'import androidx.compose.ui.platform.LocalDensity',
   ].join('\n');
 
   private numberOfIndentations = 0;
 
-  generateStructDeclaration(struct: Struct, isReferenceType: boolean): string {
+  generateStructDeclaration(struct: TypeData, isReferenceType: boolean): string {
     const numberOfIndentations = 1;
     const propertyDeclarations = struct.properties.map(
       property => this.generatePropertyDeclaration(property) + ','
@@ -108,7 +108,7 @@ export class KotlinLanguage implements Language {
     } (\n${indentedPropertiesDeclarations}\n)`;
   }
 
-  generateInstanceStructDeclaration(struct: Struct): string {
+  generateInstanceStructDeclaration(struct: TypeData): string {
     const numberOfIndentations = 1;
     const propertyDeclarations = struct.properties.map(
       property => this.generatePropertyDeclaration(property) + ', '
@@ -138,7 +138,7 @@ export class KotlinLanguage implements Language {
     return `${decelerationBeginning}: ${type}`;
   }
 
-  generateObjectDecelerationOf(struct: Struct): string {
+  generateObjectDecelerationOf(struct: TypeData): string {
     const propertyParameters = struct.properties.map(property => `${property.name}: ${property.value}`).join(', ');
     return `${struct.name}(${propertyParameters})`;
   }
@@ -164,10 +164,10 @@ export class KotlinLanguage implements Language {
   }
 
   generateColorObjectDecelerationFrom(hex: string): string {
-    return `Color(parseColor("${hex}"))`;
+    return `Color("${hex}".toColorInt())`;
   }
 
-  generateInstanceDeceleration(instance: StructInstance): string {
+  generateInstanceDeceleration(instance: InstanceData): string {
     this.numberOfIndentations++;
     var indentation = '    '.repeat(this.numberOfIndentations);
     let propertyValues = instance.propertyValues
@@ -184,7 +184,7 @@ export class KotlinLanguage implements Language {
     return deceleration;
   }
 
-  generateArrayOfInstancesDeceleration(instances: StructInstance[]): string {
+  generateArrayOfInstancesDeceleration(instances: InstanceData[]): string {
     let instancesDecelerations = instances
       .map(structInstance => this.generateInstanceDeceleration(structInstance))
       .join(', ');

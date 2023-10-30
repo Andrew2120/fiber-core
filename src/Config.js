@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mapOfUnits = exports.jsonKeyMap = void 0;
+exports.keysToBeExcludedFormRecursiveFunc = exports.mapOfTailwindNames = exports.mapOfUnits = exports.jsonKeyMap = void 0;
 exports.jsonKeyMap = {
     '--': '-negative-',
     '+': '',
@@ -17,3 +17,5 @@ exports.mapOfUnits = {
     px: { type: 'number', converter: function (value) { return convertStringWithUnitPostFixToNumber(value, 'px', 1); } },
     em: { type: 'number', converter: function (value) { return convertStringWithUnitPostFixToNumber(value, 'em', 1); } },
 };
+exports.mapOfTailwindNames = { 'color': 'colors', 'sizing': 'size', 'spacing': 'space', 'elevation': 'boxShadow' };
+exports.keysToBeExcludedFormRecursiveFunc = ['elevation'];

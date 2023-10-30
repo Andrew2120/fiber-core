@@ -1,4 +1,4 @@
-import { Property, PropertyValue, Struct, StructInstance } from '../Struct';
+import { Property, PropertyValue, TypeData, InstanceData } from '../Struct';
 import { TokenValueType } from './Types';
 
 export const indentStatements = (
@@ -8,6 +8,14 @@ export const indentStatements = (
 ): string => {
   const indentation = '    ';
   return statements.map(statement => indentation.repeat(numberOfIndentations) + statement).join(joiner);
+};
+
+export const indentMultilineString = (string: String, numberOfIndentations: number): string => {
+  const indentation = '    ';
+  return string
+    .split('\n')
+    .map(statement => indentation.repeat(numberOfIndentations) + statement)
+    .join('\n');
 };
 
 /**
@@ -63,7 +71,7 @@ export const getPropertySignature = (property: Property): string => {
   return `${property.name}${property.type}`;
 };
 
-export const getStructSignature = (struct: Struct): string => {
+export const getStructSignature = (struct: TypeData): string => {
   const sortedProperties = struct.properties.sort((p1, p2) => p2.name.localeCompare(p1.name));
   return sortedProperties.map(property => getPropertySignature(property)).join('');
 };
@@ -159,7 +167,7 @@ export const getValueAndTypeFrom = (value: any, mapOfUnits: object): { value: an
   }
 };
 
-export const getStructInstanceOf = (struct: Struct): StructInstance => {
+export const getStructInstanceOf = (struct: TypeData): InstanceData => {
   const propertyValues: PropertyValue[] = struct.properties
     .filter(property => !property.hasDefaultValue)
     .map(property => {

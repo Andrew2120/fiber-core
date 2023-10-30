@@ -26,10 +26,12 @@ var Types_1 = require("./src/Utility/Types");
 var Helpers_1 = require("./src/Utility/Helpers");
 var Config_1 = require("./src/Config");
 var KotlinLanguage_1 = require("./src/Languages/KotlinLanguage");
+var JavaScriptLanguage_1 = require("./src/Languages/JavaScriptLanguage");
 var args = process.argv.slice(2);
 var jsonFilePath = args[0];
+var packageName = args.pop();
 var languageFiles = args.slice(1);
-var accessModifier = 'internal';
+var accessModifier = 'public';
 var structOccurrencesByName = {};
 // const valueContainerStructs: Struct[] = [];
 var instanceStructsSet = new Types_1.StructsSet([]);
@@ -135,32 +137,47 @@ var generateSourceCodeDecelerationOf = function (json, language, structName, imp
         value: rootStructInstance,
     };
     var rootStructInstanceDeceleration = language.generateDecelerationStatement(declaration);
-    // `var ${lowerCaseFirstLetter(structName)} = ` + language.generateInstanceDeceleration(rootStructInstance);
-    var instanceImportStatements = '';
+    var instanceImportStatements = language.importStatements;
+    var typesImportStatements = language.importStatements;
     if (language.extension === 'kt') {
+        typesImportStatements = 'package com.b_labs.fiber_tokens\n' + language.importStatements;
+        var packageDeclaration = 'package com.b_labs.' + packageName;
         var typesNames = __spreadArray([struct.name], instanceStructsSet.values().map(function (struct) { return struct.name; }), true);
-        instanceImportStatements =
-            language.importStatements +
-                '\n' +
-                typesNames.map(function (typeName) { return 'import ' + importPath + ".".concat(typeName); }).join('\n');
+        instanceImportStatements = packageDeclaration + '\n' + instanceImportStatements;
+        instanceImportStatements +=
+            '\n' + typesNames.map(function (typeName) { return 'import ' + importPath + ".".concat(typeName); }).join('\n');
     }
     return {
-        types: __spreadArray([language.importStatements, rootStructDeceleration], instanceStructDeceleration, true).join('\n\n'),
-        instances: [instanceImportStatements, '\n', rootStructInstanceDeceleration].join('\n\n'),
+        types: __spreadArray([typesImportStatements, rootStructDeceleration], instanceStructDeceleration, true).join('\n\n'),
+        instances: [instanceImportStatements, rootStructInstanceDeceleration].join('\n\n'),
     };
 };
 var transpileTo = function (language, json, fileName, importPath) {
-    var _a = generateSourceCodeDecelerationOf(json, language, fileName, importPath), types = _a.types, instances = _a.instances;
-    fs.writeFile("./".concat(fileName, "Types.").concat(language.extension), types, function (err) {
-        if (err)
-            console.error(err);
-    });
-    fs.writeFile("./".concat(fileName, "Values.").concat(language.extension), instances, function (err) {
-        if (err)
-            console.error(err);
-    });
+    if (language.name === 'javascript') {
+        var jsLanguage = language;
+        var content = jsLanguage.generateThemeData(json);
+        fs.writeFile('./'.concat(fileName, '.').concat(jsLanguage.extension), content, function (err) {
+            if (err)
+                console.error(err);
+        });
+    }
+    else {
+        var _a = generateSourceCodeDecelerationOf(json, language, fileName, importPath), types = _a.types, instances = _a.instances;
+        fs.writeFile("./".concat(fileName, "Types.").concat(language.extension), types, function (err) {
+            if (err)
+                console.error(err);
+        });
+        fs.writeFile("./".concat(fileName, "Values.").concat(language.extension), instances, function (err) {
+            if (err)
+                console.error(err);
+        });
+    }
 };
-var supportedLanguages = [new SwiftLanguage_1.SwiftLanguage(), new KotlinLanguage_1.KotlinLanguage()];
+var supportedLanguages = [
+    new SwiftLanguage_1.SwiftLanguage(),
+    new KotlinLanguage_1.KotlinLanguage(),
+    new JavaScriptLanguage_1.JavaScriptLanguage(),
+];
 var getLanguageWithExtension = function (extension, listOfLanguages) {
     for (var index = 0; index < listOfLanguages.length; index++) {
         var language = listOfLanguages[index];
