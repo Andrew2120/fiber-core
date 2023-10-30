@@ -44,4 +44,19 @@ jobs:
           git add .
           git commit -m "Copy DesignSystem.kt from fiber-core"
           git push
+
+      - name: Push to Fiber-iOS deel
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          working-directory: ${{ github.workspace }} 
+        run: |
+          git config user.name 'YousefBtech'
+          git config user.email 'yousef.hanafi@btech.com'
+          git clone -b retail https://user:$ACCESS_TOKEN@github.com/YousefBtech/fiber-core2.git fiber-ios-temp
+          cp DesignSystemValues.swift fiber-ios-temp/Sources/Fiber-iOS
+          cp DesignSystemTypes.swift fiber-ios-temp/Sources/Fiber-iOS
+          cd fiber-ios-temp
+          git add .
+          git commit -m "Copy DesignSystem.swift from fiber-core"
+          git push  
       
