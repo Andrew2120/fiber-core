@@ -21,11 +21,12 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var SwiftLanguage_1 = require("./src/Languages/SwiftLanguage");
+var KotlinLanguage_1 = require("./src/Languages/kotlinLanguage");
+var JavaScriptLanguage_1 = require("./src/Languages/JavaScriptLanguage");
 var fs = require("fs");
 var Types_1 = require("./src/Utility/Types");
 var Helpers_1 = require("./src/Utility/Helpers");
 var Config_1 = require("./src/Config");
-var KotlinLanguage_1 = require("./src/Languages/KotlinLanguage");
 var args = process.argv.slice(2);
 var jsonFilePath = args[0];
 var languageFiles = args.slice(1);
@@ -147,17 +148,27 @@ var generateSourceCodeDecelerationOf = function (json, language, structName, imp
     };
 };
 var transpileTo = function (language, json, fileName, importPath) {
-    var _a = generateSourceCodeDecelerationOf(json, language, fileName, importPath), types = _a.types, instances = _a.instances;
-    fs.writeFile("./".concat(fileName, "Types.").concat(language.extension), types, function (err) {
-        if (err)
-            console.error(err);
-    });
-    fs.writeFile("./".concat(fileName, "Values.").concat(language.extension), instances, function (err) {
-        if (err)
-            console.error(err);
-    });
+    if (language.name === "javascript") {
+        var jsLanguage = language;
+        var content = jsLanguage.generateThemeData(json);
+        fs.writeFile("./".concat(fileName, ".").concat(jsLanguage.extension), content, function (err) {
+            if (err)
+                console.error(err);
+        });
+    }
+    else {
+        var _a = generateSourceCodeDecelerationOf(json, language, fileName, importPath), types = _a.types, instances = _a.instances;
+        fs.writeFile("./".concat(fileName, "Types.").concat(language.extension), types, function (err) {
+            if (err)
+                console.error(err);
+        });
+        fs.writeFile("./".concat(fileName, "Values.").concat(language.extension), instances, function (err) {
+            if (err)
+                console.error(err);
+        });
+    }
 };
-var supportedLanguages = [new SwiftLanguage_1.SwiftLanguage(), new KotlinLanguage_1.KotlinLanguage()];
+var supportedLanguages = [new SwiftLanguage_1.SwiftLanguage(), new KotlinLanguage_1.KotlinLanguage(), new JavaScriptLanguage_1.JavaScriptLanguage()];
 var getLanguageWithExtension = function (extension, listOfLanguages) {
     for (var index = 0; index < listOfLanguages.length; index++) {
         var language = listOfLanguages[index];
@@ -170,7 +181,7 @@ var json = require(jsonFilePath);
 languageFiles.forEach(function (languageFile) {
     var _a = languageFile.split('.'), filename = _a[0], extension = _a[1];
     var language = getLanguageWithExtension(extension, supportedLanguages);
-    transpileTo(language, json, filename, '');
+    transpileTo(language, json, filename, 'com.b_labs.fiber_tokens');
     structOccurrencesByName = {};
     instanceStructsSet = new Types_1.StructsSet([]);
 });
