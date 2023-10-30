@@ -170,7 +170,7 @@ var json = require(jsonFilePath);
 languageFiles.forEach(function (languageFile) {
     var _a = languageFile.split('.'), filename = _a[0], extension = _a[1];
     var language = getLanguageWithExtension(extension, supportedLanguages);
-    transpileTo(language, json, filename, '');
+    transpileTo(language, json, filename, 'com.b_labs.fiber_tokens');
     structOccurrencesByName = {};
     instanceStructsSet = new Types_1.StructsSet([]);
 });
