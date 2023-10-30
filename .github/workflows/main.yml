@@ -29,7 +29,7 @@ jobs:
         run: |
           git config user.name 'YousefBtech'
           git config user.email 'yousef.hanafi@btech.com'
-          git clone -b retail https://user:$ACCESS_TOKEN@github.com/YousefBtech/fiber-core2.git fiber-ios-temp
+          git clone https://user:$ACCESS_TOKEN@github.com/YousefBtech/fiber-core.git fiber-ios-temp
           cp DesignSystemValues.swift fiber-ios-temp/
           cp DesignSystemTypes.swift fiber-ios-temp/
           cd fiber-ios-temp
