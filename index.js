@@ -21,7 +21,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var SwiftLanguage_1 = require("./src/Languages/SwiftLanguage");
-var KotlinLanguage_1 = require("./src/Languages/KotlinLanguage");
+var KotlinLanguage_1 = require("./src/Languages/kotlinLanguage");
 // var JavaScriptLanguage_1 = require("./src/Languages/JavaScriptLanguage");
 var fs = require("fs");
 var Types_1 = require("./src/Utility/Types");
