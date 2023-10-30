@@ -1,4 +1,4 @@
-import { Struct } from '../Struct';
+import { TypeData } from '../Struct';
 import { getStructSignature } from './Helpers';
 
 export type AccessModifier = 'public' | 'private' | 'internal';
@@ -17,20 +17,20 @@ export type TokenValueType =
 export class StructsSet {
   private structsBySignature = {};
 
-  constructor(structs: Struct[]) {
+  constructor(structs: TypeData[]) {
     structs.forEach(struct => this.append(struct));
   }
 
-  values(): Struct[] {
+  values(): TypeData[] {
     return Object.values(this.structsBySignature);
   }
 
-  includes(struct: Struct) {
+  includes(struct: TypeData) {
     const structSignature = getStructSignature(struct);
     return !!this.structsBySignature[structSignature];
   }
 
-  append(struct: Struct) {
+  append(struct: TypeData) {
     const newStructSignature = getStructSignature(struct);
     this.structsBySignature[newStructSignature] = struct;
   }

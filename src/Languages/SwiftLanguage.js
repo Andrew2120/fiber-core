@@ -70,10 +70,27 @@ var SwiftLanguage = /** @class */ (function () {
     SwiftLanguage.prototype.generateStructDeclaration = function (struct, isReferenceType) {
         var _this = this;
         var numberOfIndentations = 1;
+        var initializerDeclaration = "\n\n" + this.generateInitializerDeclaration(struct.properties, struct.accessModifier);
         var propertyDeclarations = struct.properties.map(function (property) { return _this.generatePropertyDeclaration(property); });
         var indentedPropertiesDeclarations = (0, Helpers_1.indentStatements)(propertyDeclarations, numberOfIndentations);
         var typeDecelerationKeyword = isReferenceType ? 'class' : 'struct';
-        return "".concat(struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : '').concat(typeDecelerationKeyword, " ").concat(struct.name, " {\n").concat(indentedPropertiesDeclarations, "\n}");
+        return "".concat(struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : '').concat(typeDecelerationKeyword, " ").concat(struct.name, " {\n").concat(indentedPropertiesDeclarations).concat(initializerDeclaration, "\n}");
+    };
+    SwiftLanguage.prototype.generateInitializerDeclaration = function (properties, accessModifier) {
+        var _this = this;
+        var modifier = accessModifier != 'internal' ? accessModifier + ' ' : '';
+        var propertiesParameters = properties
+            .map(function (property) { return property.name + ': ' + _this.convertTokenTypeAndValue(property.type, property.value).type; })
+            .join(',\n');
+        var indentedPropertiesParameters = (0, Helpers_1.indentMultilineString)(propertiesParameters, 1);
+        var propertiesAssignment = properties
+            .map(function (property) {
+            var propertyName = _this.keywords.includes(property.name) ? "`".concat(property.name, "`") : property.name;
+            return "self.".concat(property.name, " = ").concat(propertyName);
+        })
+            .join('\n');
+        var indentedPropertiesAssignment = (0, Helpers_1.indentMultilineString)(propertiesAssignment, 1);
+        return (0, Helpers_1.indentMultilineString)("".concat(modifier, "init(\n").concat(indentedPropertiesParameters, "\n) {\n").concat(indentedPropertiesAssignment, "\n}"), 1);
     };
     SwiftLanguage.prototype.generateInstanceStructDeclaration = function (struct) {
         return this.generateStructDeclaration(struct, false);

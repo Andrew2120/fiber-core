@@ -1,7 +1,8 @@
-import { Declaration, Property, Struct, StructInstance } from '../Struct';
+import { Declaration, Property, TypeData, InstanceData } from '../Struct';
 import { InconsistentArgumentsError } from '../Errors/InconsistentArgumentsError';
-import { indentStatements as indentStatements } from '../Utility/Helpers';
+import { indentMultilineString, indentStatements as indentStatements } from '../Utility/Helpers';
 import { Language } from './Language';
+import { AccessModifier } from '../Utility/Types';
 
 export class SwiftLanguage implements Language {
   name = 'Swift';
@@ -67,8 +68,10 @@ export class SwiftLanguage implements Language {
   importStatements: string = 'import SwiftUI';
   private numberOfIndentations = 0;
 
-  generateStructDeclaration(struct: Struct, isReferenceType: boolean): string {
+  generateStructDeclaration(struct: TypeData, isReferenceType: boolean): string {
     const numberOfIndentations = 1;
+    const initializerDeclaration =
+      `\n\n` + this.generateInitializerDeclaration(struct.properties, struct.accessModifier);
     const propertyDeclarations = struct.properties.map(property => this.generatePropertyDeclaration(property));
     const indentedPropertiesDeclarations = indentStatements(propertyDeclarations, numberOfIndentations);
 
@@ -76,10 +79,32 @@ export class SwiftLanguage implements Language {
 
     return `${struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : ''}${typeDecelerationKeyword} ${
       struct.name
-    } {\n${indentedPropertiesDeclarations}\n}`;
+    } {\n${indentedPropertiesDeclarations}${initializerDeclaration}\n}`;
   }
 
-  generateInstanceStructDeclaration(struct: Struct): string {
+  generateInitializerDeclaration(properties: Property[], accessModifier: AccessModifier): string {
+    const modifier = accessModifier != 'internal' ? accessModifier + ' ' : '';
+    const propertiesParameters = properties
+      .map(property => property.name + ': ' + this.convertTokenTypeAndValue(property.type, property.value).type)
+      .join(',\n');
+
+    const indentedPropertiesParameters = indentMultilineString(propertiesParameters, 1);
+
+    const propertiesAssignment = properties
+      .map(property => {
+        const propertyName = this.keywords.includes(property.name) ? `\`${property.name}\`` : property.name;
+        return `self.${property.name} = ${propertyName}`;
+      })
+      .join('\n');
+    const indentedPropertiesAssignment = indentMultilineString(propertiesAssignment, 1);
+
+    return indentMultilineString(
+      `${modifier}init(\n${indentedPropertiesParameters}\n) {\n${indentedPropertiesAssignment}\n}`,
+      1
+    );
+  }
+
+  generateInstanceStructDeclaration(struct: TypeData): string {
     return this.generateStructDeclaration(struct, false);
   }
 
@@ -124,7 +149,7 @@ export class SwiftLanguage implements Language {
     return `SwiftUI.Color(hex: "${hex}")`;
   }
 
-  generateInstanceDeceleration(instance: StructInstance): string {
+  generateInstanceDeceleration(instance: InstanceData): string {
     this.numberOfIndentations++;
     var indentation = '    '.repeat(this.numberOfIndentations);
     let propertyValues = instance.propertyValues
@@ -141,7 +166,7 @@ export class SwiftLanguage implements Language {
     return deceleration;
   }
 
-  generateArrayOfInstancesDeceleration(instances: StructInstance[]): string {
+  generateArrayOfInstancesDeceleration(instances: InstanceData[]): string {
     let instancesDecelerations = instances
       .map(structInstance => this.generateInstanceDeceleration(structInstance))
       .join(', ');
