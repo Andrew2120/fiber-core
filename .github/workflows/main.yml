@@ -30,10 +30,10 @@ jobs:
           git config --global user.name 'YousefBtech'
           git config --global user.email 'yousef.hanafi@btech.com'
           git clone https://user:$ACCESS_TOKEN@github.com/YousefBtech/fiber-iOS.git fiber-ios-temp
-          rm -rf fiber-ios-temp/fiber-iOS/Sources/Fiber_Core/DesignSystem.swift
-          cp DesignSystemTypes.swift fiber-ios-temp/fiber-iOS/Sources/Fiber_Core/
-          rm -rf fiber-ios-temp/fiber-iOS/Sources/Fiber_Deel/DesignSystem.swift
-          cp DesignSystemValues.swift fiber-ios-temp/fiber-iOS/Sources/Fiber_Deel/
+          rm -rf fiber-ios-temp/Sources/Fiber_Core/DesignSystem.swift
+          cp DesignSystemTypes.swift fiber-ios-temp/Sources/Fiber_Core/
+          rm -rf fiber-ios-temp/Sources/Fiber_Deel/DesignSystem.swift
+          cp DesignSystemValues.swift fiber-ios-temp/Sources/Fiber_Deel/
           cd fiber-ios-temp
           git add .
           git commit -m "Copy DesignSystem.swift from fiber-core"
