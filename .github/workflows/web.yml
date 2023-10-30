@@ -24,7 +24,7 @@ jobs:
         run: npx token-transformer tokens.json output-tokens.json --excludes '$themes' --excludes '$metadata' --sets component/light --sets component/dark --sets alias --sets global
 
       - name: Generate Tokens web
-        run: node index.js ./output-tokens.json theme-data-${{ github.head_ref || github.ref_name }}.js
+        run: node index.js ./output-tokens.json theme-data.js
   
       - name: Push to Fiber-web
         env:
@@ -35,10 +35,10 @@ jobs:
           git config --global user.name 'peter1Osama'
           git config --global user.email 'peter.badrous@btech.com'
           git clone https://user:$ACCESS_TOKEN@github.com/peter1Osama/web-core-config-public.git fiber-web-temp
-          rm -rf fiber-web-temp/web-core-config-public/theme-data-$BRANCH_NAME.js
-          cp theme-data-$BRANCH_NAME.js fiber-web-temp
+          rm -rf fiber-web-temp/web-core-config-public/theme-data.js
+          cp theme-data.js fiber-web-temp
           cd fiber-web-temp
           npm version patch
           git add .
-          git commit -m "theme-data-$BRANCH_NAME.js and update package version from fiber-web-temp"
+          git commit -m "theme-data.js and update package version from fiber-web-temp"
           git push origin main
