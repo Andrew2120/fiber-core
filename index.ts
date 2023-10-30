@@ -173,6 +173,8 @@ const generateSourceCodeDecelerationOf = (
     instanceImportStatements = packageDeclaration + '\n' + instanceImportStatements;
     instanceImportStatements +=
       '\n' + typesNames.map(typeName => 'import ' + importPath + `.${typeName}`).join('\n');
+  } else if (language.extension === 'swift') {
+    instanceImportStatements = instanceImportStatements + '\nimport Fiber_Core';
   }
 
   return {

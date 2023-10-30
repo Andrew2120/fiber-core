@@ -115,12 +115,16 @@ export class SwiftLanguage implements Language {
       );
     }
 
+    const modifier = property.accessModifier != 'internal' ? property.accessModifier + ' ' : '';
+
     const { type, value } = this.convertTokenTypeAndValue(property.type, property.value);
 
     const propertyName = this.keywords.includes(property.name) ? `\`${property.name}\`` : property.name;
 
     const decelerationKeyword = property.isConstant ? 'let' : 'var';
-    const decelerationBeginning = `${property.isStatic ? 'static ' : ''}${decelerationKeyword} ${propertyName}`;
+    const decelerationBeginning = `${modifier}${
+      property.isStatic ? 'static ' : ''
+    }${decelerationKeyword} ${propertyName}`;
 
     if (property.hasDefaultValue) return `${decelerationBeginning} = ${value}`;
     return `${decelerationBeginning}: ${type}`;

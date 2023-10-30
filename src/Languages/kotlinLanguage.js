@@ -100,23 +100,24 @@ var KotlinLanguage = /** @class */ (function () {
         var numberOfIndentations = 1;
         var propertyDeclarations = struct.properties.map(function (property) { return _this.generatePropertyDeclaration(property) + ','; });
         var indentedPropertiesDeclarations = (0, Helpers_1.indentStatements)(propertyDeclarations, numberOfIndentations);
-        return "".concat(struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : '', "data class ").concat(struct.name, " (\n").concat(indentedPropertiesDeclarations, "\n)");
+        return "".concat(struct.accessModifier != 'public' ? struct.accessModifier + ' ' : '', "data class ").concat(struct.name, " (\n").concat(indentedPropertiesDeclarations, "\n)");
     };
     KotlinLanguage.prototype.generateInstanceStructDeclaration = function (struct) {
         var _this = this;
         var numberOfIndentations = 1;
         var propertyDeclarations = struct.properties.map(function (property) { return _this.generatePropertyDeclaration(property) + ', '; });
         var indentedPropertiesDeclarations = (0, Helpers_1.indentStatements)(propertyDeclarations, numberOfIndentations);
-        return "".concat(struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : '', "data class ").concat(struct.name, " (\n").concat(indentedPropertiesDeclarations, "\n)");
+        return "".concat(struct.accessModifier != 'public' ? struct.accessModifier + ' ' : '', "data class ").concat(struct.name, " (\n").concat(indentedPropertiesDeclarations, "\n)");
     };
     KotlinLanguage.prototype.generatePropertyDeclaration = function (property) {
         if (property.hasDefaultValue && property.value === null) {
             throw new InconsistentArgumentsError_1.InconsistentArgumentsError("Property has a default value but no value is provided\n".concat(JSON.stringify(property)));
         }
+        var modifier = property.accessModifier != 'public' ? property.accessModifier + ' ' : '';
         var _a = this.convertTokenTypeAndValue(property.type, property.value), type = _a.type, value = _a.value;
         var propertyName = this.keywords.includes(property.name) ? "`".concat(property.name, "`") : property.name;
         var decelerationKeyword = property.isConstant ? 'val' : 'var';
-        var decelerationBeginning = "".concat(decelerationKeyword, " ").concat(propertyName);
+        var decelerationBeginning = "".concat(modifier).concat(decelerationKeyword, " ").concat(propertyName);
         if (property.hasDefaultValue)
             return "".concat(decelerationBeginning, " = ").concat(value);
         return "".concat(decelerationBeginning, ": ").concat(type);

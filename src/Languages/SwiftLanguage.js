@@ -99,10 +99,11 @@ var SwiftLanguage = /** @class */ (function () {
         if (property.hasDefaultValue && property.value === null) {
             throw new InconsistentArgumentsError_1.InconsistentArgumentsError("Property has a default value but no value is provided\n".concat(JSON.stringify(property)));
         }
+        var modifier = property.accessModifier != 'internal' ? property.accessModifier + ' ' : '';
         var _a = this.convertTokenTypeAndValue(property.type, property.value), type = _a.type, value = _a.value;
         var propertyName = this.keywords.includes(property.name) ? "`".concat(property.name, "`") : property.name;
         var decelerationKeyword = property.isConstant ? 'let' : 'var';
-        var decelerationBeginning = "".concat(property.isStatic ? 'static ' : '').concat(decelerationKeyword, " ").concat(propertyName);
+        var decelerationBeginning = "".concat(modifier).concat(property.isStatic ? 'static ' : '').concat(decelerationKeyword, " ").concat(propertyName);
         if (property.hasDefaultValue)
             return "".concat(decelerationBeginning, " = ").concat(value);
         return "".concat(decelerationBeginning, ": ").concat(type);

@@ -147,6 +147,9 @@ var generateSourceCodeDecelerationOf = function (json, language, structName, imp
         instanceImportStatements +=
             '\n' + typesNames.map(function (typeName) { return 'import ' + importPath + ".".concat(typeName); }).join('\n');
     }
+    else if (language.extension === 'swift') {
+        instanceImportStatements = instanceImportStatements + '\nimport Fiber_Core';
+    }
     return {
         types: __spreadArray([typesImportStatements, rootStructDeceleration], instanceStructDeceleration, true).join('\n\n'),
         instances: [instanceImportStatements, rootStructInstanceDeceleration].join('\n\n'),

@@ -103,7 +103,7 @@ export class KotlinLanguage implements Language {
     );
     const indentedPropertiesDeclarations = indentStatements(propertyDeclarations, numberOfIndentations);
 
-    return `${struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : ''}data class ${
+    return `${struct.accessModifier != 'public' ? struct.accessModifier + ' ' : ''}data class ${
       struct.name
     } (\n${indentedPropertiesDeclarations}\n)`;
   }
@@ -115,7 +115,7 @@ export class KotlinLanguage implements Language {
     );
     const indentedPropertiesDeclarations = indentStatements(propertyDeclarations, numberOfIndentations);
 
-    return `${struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : ''}data class ${
+    return `${struct.accessModifier != 'public' ? struct.accessModifier + ' ' : ''}data class ${
       struct.name
     } (\n${indentedPropertiesDeclarations}\n)`;
   }
@@ -127,12 +127,14 @@ export class KotlinLanguage implements Language {
       );
     }
 
+    const modifier = property.accessModifier != 'public' ? property.accessModifier + ' ' : '';
+
     const { type, value } = this.convertTokenTypeAndValue(property.type, property.value);
 
     const propertyName = this.keywords.includes(property.name) ? `\`${property.name}\`` : property.name;
 
     const decelerationKeyword = property.isConstant ? 'val' : 'var';
-    const decelerationBeginning = `${decelerationKeyword} ${propertyName}`;
+    const decelerationBeginning = `${modifier}${decelerationKeyword} ${propertyName}`;
 
     if (property.hasDefaultValue) return `${decelerationBeginning} = ${value}`;
     return `${decelerationBeginning}: ${type}`;
