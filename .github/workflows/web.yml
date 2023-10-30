@@ -26,6 +26,7 @@ jobs:
       - name: Generate Tokens web
         run: node index.js ./output-tokens.json theme-data.js
   
+  
       - name: Push to Fiber-web
         env:
           ACCESS_TOKEN: ${{ secrets.WEB_TOKEN }}
