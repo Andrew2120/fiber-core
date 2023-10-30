@@ -10,8 +10,9 @@ import {
   lowerCaseFirstLetter,
 } from './src/Utility/Helpers';
 import { jsonKeyMap, mapOfUnits } from './src/Config';
-import { Language } from './src/Languages/Language';
+import { Language, JSLanguage } from './src/Languages/Language';
 import { KotlinLanguage } from './src/Languages/KotlinLanguage';
+import { JavaScriptLanguage } from './src/Languages/JavaScriptLanguage';
 
 const args = process.argv.slice(2);
 const jsonFilePath = args[0];
@@ -175,21 +176,30 @@ const generateSourceCodeDecelerationOf = (
   };
 };
 
-const transpileTo = (language: Language, json: object, fileName: string, importPath: string) => {
-  const { types, instances } = generateSourceCodeDecelerationOf(json, language, fileName, importPath);
+const transpileTo = (language: Language|JSLanguage, json: object, fileName: string, importPath: string) => {
+  if(language.name === "javascript" ){
+    const jsLanguage = language as JSLanguage
+    const content = jsLanguage.generateThemeData(json)
+    fs.writeFile("./".concat(fileName, ".").concat(jsLanguage.extension), content, function (err) {
+      if (err)
+        console.error(err);
+    });
+  } else {
+    const { types, instances } = generateSourceCodeDecelerationOf(json, language as Language, fileName, importPath);
 
-  fs.writeFile(`./${fileName}Types.${language.extension}`, types, err => {
-    if (err) console.error(err);
-  });
-
-  fs.writeFile(`./${fileName}Values.${language.extension}`, instances, err => {
-    if (err) console.error(err);
-  });
+    fs.writeFile(`./${fileName}Types.${language.extension}`, types, err => {
+      if (err) console.error(err);
+    });
+  
+    fs.writeFile(`./${fileName}Values.${language.extension}`, instances, err => {
+      if (err) console.error(err);
+    });
+  }
 };
 
-const supportedLanguages: Language[] = [new SwiftLanguage(), new KotlinLanguage()];
+const supportedLanguages: (Language|JSLanguage)[] = [new SwiftLanguage(), new KotlinLanguage(), new JavaScriptLanguage()];
 
-const getLanguageWithExtension = (extension: string, listOfLanguages: Language[]): Language => {
+const getLanguageWithExtension = (extension: string, listOfLanguages: (Language|JSLanguage)[]): (Language|JSLanguage) => {
   for (let index = 0; index < listOfLanguages.length; index++) {
     const language = listOfLanguages[index];
     if (language.extension === extension) return language;
