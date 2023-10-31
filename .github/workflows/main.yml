@@ -6,6 +6,7 @@ on:
       - open-loop
       - deel
       - retail
+      - main
 
 jobs:
   Run_tokens_transformer_and_push_generated_files:
