@@ -23,7 +23,7 @@ jobs:
 
       - name: Generate Tokens for Kotlin and Swift
         run: |
-          tsd index.ts
+          tsc index.ts
           node index.js ./output-tokens.json DesignSystem.swift DesignSystem.kt
  
       - name: Push to Fiber-iOS
