@@ -16,8 +16,8 @@ import { JavaScriptLanguage } from './src/Languages/JavaScriptLanguage';
 
 const args = process.argv.slice(2);
 const jsonFilePath = args[0];
-const packageName = args.pop();
 const languageFiles = args.slice(1);
+const packageName = args.pop();
 
 const accessModifier: AccessModifier = 'public';
 
