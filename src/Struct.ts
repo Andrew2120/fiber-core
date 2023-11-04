@@ -7,15 +7,19 @@ export interface Property {
   isStatic: boolean;
   hasDefaultValue: boolean;
   isConstant: boolean;
+  nameInObject: string;
   name: string;
   type: string;
   value: Nullable<string | number | TypeData | InstanceData | Array<any>>;
 }
 
+export type ComputedProperty = Property;
+
 export interface TypeData {
   accessModifier: AccessModifier;
   name: string;
   properties: Property[];
+  computedProperties: Property[];
 }
 
 export interface PropertyValue {

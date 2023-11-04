@@ -99,8 +99,16 @@ var KotlinLanguage = /** @class */ (function () {
         var _this = this;
         var numberOfIndentations = 1;
         var propertyDeclarations = struct.properties.map(function (property) { return _this.generatePropertyDeclaration(property) + ','; });
+        var computedPropertyDeclarations = struct.computedProperties.map(function (property) {
+            return _this.generateComputedPropertyDeclaration(property);
+        });
         var indentedPropertiesDeclarations = (0, Helpers_1.indentStatements)(propertyDeclarations, numberOfIndentations);
-        return "".concat(struct.accessModifier != 'public' ? struct.accessModifier + ' ' : '', "data class ").concat(struct.name, " (\n").concat(indentedPropertiesDeclarations, "\n)");
+        var indentedComputedPropertiesDeclarations = (0, Helpers_1.indentStatements)(computedPropertyDeclarations, numberOfIndentations);
+        var dataClassDeclaration = "".concat(struct.accessModifier != 'public' ? struct.accessModifier + ' ' : '', "data class ").concat(struct.name, " (\n").concat(indentedPropertiesDeclarations, "\n)");
+        if (computedPropertyDeclarations.length > 0) {
+            dataClassDeclaration += " {\n".concat(indentedComputedPropertiesDeclarations, "\n}");
+        }
+        return dataClassDeclaration;
     };
     KotlinLanguage.prototype.generateInstanceStructDeclaration = function (struct) {
         var _this = this;
@@ -119,8 +127,18 @@ var KotlinLanguage = /** @class */ (function () {
         var decelerationKeyword = property.isConstant ? 'val' : 'var';
         var decelerationBeginning = "".concat(modifier).concat(decelerationKeyword, " ").concat(propertyName);
         if (property.hasDefaultValue)
-            return "".concat(decelerationBeginning, " = ").concat(value);
+            return "".concat(decelerationBeginning, ": ").concat(type, " = ").concat(value);
         return "".concat(decelerationBeginning, ": ").concat(type);
+    };
+    KotlinLanguage.prototype.generateComputedPropertyDeclaration = function (property) {
+        if (property.hasDefaultValue && property.value === null) {
+            throw new InconsistentArgumentsError_1.InconsistentArgumentsError("Property has a default value but no value is provided\n".concat(JSON.stringify(property)));
+        }
+        var modifier = property.accessModifier != 'public' ? property.accessModifier + ' ' : '';
+        var _a = this.convertTokenTypeAndValue(property.type, property.value), type = _a.type, value = _a.value;
+        var propertyName = this.keywords.includes(property.name) ? "`".concat(property.name, "`") : property.name;
+        var decelerationBeginning = "".concat(modifier).concat(property.isStatic ? 'static ' : '', "val ").concat(propertyName);
+        return "".concat(decelerationBeginning, ": ").concat(type, " get() = ").concat(value);
     };
     KotlinLanguage.prototype.generateObjectDecelerationOf = function (struct) {
         var propertyParameters = struct.properties.map(function (property) { return "".concat(property.name, ": ").concat(property.value); }).join(', ');
@@ -133,6 +151,10 @@ var KotlinLanguage = /** @class */ (function () {
             case 'number':
                 var number = parseFloat(value);
                 return { type: 'Double', value: this.getStringifiedNumberAsFloat(number) };
+            case 'boolean':
+                return { type: 'Boolean', value: value };
+            case 'color-computedProperty':
+                return { type: 'DSColor', value: value };
             case 'color':
                 return { type: 'Color', value: this.generateColorObjectDecelerationFrom(value) };
             case 'valueContainerObject':
