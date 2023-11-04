@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStructInstanceOf = exports.getValueAndTypeFrom = exports.getValueAndTypeFromWrappedValue = exports.getPropertyName = exports.lowerCaseFirstLetter = exports.capitalizeFirstLetter = exports.replaceKeysWithValuesIn = exports.getStructSignature = exports.getPropertySignature = exports.convertToCamelCase = exports.isHexColor = exports.isStruct = exports.isWrappedValue = exports.indentMultilineString = exports.indentStatements = void 0;
+exports.getObjectSignature = exports.getStructInstanceOf = exports.getValueAndTypeFrom = exports.getValueAndTypeFromWrappedValue = exports.getPropertyName = exports.lowerCaseFirstLetter = exports.capitalizeFirstLetter = exports.replaceKeysWithValuesIn = exports.getStructSignature = exports.getPropertySignature = exports.convertToCamelCase = exports.isHexColor = exports.isStruct = exports.isWrappedValue = exports.indentMultilineString = exports.indentStatements = void 0;
 var indentStatements = function (statements, numberOfIndentations, joiner) {
     if (joiner === void 0) { joiner = '\n'; }
     var indentation = '    ';
@@ -64,7 +64,7 @@ var getPropertySignature = function (property) {
 exports.getPropertySignature = getPropertySignature;
 var getStructSignature = function (struct) {
     var sortedProperties = struct.properties.sort(function (p1, p2) { return p2.name.localeCompare(p1.name); });
-    return sortedProperties.map(function (property) { return (0, exports.getPropertySignature)(property); }).join('');
+    return sortedProperties.map(function (property) { return (0, exports.getPropertySignature)(property); }).join('') + struct.name;
 };
 exports.getStructSignature = getStructSignature;
 var replaceKeysWithValuesIn = function (str, map) {
@@ -157,3 +157,14 @@ var getStructInstanceOf = function (struct) {
     return { struct: struct, propertyValues: propertyValues };
 };
 exports.getStructInstanceOf = getStructInstanceOf;
+var getObjectSignature = function (obj) {
+    var sortedKeys = Object.keys(obj).sort(function (a, b) { return b.localeCompare(a); });
+    var values = sortedKeys.map(function (key) { return obj[key]; });
+    var valueTypes = values.map(function (value) {
+        if (typeof value === 'object')
+            return (0, exports.getObjectSignature)(value);
+        return typeof value;
+    });
+    return sortedKeys.join('') + valueTypes.join('');
+};
+exports.getObjectSignature = getObjectSignature;
