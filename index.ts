@@ -296,7 +296,7 @@ const lightJson = require(lightJsonFilePath);
 languageFiles.forEach(languageFile => {
   const [filename, extension] = languageFile.split('.');
   const language = getLanguageWithExtension(extension, supportedLanguages);
-  transpileTo(language, lightJson, darkJson, filename, 'com.b_labs.fiber_tokens');
+  transpileTo(language, lightJson, darkJson, filename, 'com.blabs.hicomponents.theme');
   structOccurrencesByName = {};
   generatedObjectSignatures = [];
   instanceStructsSet = new StructsSet([]);
