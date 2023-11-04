@@ -225,8 +225,8 @@ const generateSourceCodeDecelerationOf = (
   let instanceImportStatements: string = language.importStatements;
   let typesImportStatements: string = language.importStatements;
   if (language.extension === 'kt') {
-    typesImportStatements = 'package com.b_labs.fiber_tokens\n' + language.importStatements;
-    const packageDeclaration = 'package com.b_labs.' + packageName;
+    typesImportStatements = 'package com.blabs.hicomponents.theme\n' + language.importStatements;
+    const packageDeclaration = 'package com.blabs.' + packageName;
     const typesNames = [struct.name, ...instanceStructsSet.values().map(struct => struct.name)];
     instanceImportStatements = packageDeclaration + '\n' + instanceImportStatements;
     instanceImportStatements +=
