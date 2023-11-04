@@ -25,7 +25,7 @@ var fs = require("fs");
 var Types_1 = require("./src/Utility/Types");
 var Helpers_1 = require("./src/Utility/Helpers");
 var Config_1 = require("./src/Config");
-var KotlinLanguage_1 = require("./src/Languages/KotlinLanguage");
+var kotlinLanguage_1 = require("./src/Languages/kotlinLanguage");
 var JavaScriptLanguage_1 = require("./src/Languages/JavaScriptLanguage");
 var args = process.argv.slice(2);
 var tokensFilePath = args[0];
@@ -218,7 +218,7 @@ var transpileTo = function (language, lightJson, darkJson, fileName, importPath)
 };
 var supportedLanguages = [
     new SwiftLanguage_1.SwiftLanguage(),
-    new KotlinLanguage_1.KotlinLanguage(),
+    new kotlinLanguage_1.KotlinLanguage(),
     new JavaScriptLanguage_1.JavaScriptLanguage(),
 ];
 var getLanguageWithExtension = function (extension, listOfLanguages) {
