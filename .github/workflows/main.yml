@@ -19,7 +19,7 @@ jobs:
         run: npm install token-transformer
 
       - name: Generate Tokens for Kotlin and Swift
-        run: node index.js ./tokens.json DesignSystem.swift DesignSystem.kt
+        run: node index.js ./tokens.json DesignSystem.swift DesignSystem.kt fiber_deel
  
       - name: Push to Fiber-iOS
         env:
