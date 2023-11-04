@@ -1,4 +1,4 @@
-import { Declaration, Property, TypeData, InstanceData } from '../Struct';
+import { Declaration, Property, TypeData, InstanceData, ComputedProperty } from '../Struct';
 import { InconsistentArgumentsError } from '../Errors/InconsistentArgumentsError';
 import { indentMultilineString, indentStatements as indentStatements } from '../Utility/Helpers';
 import { Language } from './Language';
@@ -72,8 +72,15 @@ export class SwiftLanguage implements Language {
     const numberOfIndentations = 1;
     const initializerDeclaration =
       `\n\n` + this.generateInitializerDeclaration(struct.properties, struct.accessModifier);
+
     const propertyDeclarations = struct.properties.map(property => this.generatePropertyDeclaration(property));
-    const indentedPropertiesDeclarations = indentStatements(propertyDeclarations, numberOfIndentations);
+    const computedPropertyDeclarations = struct.computedProperties.map(property =>
+      this.generateComputedPropertyDeclaration(property)
+    );
+
+    const allPropertyDeclarations = [...propertyDeclarations, ['\n'], ...computedPropertyDeclarations].join('\n');
+
+    const indentedPropertiesDeclarations = indentMultilineString(allPropertyDeclarations, numberOfIndentations);
 
     const typeDecelerationKeyword = isReferenceType ? 'class' : 'struct';
 
@@ -84,13 +91,14 @@ export class SwiftLanguage implements Language {
 
   generateInitializerDeclaration(properties: Property[], accessModifier: AccessModifier): string {
     const modifier = accessModifier != 'internal' ? accessModifier + ' ' : '';
-    const propertiesParameters = properties
+    const requiredProperties = properties.filter(property => !property.hasDefaultValue);
+    const propertiesParameters = requiredProperties
       .map(property => property.name + ': ' + this.convertTokenTypeAndValue(property.type, property.value).type)
       .join(',\n');
 
     const indentedPropertiesParameters = indentMultilineString(propertiesParameters, 1);
 
-    const propertiesAssignment = properties
+    const propertiesAssignment = requiredProperties
       .map(property => {
         const propertyName = this.keywords.includes(property.name) ? `\`${property.name}\`` : property.name;
         return `self.${property.name} = ${propertyName}`;
@@ -130,13 +138,35 @@ export class SwiftLanguage implements Language {
     return `${decelerationBeginning}: ${type}`;
   }
 
+  generateComputedPropertyDeclaration(property: ComputedProperty): string {
+    if (property.hasDefaultValue && property.value === null) {
+      throw new InconsistentArgumentsError(
+        `Property has a default value but no value is provided\n${JSON.stringify(property)}`
+      );
+    }
+
+    const modifier = property.accessModifier != 'internal' ? property.accessModifier + ' ' : '';
+
+    const { type, value } = this.convertTokenTypeAndValue(property.type, property.value);
+
+    const propertyName = this.keywords.includes(property.name) ? `\`${property.name}\`` : property.name;
+
+    const decelerationBeginning = `${modifier}${property.isStatic ? 'static ' : ''}var ${propertyName}`;
+
+    return `${decelerationBeginning}: ${type} {\n${indentMultilineString(value, 1)}\n}`;
+  }
+
   convertTokenTypeAndValue(tokenValueType: string, value: any): { type: string; value: string } {
     switch (tokenValueType) {
       case 'string':
         return { type: 'String', value: `"${value}"` };
       case 'number':
         const number = parseFloat(value);
-        return { type: 'CGFloat', value: this.getStringifiedNumberAsFloat(number) };
+        return { type: 'CGFloat', value: `${number}` };
+      case 'boolean':
+        return { type: 'Bool', value: value };
+      case 'color-computedProperty':
+        return { type: 'DSColor', value: value };
       case 'color':
         return { type: 'SwiftUI.Color', value: this.generateColorObjectDecelerationFrom(value) };
     }

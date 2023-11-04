@@ -1,9 +1,10 @@
 import { SwiftLanguage } from './src/Languages/SwiftLanguage';
-import { Declaration, Property, TypeData, InstanceData } from './src/Struct';
+import { Declaration, Property, TypeData, InstanceData, ComputedProperty } from './src/Struct';
 import * as fs from 'fs';
 import { AccessModifier, StructsSet } from './src/Utility/Types';
 import {
   capitalizeFirstLetter,
+  getObjectSignature,
   getPropertyName,
   getStructInstanceOf,
   getValueAndTypeFrom,
@@ -11,19 +12,33 @@ import {
 } from './src/Utility/Helpers';
 import { jsonKeyMap, mapOfUnits } from './src/Config';
 import { Language, JSLanguage } from './src/Languages/Language';
-import { KotlinLanguage } from './src/Languages/KotlinLanguage';
+import { KotlinLanguage } from './src/Languages/kotlinLanguage';
 import { JavaScriptLanguage } from './src/Languages/JavaScriptLanguage';
 
 const args = process.argv.slice(2);
-const jsonFilePath = args[0];
-const languageFiles = args.slice(1);
+const tokensFilePath = args[0];
 const packageName = args.pop();
+const languageFiles = args.slice(1);
+
+const lightJsonFilePath = './light.json';
+const darkJsonFilePath = './dark.json';
+
+const execSync = require('child_process').execSync;
+execSync(`npx token-transformer ${tokensFilePath} ${lightJsonFilePath} global,alias,component/light global`, {
+  encoding: 'utf-8',
+});
+
+execSync(`npx token-transformer ${tokensFilePath} ${darkJsonFilePath} global,alias,component/dark global`, {
+  encoding: 'utf-8',
+});
 
 const accessModifier: AccessModifier = 'public';
 
 var structOccurrencesByName = {};
 // const valueContainerStructs: Struct[] = [];
 var instanceStructsSet = new StructsSet([]);
+
+var generatedObjectSignatures: string[] = [];
 
 /**
  * Creates and returns a `Struct` object form the provided object
@@ -40,7 +55,8 @@ const getStructFrom = (
   name: string,
   isStatic: boolean,
   propertiesHaveDefaultValues: boolean,
-  originalStructName: string
+  originalStructName: string,
+  isRootObject: boolean
 ): TypeData => {
   var properties: Property[] = [];
 
@@ -54,6 +70,7 @@ const getStructFrom = (
       isStatic: isStatic,
       hasDefaultValue: propertiesHaveDefaultValues,
       isConstant: true,
+      nameInObject: key,
       name: propertyName,
     };
 
@@ -68,14 +85,31 @@ const getStructFrom = (
     }
 
     if (type.endsWith('-object')) {
-      var structName = type.replace('-object', '');
+      var structName = capitalizeFirstLetter(
+        type.replace('-object', '').replace('colorLight', 'color').replace('colorDark', 'color')
+      );
       let structInstance = getStructInstance(structName, value);
       properties.push({ ...property, type, value: structInstance });
       return;
     }
 
     if (type === 'valueContainerObject') {
-      const structInstance = getStaticStruct(propertyName, value);
+      var structName = propertyName.replace('colorLight', 'color').replace('colorDark', 'color');
+      const structInstance = getStaticStruct(structName, value);
+      if (isRootObject) {
+        if (propertyName == 'color') {
+          const darkStructInstance = overrideValues(darkJson.color, structInstance) as InstanceData;
+          property.name = 'colorLight';
+          property.accessModifier = 'private' as 'public';
+
+          properties.push({
+            ...property,
+            name: 'colorDark',
+            type,
+            value: darkStructInstance,
+          });
+        }
+      }
       properties.push({ ...property, type, value: structInstance });
       return;
     }
@@ -83,28 +117,34 @@ const getStructFrom = (
     properties.push({ ...property, type, value: value });
   });
 
-  return { accessModifier, name, properties };
+  return { accessModifier, name, properties, computedProperties: [] };
 };
 
 /** @Mutating */
 const getStaticStruct = (name: string, object: object): InstanceData => {
-  const originalStructName = capitalizeFirstLetter(name) + 'ValuesContainer';
+  const originalStructName = 'DS' + capitalizeFirstLetter(name);
   let structName = originalStructName;
 
   const numberOfOccurrences = structOccurrencesByName[originalStructName];
 
+  const isStatic = false;
+  const hasDefaultValues = false;
+  const objectSignature = getObjectSignature(object);
+
   if (typeof numberOfOccurrences === 'number') {
-    structName += numberOfOccurrences;
-    structOccurrencesByName[originalStructName] = numberOfOccurrences + 1;
+    if (!generatedObjectSignatures.includes(objectSignature)) {
+      structName += numberOfOccurrences;
+      structOccurrencesByName[originalStructName] = numberOfOccurrences + 1;
+    }
   } else {
     structOccurrencesByName[originalStructName] = 1;
   }
-  const isStatic = false;
-  const hasDefaultValues = false;
 
-  let struct = getStructFrom(object, structName, isStatic, hasDefaultValues, name);
+  generatedObjectSignatures.push(objectSignature);
+  let struct = getStructFrom(object, structName, isStatic, hasDefaultValues, name, false);
 
   instanceStructsSet.append(struct);
+
   let structInstance = getStructInstanceOf(struct);
 
   return structInstance;
@@ -115,21 +155,13 @@ const getStructInstance = (name: string, object: object): InstanceData => {
   const isStatic = false;
   const hasDefaultValues = false;
 
-  let struct = getStructFrom(object, name, isStatic, hasDefaultValues, name);
+  let struct = getStructFrom(object, name, isStatic, hasDefaultValues, name, false);
 
   instanceStructsSet.append(struct);
   let structInstance = getStructInstanceOf(struct);
 
   return structInstance;
 };
-
-// const types: Struct[] = [];
-// const typesNames = types.map(type => type.name);
-// const importPath = ""
-// const importStatements = typesNames.map(typeName => importPath + typeName);
-// const typeDecelerations: string[] = [];
-// const instances: StructInstance[] = [];
-// const instancesDecelerations: string[] = [];
 
 const generateSourceCodeDecelerationOf = (
   json: object,
@@ -140,12 +172,37 @@ const generateSourceCodeDecelerationOf = (
   const propertiesHaveDefaultValues = false;
   const isStatic = false;
 
-  const struct = getStructFrom(json, structName, isStatic, propertiesHaveDefaultValues, structName);
-  const rootStructDeceleration = language.generateStructDeclaration(struct, true);
+  const struct = getStructFrom(json, structName, isStatic, propertiesHaveDefaultValues, structName, true);
+  const isDarkProperty: Property = {
+    accessModifier: accessModifier,
+    isStatic: isStatic,
+    hasDefaultValue: true,
+    isConstant: false,
+    nameInObject: 'isDark',
+    name: 'isDark',
+    type: 'boolean',
+    value: 'false',
+  };
 
-  // const valueContainerStructsDeceleration = valueContainerStructs.map(staticStruct => {
-  //   return language.generateStructDeclaration(staticStruct);
-  // });
+  const swiftColorComputedPropertyValue = 'isDark ? colorDark : colorLight';
+  const kotlinColorComputedPropertyValue = 'if (isDark) colorDark else colorLight';
+
+  const colorComputedPropertyValue =
+    language.extension === 'swift' ? swiftColorComputedPropertyValue : kotlinColorComputedPropertyValue;
+
+  const colorComputedProperty: ComputedProperty = {
+    accessModifier: accessModifier,
+    isStatic: isStatic,
+    hasDefaultValue: true,
+    isConstant: false,
+    nameInObject: 'color',
+    name: 'color',
+    type: 'color-computedProperty',
+    value: colorComputedPropertyValue,
+  };
+  struct.properties = [isDarkProperty, ...struct.properties];
+  struct.computedProperties = [colorComputedProperty];
+  const rootStructDeceleration = language.generateStructDeclaration(struct, true);
 
   const instanceStructDeceleration = instanceStructsSet.values().map(instanceStruct => {
     return language.generateInstanceStructDeclaration(instanceStruct);
@@ -158,6 +215,7 @@ const generateSourceCodeDecelerationOf = (
     isStatic: false,
     hasDefaultValue: true,
     isConstant: true,
+    nameInObject: '',
     name: lowerCaseFirstLetter(structName),
     type: `${struct.name}-object`,
     value: rootStructInstance,
@@ -174,7 +232,7 @@ const generateSourceCodeDecelerationOf = (
     instanceImportStatements +=
       '\n' + typesNames.map(typeName => 'import ' + importPath + `.${typeName}`).join('\n');
   } else if (language.extension === 'swift') {
-    instanceImportStatements = instanceImportStatements + '\nimport Fiber_Core';
+    instanceImportStatements = instanceImportStatements + '\nimport FiberCore';
   }
 
   return {
@@ -183,16 +241,22 @@ const generateSourceCodeDecelerationOf = (
   };
 };
 
-const transpileTo = (language: Language | JSLanguage, json: object, fileName: string, importPath: string) => {
+const transpileTo = (
+  language: Language | JSLanguage,
+  lightJson: object,
+  darkJson,
+  fileName: string,
+  importPath: string
+) => {
   if (language.name === 'javascript') {
     const jsLanguage = language as JSLanguage;
-    const content = jsLanguage.generateThemeData(json);
+    const content = jsLanguage.generateThemeData(lightJson);
     fs.writeFile('./'.concat(fileName, '.').concat(jsLanguage.extension), content, function (err) {
       if (err) console.error(err);
     });
   } else {
     const { types, instances } = generateSourceCodeDecelerationOf(
-      json,
+      lightJson,
       language as Language,
       fileName,
       importPath
@@ -226,12 +290,58 @@ const getLanguageWithExtension = (
   console.error(`Language is with extension ${extension} is not supported`);
 };
 
-const json = require(jsonFilePath);
+const darkJson = require(darkJsonFilePath);
+const lightJson = require(lightJsonFilePath);
 
 languageFiles.forEach(languageFile => {
   const [filename, extension] = languageFile.split('.');
   const language = getLanguageWithExtension(extension, supportedLanguages);
-  transpileTo(language, json, filename, 'com.b_labs.fiber_tokens');
+  transpileTo(language, lightJson, darkJson, filename, 'com.b_labs.fiber_tokens');
   structOccurrencesByName = {};
+  generatedObjectSignatures = [];
   instanceStructsSet = new StructsSet([]);
 });
+
+function overrideValues(json: object, colorProperty: InstanceData): object {
+  const allColorValues = getAllColorValuesIn(json);
+  var stringifiedColorProperty = JSON.stringify(colorProperty);
+  Object.keys(allColorValues).forEach(propertyName => {
+    let value = allColorValues[propertyName];
+    let pattern = `name":"${propertyName}","type":"color","value":"#([0-9A-Fa-f]{3,4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})"`;
+    let regex = new RegExp(pattern, 'g');
+    if (regex.test(stringifiedColorProperty)) {
+      stringifiedColorProperty = stringifiedColorProperty.replace(
+        regex,
+        `name":"${propertyName}","type":"color","value":"${value}"`
+      );
+    }
+  });
+  return JSON.parse(stringifiedColorProperty);
+}
+
+function getAllColorValuesIn(obj: object, parentKey = '') {
+  let colorValues = {};
+
+  Object.keys(obj).forEach(key => {
+    const value = obj[key];
+    if (typeof value['value'] === 'string') {
+      let propertyName = getPropertyName(key, parentKey, jsonKeyMap);
+      colorValues[propertyName] = value['value'];
+    } else {
+      const childColorValues = getAllColorValuesIn(value, key);
+      colorValues = { ...colorValues, ...childColorValues };
+    }
+  });
+  return colorValues;
+}
+
+function includesStructCalled(structsSet: StructsSet, name: string): boolean {
+  let isIncluded = false;
+  structsSet.values().forEach(instance => {
+    if (instance.name === name) {
+      isIncluded = true;
+    }
+  });
+
+  return isIncluded;
+}
