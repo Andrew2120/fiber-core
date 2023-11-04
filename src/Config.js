@@ -17,5 +17,5 @@ exports.mapOfUnits = {
     px: { type: 'number', converter: function (value) { return convertStringWithUnitPostFixToNumber(value, 'px', 1); } },
     em: { type: 'number', converter: function (value) { return convertStringWithUnitPostFixToNumber(value, 'em', 1); } },
 };
-exports.mapOfTailwindNames = { 'color': 'colors', 'sizing': 'size', 'spacing': 'space', 'elevation': 'boxShadow' };
+exports.mapOfTailwindNames = { color: 'colors', sizing: 'size', spacing: 'space', elevation: 'boxShadow' };
 exports.keysToBeExcludedFormRecursiveFunc = ['elevation'];

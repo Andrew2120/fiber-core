@@ -73,7 +73,7 @@ export const getPropertySignature = (property: Property): string => {
 
 export const getStructSignature = (struct: TypeData): string => {
   const sortedProperties = struct.properties.sort((p1, p2) => p2.name.localeCompare(p1.name));
-  return sortedProperties.map(property => getPropertySignature(property)).join('');
+  return sortedProperties.map(property => getPropertySignature(property)).join('') + struct.name;
 };
 
 export const replaceKeysWithValuesIn = (str: string, map: object): string => {
@@ -175,4 +175,15 @@ export const getStructInstanceOf = (struct: TypeData): InstanceData => {
     });
 
   return { struct, propertyValues };
+};
+
+export const getObjectSignature = obj => {
+  let sortedKeys = Object.keys(obj).sort((a, b) => b.localeCompare(a));
+  let values = sortedKeys.map(key => obj[key]);
+  let valueTypes = values.map(value => {
+    if (typeof value === 'object') return getObjectSignature(value);
+    return typeof value;
+  });
+
+  return sortedKeys.join('') + valueTypes.join('');
 };

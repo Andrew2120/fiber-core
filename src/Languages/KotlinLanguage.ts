@@ -1,4 +1,4 @@
-import { Declaration, Property, TypeData, InstanceData } from '../Struct';
+import { Declaration, Property, TypeData, InstanceData, ComputedProperty } from '../Struct';
 import { InconsistentArgumentsError } from '../Errors/InconsistentArgumentsError';
 import { indentStatements as indentStatements } from '../Utility/Helpers';
 import { Language } from './Language';
@@ -101,11 +101,25 @@ export class KotlinLanguage implements Language {
     const propertyDeclarations = struct.properties.map(
       property => this.generatePropertyDeclaration(property) + ','
     );
-    const indentedPropertiesDeclarations = indentStatements(propertyDeclarations, numberOfIndentations);
 
-    return `${struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : ''}data class ${
-      struct.name
-    } (\n${indentedPropertiesDeclarations}\n)`;
+    const computedPropertyDeclarations = struct.computedProperties.map(property =>
+      this.generateComputedPropertyDeclaration(property)
+    );
+    const indentedPropertiesDeclarations = indentStatements(propertyDeclarations, numberOfIndentations);
+    const indentedComputedPropertiesDeclarations = indentStatements(
+      computedPropertyDeclarations,
+      numberOfIndentations
+    );
+
+    var dataClassDeclaration = `${
+      struct.accessModifier != 'public' ? struct.accessModifier + ' ' : ''
+    }data class ${struct.name} (\n${indentedPropertiesDeclarations}\n)`;
+
+    if (computedPropertyDeclarations.length > 0) {
+      dataClassDeclaration += ` {\n${indentedComputedPropertiesDeclarations}\n}`;
+    }
+
+    return dataClassDeclaration;
   }
 
   generateInstanceStructDeclaration(struct: TypeData): string {
@@ -115,7 +129,7 @@ export class KotlinLanguage implements Language {
     );
     const indentedPropertiesDeclarations = indentStatements(propertyDeclarations, numberOfIndentations);
 
-    return `${struct.accessModifier != 'internal' ? struct.accessModifier + ' ' : ''}data class ${
+    return `${struct.accessModifier != 'public' ? struct.accessModifier + ' ' : ''}data class ${
       struct.name
     } (\n${indentedPropertiesDeclarations}\n)`;
   }
@@ -127,15 +141,35 @@ export class KotlinLanguage implements Language {
       );
     }
 
+    const modifier = property.accessModifier != 'public' ? property.accessModifier + ' ' : '';
+
     const { type, value } = this.convertTokenTypeAndValue(property.type, property.value);
 
     const propertyName = this.keywords.includes(property.name) ? `\`${property.name}\`` : property.name;
 
     const decelerationKeyword = property.isConstant ? 'val' : 'var';
-    const decelerationBeginning = `${decelerationKeyword} ${propertyName}`;
+    const decelerationBeginning = `${modifier}${decelerationKeyword} ${propertyName}`;
 
-    if (property.hasDefaultValue) return `${decelerationBeginning} = ${value}`;
+    if (property.hasDefaultValue) return `${decelerationBeginning}: ${type} = ${value}`;
     return `${decelerationBeginning}: ${type}`;
+  }
+
+  generateComputedPropertyDeclaration(property: ComputedProperty): string {
+    if (property.hasDefaultValue && property.value === null) {
+      throw new InconsistentArgumentsError(
+        `Property has a default value but no value is provided\n${JSON.stringify(property)}`
+      );
+    }
+
+    const modifier = property.accessModifier != 'public' ? property.accessModifier + ' ' : '';
+
+    const { type, value } = this.convertTokenTypeAndValue(property.type, property.value);
+
+    const propertyName = this.keywords.includes(property.name) ? `\`${property.name}\`` : property.name;
+
+    const decelerationBeginning = `${modifier}${property.isStatic ? 'static ' : ''}val ${propertyName}`;
+
+    return `${decelerationBeginning}: ${type} get() = ${value}`;
   }
 
   generateObjectDecelerationOf(struct: TypeData): string {
@@ -150,6 +184,10 @@ export class KotlinLanguage implements Language {
       case 'number':
         const number = parseFloat(value);
         return { type: 'Double', value: this.getStringifiedNumberAsFloat(number) };
+      case 'boolean':
+        return { type: 'Boolean', value: value };
+      case 'color-computedProperty':
+        return { type: 'DSColor', value: value };
       case 'color':
         return { type: 'Color', value: this.generateColorObjectDecelerationFrom(value) };
       case 'valueContainerObject':
