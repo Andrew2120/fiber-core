@@ -12,6 +12,9 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
+      
+      - name: Install token-transformer
+        run: npm install token-transformer
 
       - name: Generate Tokens for Kotlin and Swift
         run: node index.js ./output-tokens.json DesignSystem.swift DesignSystem.kt fiber_deel
