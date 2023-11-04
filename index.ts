@@ -12,7 +12,7 @@ import {
 } from './src/Utility/Helpers';
 import { jsonKeyMap, mapOfUnits } from './src/Config';
 import { Language, JSLanguage } from './src/Languages/Language';
-import { KotlinLanguage } from './src/Languages/KotlinLanguage';
+import { KotlinLanguage } from './src/Languages/kotlinLanguage';
 import { JavaScriptLanguage } from './src/Languages/JavaScriptLanguage';
 
 const args = process.argv.slice(2);
