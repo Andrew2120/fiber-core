@@ -48,11 +48,11 @@ jobs:
           git config --global user.email 'andrew-2120@live.com'
           git clone https://user:$ACCESS_ANDROID@github.com/Andrew2120/f-android.git Fiber-android-temp
           
-          rm -rf Fiber-android-temp/fiber-deel/src/main/java/com/blabs/fiber_deel/DesignSystemValues.kt
-          cp DesignSystemValues.kt Fiber-android-temp/fiber-deel/src/main/java/com/blabs/fiber_deel
+          rm -rf Fiber-android-temp/fiber-deel/src/main/java/com/b_labs/fiber_deel/DesignSystemValues.kt
+          cp DesignSystemValues.kt Fiber-android-temp/fiber-deel/src/main/java/com/b_labs/fiber_deel
 
-          rm -rf Fiber-android-temp/HIComponents/src/main/java/com/blabs/hicomponents/theme/DesignSystemTypes.kt
-          cp DesignSystemTypes.kt Fiber-android-temp/HIComponents/src/main/java/com/blabs/hicomponents/theme
+          rm -rf Fiber-android-temp/HIComponents/src/main/java/com/b_labs/hicomponents/theme/DesignSystemTypes.kt
+          cp DesignSystemTypes.kt Fiber-android-temp/HIComponents/src/main/java/com/b_labs/hicomponents/theme
           
           cd Fiber-android-temp
           git add .
