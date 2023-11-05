@@ -3,7 +3,7 @@ name: Generate Tokens
 on:
   push:
     branches:
-      - mylo
+      - open-loop
 
 
 jobs:
