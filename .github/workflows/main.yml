@@ -51,7 +51,7 @@ jobs:
           rm -rf Fiber-android-temp/fiber-mylo/src/main/java/com/b_labs/fiber_mylo/DesignSystemValues.kt
           cp DesignSystemValues.kt Fiber-android-temp/fiber-mylo/src/main/java/com/b_labs/fiber_mylo
 
-          rm -rf Fiber-android-temp/HIComponents/src/main/java/com/b_labs/hicomponents/theme/DesignSystemTypes.kt
+          rm -rf Fiber-android-temp/fiber-hi-components/src/main/java/com/b_labs/fiber_tokens/DesignSystemTypes.kt
           cp DesignSystemTypes.kt Fiber-android-temp/fiber-hi-components/src/main/java/com/b_labs/fiber_tokens
           
           cd Fiber-android-temp
