@@ -51,8 +51,8 @@ jobs:
           rm -rf Fiber-android-temp/fiber-retail/src/main/java/com/b_labs/fiber_retail/DesignSystemValues.kt
           cp DesignSystemValues.kt Fiber-android-temp/fiber-retail/src/main/java/com/b_labs/fiber_retail
 
-          rm -rf Fiber-android-temp/HIComponents/src/main/java/com/b_labs/hicomponents/theme/DesignSystemTypes.kt
-          cp DesignSystemTypes.kt Fiber-android-temp/HIComponents/src/main/java/com/b_labs/fiber_tokens
+          rm -rf Fiber-android-temp/fiber-hi-components/src/main/java/com/b_labs/fiber_tokens/DesignSystemTypes.kt
+          cp DesignSystemTypes.kt Fiber-android-temp/fiber-hi-components/src/main/java/com/b_labs/fiber_tokens
           
           cd Fiber-android-temp
           git add .
