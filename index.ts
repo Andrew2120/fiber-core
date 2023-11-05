@@ -225,7 +225,7 @@ const generateSourceCodeDecelerationOf = (
   let instanceImportStatements: string = language.importStatements;
   let typesImportStatements: string = language.importStatements;
   if (language.extension === 'kt') {
-    typesImportStatements = 'package com.b_labs.hicomponents.theme\n' + language.importStatements;
+    typesImportStatements = 'package com.b_labs.fiber_tokens\n' + language.importStatements;
     const packageDeclaration = 'package com.b_labs.' + packageName;
     const typesNames = [struct.name, ...instanceStructsSet.values().map(struct => struct.name)];
     instanceImportStatements = packageDeclaration + '\n' + instanceImportStatements;
@@ -296,7 +296,7 @@ const lightJson = require(lightJsonFilePath);
 languageFiles.forEach(languageFile => {
   const [filename, extension] = languageFile.split('.');
   const language = getLanguageWithExtension(extension, supportedLanguages);
-  transpileTo(language, lightJson, darkJson, filename, 'com.b_labs.hicomponents.theme');
+  transpileTo(language, lightJson, darkJson, filename, 'com.b_labs.fiber_tokens');
   structOccurrencesByName = {};
   generatedObjectSignatures = [];
   instanceStructsSet = new StructsSet([]);
