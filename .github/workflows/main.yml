@@ -3,7 +3,7 @@ name: Generate Tokens
 on:
   push:
     branches:
-      - open-loop
+      - mylo
 
 
 jobs:
@@ -12,15 +12,14 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
-
+      
       - name: Install token-transformer
         run: npm install token-transformer
 
-      - name: Transform tokens
-        run: npx token-transformer tokens.json output-tokens.json --excludes '$themes' --excludes '$metadata' --sets component/light --sets component/dark --sets alias --sets global
-
       - name: Generate Tokens for Kotlin and Swift
-        run: node index.js ./output-tokens.json DesignSystem.swift DesignSystem.kt fiber_mylo
+        run: |
+          ls
+          node index.js ./tokens.json DesignSystem.swift DesignSystem.kt fiber_mylo
 
       - name: Push to Fiber-iOS Mylo
         env:
@@ -32,13 +31,14 @@ jobs:
           git clone https://user:$ACCESS_TOKEN@github.com/YousefBtech/fiber-iOS.git fiber-ios-temp
           rm -rf fiber-ios-temp/Sources/FiberCore/DesignSystemTypes.swift
           cp DesignSystemTypes.swift fiber-ios-temp/Sources/FiberCore/
-          rm -rf fiber-ios-temp/Sources/FiberMylo/DesignSystemValues.swift
-          cp DesignSystemValues.swift fiber-ios-temp/Sources/FiberMylo/
+          rm -rf fiber-ios-temp/Sources/Fibermylo/DesignSystemValues.swift
+          cp DesignSystemValues.swift fiber-ios-temp/Sources/Fibermylo/
           cd fiber-ios-temp
           git add .
           git commit -m "Copy DesignSystem.swift from fiber-core"
-          git push 
-          
+          git push  
+      
+
       - name: Push to Fiber-Android Mylo
         env:
           ACCESS_ANDROID: ${{ secrets.ACCESS_ANDROID }}
@@ -50,12 +50,12 @@ jobs:
           
           rm -rf Fiber-android-temp/fiber-mylo/src/main/java/com/b_labs/fiber_mylo/DesignSystemValues.kt
           cp DesignSystemValues.kt Fiber-android-temp/fiber-mylo/src/main/java/com/b_labs/fiber_mylo
-          
-          rm -rf Fiber-android-temp/fiber-tokens/src/main/java/com/b_labs/fiber_tokens/DesignSystemTypes.kt
-          cp DesignSystemTypes.kt Fiber-android-temp/fiber-tokens/src/main/java/com/b_labs/fiber_tokens
+
+          rm -rf Fiber-android-temp/HIComponents/src/main/java/com/b_labs/hicomponents/theme/DesignSystemTypes.kt
+          cp DesignSystemTypes.kt Fiber-android-temp/HIComponents/src/main/java/com/b_labs/fiber_tokens
           
           cd Fiber-android-temp
           git add .
           git commit -m "Copy DesignSystem.kt from fiber-core"
           git push
-     
+      
