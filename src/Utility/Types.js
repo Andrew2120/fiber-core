@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StructNamesSet = exports.StructsSet = void 0;
+exports.ObjectPath = exports.StructNamesSet = exports.StructsSet = void 0;
 var Helpers_1 = require("./Helpers");
 var StructsSet = /** @class */ (function () {
     function StructsSet(structs) {
@@ -35,9 +35,6 @@ var StructNamesSet = /** @class */ (function () {
         return !!this.numberOfOccurrencesByStructName[structName];
     };
     StructNamesSet.prototype.append = function (structName) {
-        // this.numberOfOccurrencesByStructName[structName] = struct;
-        //   const originalStructName = capitalizeFirstLetter(name) + 'ValuesContainer';
-        // let structName = originalStructName;
         var numberOfOccurrences = this.numberOfOccurrencesByStructName[structName];
         if (typeof numberOfOccurrences === 'number') {
             this.numberOfOccurrencesByStructName[structName] = numberOfOccurrences + 1;
@@ -51,3 +48,19 @@ var StructNamesSet = /** @class */ (function () {
     return StructNamesSet;
 }());
 exports.StructNamesSet = StructNamesSet;
+var ObjectPath = /** @class */ (function () {
+    function ObjectPath() {
+        this.keys = [];
+    }
+    ObjectPath.prototype.path = function () {
+        return this.keys.join('.');
+    };
+    ObjectPath.prototype.push = function (key) {
+        this.keys.push(key);
+    };
+    ObjectPath.prototype.pop = function () {
+        this.keys.pop();
+    };
+    return ObjectPath;
+}());
+exports.ObjectPath = ObjectPath;

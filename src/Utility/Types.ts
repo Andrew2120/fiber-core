@@ -52,10 +52,6 @@ export class StructNamesSet {
   }
 
   append(structName: string) {
-    // this.numberOfOccurrencesByStructName[structName] = struct;
-    //   const originalStructName = capitalizeFirstLetter(name) + 'ValuesContainer';
-    // let structName = originalStructName;
-
     const numberOfOccurrences = this.numberOfOccurrencesByStructName[structName];
 
     if (typeof numberOfOccurrences === 'number') {
@@ -65,5 +61,28 @@ export class StructNamesSet {
       this.numberOfOccurrencesByStructName[structName] = 1;
       return structName;
     }
+  }
+}
+
+export interface RGBAColor {
+  red: number;
+  green: number;
+  blue: number;
+  alpha: number;
+}
+
+export class ObjectPath {
+  keys: string[] = [];
+
+  path() {
+    return this.keys.join('.');
+  }
+
+  push(key: string) {
+    this.keys.push(key);
+  }
+
+  pop() {
+    this.keys.pop();
   }
 }

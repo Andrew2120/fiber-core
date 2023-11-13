@@ -7,7 +7,7 @@ export interface Property {
   isStatic: boolean;
   hasDefaultValue: boolean;
   isConstant: boolean;
-  nameInObject: string;
+  zNameInObject: string;
   name: string;
   type: string;
   value: Nullable<string | number | TypeData | InstanceData | Array<any>>;
@@ -24,6 +24,7 @@ export interface TypeData {
 
 export interface PropertyValue {
   name: string;
+  zNameInObject: string;
   type: string;
   value: Nullable<string | number | TypeData | InstanceData | Array<any>>;
 }

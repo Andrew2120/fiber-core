@@ -1,5 +1,5 @@
 import { Property, PropertyValue, TypeData, InstanceData } from '../Struct';
-import { TokenValueType } from './Types';
+import { RGBAColor, TokenValueType } from './Types';
 
 export const indentStatements = (
   statements: String[],
@@ -104,74 +104,16 @@ export const getPropertyName = (key: string, originalStructName: string, jsonKey
   return propertyName;
 };
 
-export const getValueAndTypeFromWrappedValue = (
-  wrappedValue: any,
-  mapOfUnits: object
-): { value: any; type: TokenValueType } => {
-  if (!isWrappedValue(wrappedValue)) throw new Error(`Cannot extract the wrapped value from\n${wrappedValue}`);
-
-  const { value, type } = wrappedValue;
-
-  if (type === 'color') {
-    // if (!isHexColor(wrappedValue)) throw new Error(`Unexpected string ${value}, expected a hexadecimal color`);
-    return { value, type: 'color' };
-  }
-
-  if (typeof value === 'string') {
-    const units = Object.keys(mapOfUnits);
-    for (let index = 0; index < units.length; index++) {
-      const unit = units[index];
-      const { type, converter: unitConverter } = mapOfUnits[unit];
-      if (value.endsWith(unit)) return { value: unitConverter(value), type: type };
-    }
-
-    if (!isNaN(Number(value))) return { value: parseFloat(value), type: 'number' };
-
-    return { value, type: 'string' };
-  }
-
-  if (typeof value === 'number') return { value, type: 'number' };
-
-  if (Array.isArray(value)) {
-    return { value: value, type: `${capitalizeFirstLetter(type)}-array` };
-  }
-
-  if (typeof value === 'object') return { value, type: `${capitalizeFirstLetter(type)}-object` };
-};
-
-export const getValueAndTypeFrom = (value: any, mapOfUnits: object): { value: any; type: TokenValueType } => {
-  if (typeof value === 'string') {
-    const units = Object.keys(mapOfUnits);
-    for (let index = 0; index < units.length; index++) {
-      const unit = units[index];
-      const { type, converter: unitConverter } = mapOfUnits[unit];
-      if (value.endsWith(unit)) return { value: unitConverter(value), type: type };
-    }
-
-    if (!isNaN(Number(value))) return { value: parseFloat(value), type: 'number' };
-
-    return { value, type: 'string' };
-  }
-
-  if (typeof value === 'number') return { value: value.toString(), type: 'number' };
-
-  if (Array.isArray(value)) return { value: value, type: 'array' };
-
-  if (typeof value === 'object') {
-    if (isWrappedValue(value)) {
-      const { value: wrappedValue, type: wrappedValueType } = getValueAndTypeFromWrappedValue(value, mapOfUnits);
-      return { value: wrappedValue, type: wrappedValueType };
-    }
-
-    return { value: value, type: 'valueContainerObject' };
-  }
-};
-
 export const getStructInstanceOf = (struct: TypeData): InstanceData => {
   const propertyValues: PropertyValue[] = struct.properties
     .filter(property => !property.hasDefaultValue)
     .map(property => {
-      return { name: property.name, type: property.type, value: property.value };
+      return {
+        name: property.name,
+        zNameInObject: property.zNameInObject,
+        type: property.type,
+        value: property.value,
+      };
     });
 
   return { struct, propertyValues };
@@ -186,4 +128,65 @@ export const getObjectSignature = obj => {
   });
 
   return sortedKeys.join('') + valueTypes.join('');
+};
+
+/** Converts the abbreviated hex string to the non abbreviated with two characters for each color or alpha */
+const spreadHexColorStringToFullForm = (hexString: string) => {
+  if (hexString.length === 3 || hexString.length === 4) {
+    const spreadHexString = Array.from(hexString)
+      .map(character => character + character)
+      .join('');
+
+    return spreadHexString;
+  }
+
+  return hexString;
+};
+
+export const convertHexColorStringToRGBAColor = (hexString: string): RGBAColor => {
+  hexString = hexString.replace('#', '');
+  const spreadHexString = spreadHexColorStringToFullForm(hexString);
+  const hexNumbers = spreadHexString.match(/.{2}/g);
+  const [hexRed, hexGreen, hexBlue, hexAlpha] = hexNumbers;
+
+  const hexadecimalBase = 16;
+
+  const rgbaColor: RGBAColor = {
+    red: parseInt(hexRed, hexadecimalBase),
+    green: parseInt(hexGreen, hexadecimalBase),
+    blue: parseInt(hexBlue, hexadecimalBase),
+    alpha: parseInt(hexAlpha, hexadecimalBase) || 255,
+  };
+
+  return rgbaColor;
+};
+
+/**
+ * Converts a string path to a value that is existing in a json object.
+ *
+ * @param {Object} jsonData Json data to use for searching the value.
+ * @param {Object} path the path to use to find the value.
+ * @returns {valueOfThePath|null}
+ */
+export const jsonPathToValue = (jsonData, path) => {
+  if (!(jsonData instanceof Object) || typeof path === 'undefined') {
+    throw 'Not valid argument:jsonData:' + jsonData + ', path:' + path;
+  }
+
+  path = path.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+  path = path.replace(/^\./, ''); // strip a leading dot
+  var pathArray = path.split('.');
+  for (var i = 0, n = pathArray.length; i < n; ++i) {
+    var key = pathArray[i];
+    if (key in jsonData) {
+      if (jsonData[key] !== null) {
+        jsonData = jsonData[key];
+      } else {
+        return null;
+      }
+    } else {
+      return key;
+    }
+  }
+  return jsonData;
 };

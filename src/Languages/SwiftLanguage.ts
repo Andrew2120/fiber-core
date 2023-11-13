@@ -1,8 +1,17 @@
 import { Declaration, Property, TypeData, InstanceData, ComputedProperty } from '../Struct';
 import { InconsistentArgumentsError } from '../Errors/InconsistentArgumentsError';
-import { indentMultilineString, indentStatements as indentStatements } from '../Utility/Helpers';
+import {
+  convertToCamelCase,
+  getPropertyName,
+  indentMultilineString,
+  indentStatements as indentStatements,
+} from '../Utility/Helpers';
 import { Language } from './Language';
 import { AccessModifier } from '../Utility/Types';
+import { Folder } from '../Utility/Folder';
+import { ColorSetFolder } from '../Utility/ColorSetFolder';
+import { XcodeAssetsFolder } from '../Utility/XcodeAssetsFolder';
+import { jsonKeyMap } from '../Config';
 
 export class SwiftLanguage implements Language {
   name = 'Swift';
@@ -65,8 +74,16 @@ export class SwiftLanguage implements Language {
     'try',
   ];
 
+  generatedFiles = [];
+  generatedFolders = [];
+  private xcAssetsFolder = new XcodeAssetsFolder('Colors');
   importStatements: string = 'import SwiftUI';
   private numberOfIndentations = 0;
+  private generatedColorFolderNames = {};
+
+  constructor() {
+    this.generatedFolders.push(this.xcAssetsFolder);
+  }
 
   generateStructDeclaration(struct: TypeData, isReferenceType: boolean): string {
     const numberOfIndentations = 1;
@@ -77,8 +94,13 @@ export class SwiftLanguage implements Language {
     const computedPropertyDeclarations = struct.computedProperties.map(property =>
       this.generateComputedPropertyDeclaration(property)
     );
-
-    const allPropertyDeclarations = [...propertyDeclarations, ['\n'], ...computedPropertyDeclarations].join('\n');
+    const typeIncludesComputedProperties = computedPropertyDeclarations.length > 0;
+    const propertiesSeparator = typeIncludesComputedProperties ? ['\n'] : [];
+    const allPropertyDeclarations = [
+      ...propertyDeclarations,
+      propertiesSeparator,
+      ...computedPropertyDeclarations,
+    ].join('\n');
 
     const indentedPropertiesDeclarations = indentMultilineString(allPropertyDeclarations, numberOfIndentations);
 
@@ -93,7 +115,12 @@ export class SwiftLanguage implements Language {
     const modifier = accessModifier != 'internal' ? accessModifier + ' ' : '';
     const requiredProperties = properties.filter(property => !property.hasDefaultValue);
     const propertiesParameters = requiredProperties
-      .map(property => property.name + ': ' + this.convertTokenTypeAndValue(property.type, property.value).type)
+      .map(
+        property =>
+          property.name +
+          ': ' +
+          this.convertTokenTypeAndValue(property.type, property.value, property.name, property.zNameInObject).type
+      )
       .join(',\n');
 
     const indentedPropertiesParameters = indentMultilineString(propertiesParameters, 1);
@@ -125,9 +152,14 @@ export class SwiftLanguage implements Language {
 
     const modifier = property.accessModifier != 'internal' ? property.accessModifier + ' ' : '';
 
-    const { type, value } = this.convertTokenTypeAndValue(property.type, property.value);
-
     const propertyName = this.keywords.includes(property.name) ? `\`${property.name}\`` : property.name;
+
+    const { type, value } = this.convertTokenTypeAndValue(
+      property.type,
+      property.value,
+      propertyName,
+      property.zNameInObject
+    );
 
     const decelerationKeyword = property.isConstant ? 'let' : 'var';
     const decelerationBeginning = `${modifier}${
@@ -147,16 +179,25 @@ export class SwiftLanguage implements Language {
 
     const modifier = property.accessModifier != 'internal' ? property.accessModifier + ' ' : '';
 
-    const { type, value } = this.convertTokenTypeAndValue(property.type, property.value);
-
     const propertyName = this.keywords.includes(property.name) ? `\`${property.name}\`` : property.name;
+    const { type, value } = this.convertTokenTypeAndValue(
+      property.type,
+      property.value,
+      propertyName,
+      property.zNameInObject
+    );
 
     const decelerationBeginning = `${modifier}${property.isStatic ? 'static ' : ''}var ${propertyName}`;
 
     return `${decelerationBeginning}: ${type} {\n${indentMultilineString(value, 1)}\n}`;
   }
 
-  convertTokenTypeAndValue(tokenValueType: string, value: any): { type: string; value: string } {
+  convertTokenTypeAndValue(
+    tokenValueType: string,
+    value: any,
+    propertyName: string = '',
+    zNameInObject: string = ''
+  ): { type: string; value: string } {
     switch (tokenValueType) {
       case 'string':
         return { type: 'String', value: `"${value}"` };
@@ -168,7 +209,15 @@ export class SwiftLanguage implements Language {
       case 'color-computedProperty':
         return { type: 'DSColor', value: value };
       case 'color':
-        return { type: 'SwiftUI.Color', value: this.generateColorObjectDecelerationFrom(value) };
+        var [_, lightThemeColor, darkThemeColor] = value.split('#');
+
+        const camelCasedNameInObject = getPropertyName(zNameInObject, '', jsonKeyMap);
+        if (!this.generatedColorFolderNames[camelCasedNameInObject]) {
+          const colorFolder = this.createColorFolder(camelCasedNameInObject, lightThemeColor, darkThemeColor);
+          this.xcAssetsFolder.subFolders.push(colorFolder);
+          this.generatedColorFolderNames[camelCasedNameInObject] = 1;
+        }
+        return { type: 'SwiftUI.Color', value: this.generateColorObjectDecelerationFrom(camelCasedNameInObject) };
     }
 
     if (tokenValueType.endsWith('-object') || tokenValueType === 'valueContainerObject')
@@ -178,9 +227,12 @@ export class SwiftLanguage implements Language {
       return { type: `[${value[0].struct.name}]`, value: this.generateArrayOfInstancesDeceleration(value) };
   }
 
-  generateColorObjectDecelerationFrom(hex: string): string {
-    if (hex.startsWith('#')) hex = hex.substring(1);
-    return `SwiftUI.Color(hex: "${hex}")`;
+  createColorFolder(colorName: string, lightThemeColor: string, darkThemeColor: string): Folder {
+    return new ColorSetFolder(colorName, lightThemeColor, darkThemeColor);
+  }
+
+  generateColorObjectDecelerationFrom(propertyName: string): string {
+    return `SwiftUI.Color(.${propertyName})`;
   }
 
   generateInstanceDeceleration(instance: InstanceData): string {
@@ -188,7 +240,12 @@ export class SwiftLanguage implements Language {
     var indentation = '    '.repeat(this.numberOfIndentations);
     let propertyValues = instance.propertyValues
       .map(propertyValue => {
-        const { value } = this.convertTokenTypeAndValue(propertyValue.type, propertyValue.value);
+        const { value } = this.convertTokenTypeAndValue(
+          propertyValue.type,
+          propertyValue.value,
+          propertyValue.name,
+          propertyValue.zNameInObject
+        );
         return `${propertyValue.name}: ${value}`;
       })
       .map(statement => indentation + statement)

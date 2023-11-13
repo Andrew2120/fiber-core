@@ -1,10 +1,14 @@
 import { Declaration, Property, TypeData, InstanceData } from '../Struct';
+import { File } from '../Utility/File';
+import { Folder } from '../Utility/Folder';
 
 export interface Language {
   name: string;
   extension: string;
   keywords: string[];
   importStatements: string;
+  generatedFiles: File[];
+  generatedFolders: Folder[];
 
   generateStructDeclaration(struct: TypeData, isReferenceType: boolean): string;
   generateInstanceStructDeclaration(struct: TypeData): string;

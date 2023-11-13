@@ -86,6 +86,8 @@ var KotlinLanguage = /** @class */ (function () {
             'field',
             'it',
         ];
+        this.generatedFiles = [];
+        this.generatedFolders = [];
         this.importStatements = [
             'import androidx.compose.ui.unit.*',
             'import androidx.compose.ui.graphics.Color',
